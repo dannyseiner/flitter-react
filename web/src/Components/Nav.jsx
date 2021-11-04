@@ -13,21 +13,16 @@ const Nav = () => {
                     <li className="nav-item">
                         <Link to='/' className="nav-link" href="javascript:void(0);"><i className="fas fa-tachometer-alt"></i>Dashboard</Link>
                     </li>
-                    <li className="nav-item active">
+                    <li className="nav-item">
                         <Link to='/profile' className="nav-link" href="javascript:void(0);"><i className="far fa-address-book"></i>Address Book</Link>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="javascript:void(0);"><i className="far fa-clone"></i>Components</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="javascript:void(0);"><i className="far fa-calendar-alt"></i>Calendar</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className="nav-link" href="javascript:void(0);"><i className="far fa-chart-bar"></i>Charts</a>
                     </li>
                     <li className="nav-item">
                         <Link to='/apiTest' className="nav-link" href="javascript:void(0);"><i className="far fa-copy"></i>Api Test</Link>
                     </li>
+                    <li className="nav-item active">
+                        <Link to='/login' className="nav-link" href="javascript:void(0);"><i className="far fa-calendar-alt"></i>Profile</Link>
+                    </li>
+
                 </ul>
             </div>
         </nav>
