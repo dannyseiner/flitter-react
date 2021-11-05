@@ -2,11 +2,15 @@ import React from 'react'
 
 const Profile = () => {
 
-    const user_profile = JSON.parse(sessionStorage.getItem("user"))
-
+    const user = JSON.parse(sessionStorage.getItem("user"))
+    console.log(user)
     return (
         <div>
-            <h1>Profile {user_profile.account_name}</h1>
+            <h3>profile info:</h3>
+            <ul>
+                <li>{user.account_name}</li>
+                <li>{user.account_email}</li>
+            </ul>
         </div>
     )
 }

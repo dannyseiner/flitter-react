@@ -1,13 +1,15 @@
 @import url("nav.css");
 @import url("login.css");
+@import url("home.css");
+@import url("profile.css");
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
 
 *{
     font-family: 'Open Sans', sans-serif;
 }
 .main_container { 
+	background-color:rgba(0,0,0,0.03);
     width: 80%;
-    max-width:1000px;
     min-width: 400px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 11px;

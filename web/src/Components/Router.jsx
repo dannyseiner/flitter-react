@@ -5,6 +5,9 @@ import Home from '../Sites/Home'
 import Profile from '../Sites/Profile'
 import Apitest from '../Testing/ApiTest'
 import Login from '../Sites/Login'
+// CUSTOM Components
+import PrivateRoute from './PrivateRoute'
+import Post from '../Sites/Post'
 
 
 const RouterCom = () => {
@@ -13,9 +16,12 @@ const RouterCom = () => {
             <Nav />
             <div className="main_container">
                 <Switch>
-                    <Route path='/' exact component={Home} />
-                    < Route path="/profile" exact component={Profile} />
-                    <Route path='/apiTest' exact component={Apitest} />
+                    {/* PRIVATE ROUTES */}
+                    <PrivateRoute path='/' exact component={Home} />
+                    <PrivateRoute path="/profile" exact component={Profile} />
+                    <PrivateRoute path='/apiTest' component={Apitest} />
+                    <PrivateRoute path="/post/:id" component={Post} />
+                    {/* PUBLIC ROUTES */}
                     <Route path='/login' exact component={Login} />
                 </Switch >
             </div >

@@ -29,8 +29,15 @@ api.get("/", (res, req) => {
     req.send({ status: "WORKING" })
 })
 
-api.get('/accounts', (res, req) => {
-    con.query("SELECT * FROM accounts", (err, result) => {
+api.get('/posts', (res, req) => {
+    con.query("SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id", (err, result) => {
+        if (err) throw err
+        req.send(result)
+    })
+})
+
+api.get('/post/:id', (res, req) => {
+    con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id WHERE post_id = ${res.params.id}`, (err, result) => {
         if (err) throw err
         req.send(result)
     })
