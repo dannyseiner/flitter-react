@@ -9,7 +9,12 @@ const passwordHash = require('password-hash');
 api.use(cors())
 api.use(bodyParser.json())
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
-
+const log = (txt, data) => {
+    console.log("")
+    console.log(`------------ < ${txt} > ------------`)
+    console.log(data)
+    console.log(`------------ < ${txt} /> ------------`)
+}
 const con = mysql.createConnection({
     socketPath: '/Applications/MAMP/tmp/mysql/mysql.sock',
     user: 'admin',
@@ -27,19 +32,31 @@ con.connect(function (err) {
 // ROUTES
 api.get("/", (res, req) => {
     req.send({ status: "WORKING" })
+    console.log("hompage", { status: "WORKING" })
+
+})
+
+api.get("/user/:id", (res, req) => {
+    // con.query("SELECT * FROM accounts INNER JOIN account_info ON accounts.account_id = account_info.user_id WHERE = accounts.account_id = " + res.params.id, (err, result) => {
+    //     if (err) throw err
+    //     req.send(result)
+    // })
 })
 
 api.get('/posts', (res, req) => {
     con.query("SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id", (err, result) => {
         if (err) throw err
+        log("posts", result)
         req.send(result)
     })
 })
 
 api.get('/post/:id', (res, req) => {
+    if (res.params.id === "notfound") return
     con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id WHERE post_id = ${res.params.id}`, (err, result) => {
         if (err) throw err
         req.send(result)
+        log("post", result)
     })
 })
 
@@ -50,23 +67,36 @@ api.get('/table/:table', (res, req) => {
     })
 })
 
+api.get("/user/posts/:id", (res, req) => {
+    con.query(`SELECT * FROM posts WHERE post_author_id = ${res.params.id}`, (err, result) => {
+        if (err) throw err
+        req.send(result)
+    })
+})
+
 
 // LOGIN 
 api.post('/login', urlencodedParser, (req, res) => {
+
     console.log(req.body)
     con.query(`SELECT * FROM accounts WHERE account_email = '${req.body.email}'`, (err, result) => {
         if (err) throw err
         if (result.length == 0) return res.send({ status: false })
         if (passwordHash.verify(req.body.password, result[0].account_password)) {
             res.send(result)
+            log("login", result)
         } else {
             res.send({ status: false, password: false })
+            log("login", { status: false, password: false })
+
         }
     })
+
 })
 
 // REGISTER
 api.post('/register', urlencodedParser, (req, res) => {
+    console.log()
     console.log(req.body)
     // CHECK FOR EMAIL 
     con.query(`SELECT * FROM accounts WHERE account_email='${req.body.email}' OR account_name='${req.body.username}'`, (err, result) => {
@@ -79,14 +109,17 @@ api.post('/register', urlencodedParser, (req, res) => {
                 '${req.body.password}'
             )`, (errr, resultt) => {
                 res.send({ status: true })
+                log("register", { status: true })
             })
 
         } else {
             res.send({ status: false })
+            log("register", { status: false })
         }
         // EMAIL OR USERNAME USED
         if (err) throw err
     })
+
 })
 
 

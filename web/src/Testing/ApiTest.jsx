@@ -111,6 +111,8 @@ const Apitest = () => {
             <div style={spaceleft(3)}>{render_request(table.data)}</div>
             <p style={spaceleft(2)}>Notifss</p>
             <div style={spaceleft(3)}>{render_request(talbePosts.data)}</div>
+            <h3>Full request:</h3>
+            <p style={spaceleft(2)}>{JSON.stringify(table, null, 2)}</p>
         </div >
     )
 }

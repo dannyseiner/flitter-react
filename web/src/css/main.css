@@ -2,26 +2,30 @@
 @import url("login.css");
 @import url("home.css");
 @import url("profile.css");
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url("notfound.css");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 
-*{
-    font-family: 'Open Sans', sans-serif;
+* {
+  font-family: "Open Sans", sans-serif;
 }
-.main_container { 
-	background-color:rgba(0,0,0,0.03);
-    width: 80%;
-    min-width: 400px;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    border-radius: 11px;
-    padding:20px;
-    margin:70px auto;
-}
-
-.center{
-    width:fit-content;
-    margin: auto;
+.main_container {
+  background-color: rgba(0, 0, 0, 0.03);
+  width: 80%;
+  min-width: 400px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 11px;
+  padding: 20px;
+  margin: 70px auto;
 }
 
-.transition{
-    transition: 0.3s ease-in-out;
+.center {
+  width: fit-content;
+  margin: auto;
+}
+.box-shadow {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.transition {
+  transition: 0.3s ease-in-out;
 }

@@ -21,10 +21,15 @@ app.get("/", (req, res) => {
 app.get('/user/:id', (req, res) => {
     Account.findById(req.params.id, (err, usr) => res.send(usr))
 })
+//  GET USER POSTS
+app.get('/user/:id/posts', (req, res) => {
+    res.send(req.params)
+})
 
-app.post('login', (req, res) => {
-    console.log(req.body)
-    Account.logIn(req.body, (err, state) => res.send(state))
+app.post('/login', (req, res) => {
+    console.log("login")
+    // console.log(req.body)
+    // Account.logIn(req.body, (err, state) => res.send(state))
 })
 
 // POST ROUTES
