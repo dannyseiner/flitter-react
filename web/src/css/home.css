@@ -11,22 +11,50 @@ body {
 
 .home-container {
   margin: 50px auto;
-  width: 80%;
+  width: 60%;
+  min-width: fit-content;
   height: fit-content;
   padding: 10px 20px 20px 10px;
   border-radius: 10px;
+}
+.post-icon {
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #5160ce;
+  border-radius: 6px;
+  background-color: none;
+  background: none;
+  margin-right: 10px;
+  color: #5160ce;
+  cursor: pointer;
+  transition: 0.4s ease-in-out;
+}
+.post-comment {
+  padding: 7px;
+  border-top-left-radius: 5px;
+  position: relative;
+  border-bottom-left-radius: 5px;
+  border: 1px solid #5160ce;
+  top: -2px;
+  outline: none;
+  transition: 0.4s ease-in-out;
+}
+.post-comment:hover {
+  border: 1px solid #5160ce;
+}
+.post-icon:hover {
+  color: white;
+  background-color: #5160ce;
+}
+.post-icon > i {
+  text-align: center;
+  margin: 0px auto;
+  font-size: 20px;
 }
 .timeline {
   margin: 4em auto;
   position: relative;
   max-width: 46em;
-}
-
-.timelineline:hover .timeline-event .timeline-event-copy .post-comments {
-  visibility: visible;
-}
-.timeline-event .timeline-event-copy .post-comments {
-  visibility: hidden;
 }
 
 .timeline:before {

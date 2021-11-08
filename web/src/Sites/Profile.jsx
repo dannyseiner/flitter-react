@@ -1,17 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import url from '../config'
+import React, { useState } from 'react'
 const Profile = () => {
 
     const user = JSON.parse(sessionStorage.getItem("user"))
-    const [status, setStatus] = useState(
+    const [status] = useState(
         user.account_role === 2 ?
             {
                 display: "block",
                 message: "admin"
-            }
-            :
-            {
+            } : {
                 display: "none",
                 message: ""
             }

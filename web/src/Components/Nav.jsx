@@ -1,18 +1,18 @@
 import { Link } from 'react-router-dom'
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 // Custom components 
 import PrivateLink from './PrivateLink'
 import AdminLink from './AdminLink'
 
 const Nav = () => {
 
-    const [active, setActive] = useState("active");
-    const [logoutBtn, setlogoutBtn] = useState(sessionStorage.getItem('user') === null ? { display: "none" } : { display: "block" });
+    const [logoutBtn] = useState(sessionStorage.getItem('user') === null ? { display: "none" } : { display: "block" });
 
     const logout = () => {
         sessionStorage.removeItem('user')
         window.location.replace('/login')
     }
+
 
     return (
         <nav className="navbar navbar-expand-custom navbar-mainbg">
@@ -28,8 +28,11 @@ const Nav = () => {
                     <li className="nav-item">
                         <PrivateLink to='/profile' className="nav-link"><i className="far fa-calendar-alt"></i>Profile</PrivateLink>
                     </li>
+                    <li className="nav-item">
+                        <PrivateLink to='/chat' className="nav-link"><i className="fas fa-comment-dots"></i>Chat</PrivateLink>
+                    </li>
                     <li className="nav-item" style={logoutBtn}>
-                        <a onClick={logout} className="nav-link"><i className="far fa-calendar-alt"></i>Logout</a>
+                        <button onClick={logout} className="nav-link"><i className="far fa-calendar-alt"></i>Logout</button>
                     </li>
 
                 </ul>

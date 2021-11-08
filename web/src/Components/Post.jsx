@@ -13,13 +13,14 @@ const Post = ({ post }) => {
                 <h4>{post.account_name}</h4>
                 <p>{post.post_content}</p>
                 <div className='post-comments'>
-                    <input type='text' placeholder='Comment' />
-                    <button><i className="fas fa-paper-plane"></i></button>
-                    <button><i className="far fa-thumbs-up"></i></button>
-                    <button><i className="fas fa-share"></i></button>
+                    <input className="post-comment" type='text' placeholder='Comment' />
+                    <button className="post-icon" style={{ borderTopLeftRadius: "0px", borderBottomLeftRadius: "0px" }}><i className="fas fa-paper-plane"></i></button>
+                    <div style={{ display: "inline-block", float: "right" }}>
+                        <button className="post-icon"><i className="far fa-thumbs-up"></i></button>
+                        <button className="post-icon"><i className="fas fa-share"></i></button>
+                    </div>
                 </div>
             </div>
-
         </li>
     )
 }

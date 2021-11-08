@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import axios from 'axios'
 import url from '../config'
 import Post from '../Components/Post'
@@ -10,7 +9,6 @@ const Home = () => {
     }, [])
 
     const [posts, setPosts] = useState([])
-    const now = new Date()
 
     return (
         <div className="home-container box-shadow">

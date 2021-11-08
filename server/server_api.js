@@ -4,13 +4,14 @@ const mysql = require('mysql')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const passwordHash = require('password-hash');
+const { application } = require("express")
 
 
 api.use(cors())
 api.use(bodyParser.json())
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 const log = (txt, data) => {
-    console.log("")
+    console.clear()
     console.log(`------------ < ${txt} > ------------`)
     console.log(data)
     console.log(`------------ < ${txt} /> ------------`)
@@ -58,6 +59,26 @@ api.get('/post/:id', (res, req) => {
         req.send(result)
         log("post", result)
     })
+})
+api.get('/post/:id/comments', (res, req) => {
+    if (res.params.id === "notfound") return
+    con.query(`SELECT * FROM post_comments WHERE comment_post_id = ${res.params.id}`, (err, result) => {
+        if (err) throw err
+        req.send(result)
+        log("post comments", result)
+    })
+})
+
+// POST COMMENT
+api.post('/addComment', urlencodedParser, (req, res) => {
+    log("ADD COMMENT", req.body)
+    con.query(`INSERT INTO post_comments (comment_post_id, comment_author_id, comment_content) VALUES
+    ( 
+        ${req.body.post_id},
+        ${req.body.author_id},
+        '${req.body.comment_content}'
+    )
+    `)
 })
 
 api.get('/table/:table', (res, req) => {
