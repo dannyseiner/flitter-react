@@ -4,7 +4,6 @@ const mysql = require('mysql')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const passwordHash = require('password-hash');
-const { application } = require("express")
 
 
 api.use(cors())
@@ -65,19 +64,10 @@ api.get('/post/:id', (res, req) => {
 })
 api.get('/post/:id/comments', (res, req) => {
     if (res.params.id === "notfound") return
-    con.query(`SELECT * FROM post_comments INNER JOIN accounts ON comment_author_id = accounts.account_id WHERE comment_post_id = ${res.params.id} AND post_comments.comment_on_comment_id = 0`, (err, result) => {
+    con.query(`SELECT * FROM post_comments INNER JOIN accounts ON comment_author_id = accounts.account_id WHERE comment_post_id = ${res.params.id}`, (err, result) => {
         if (err) throw err
         req.send(result)
         log("post comments", result)
-    })
-})
-
-api.get('/post/:id/comments/:onco', (res, req) => {
-    con.query(`SELECT * FROM post_comments WHERE comment_on_comment_id = ${res.params.onco} AND comment_post_id = ${res.params.id}`, (err, result) => {
-        if (err) throw err
-        log("COMMENTS ON COMMENT", result)
-        req.send(result)
-
     })
 })
 

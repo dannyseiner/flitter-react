@@ -26,16 +26,9 @@ const add_comment = (postId, authorId, comment, setComment) => {
 }
 
 
-const get_comments_on = (postId, commentId, setComment) => {
-    axios.get(`${url}/post/${postId}/comment/${commentId}`)
-        .then(response => { return response })
-}
-
-
-
 const functions = {
     get_post,
+    get_comments,
     add_comment,
-    get_comments_on
 }
 export default functions
