@@ -38,10 +38,13 @@ api.get("/", (res, req) => {
 })
 
 api.get("/user/:id", (res, req) => {
-    // con.query("SELECT * FROM accounts INNER JOIN account_info ON accounts.account_id = account_info.user_id WHERE = accounts.account_id = " + res.params.id, (err, result) => {
-    //     if (err) throw err
-    //     req.send(result)
-    // })
+    con.query(`SELECT * FROM accounts WHERE account_id = ${res.params.id}`, (err, result) => {
+        if (result.length == 0) {
+            req.send({ status: false })
+            return
+        }
+        req.send(result)
+    })
 })
 
 api.get('/posts', (res, req) => {
@@ -62,10 +65,19 @@ api.get('/post/:id', (res, req) => {
 })
 api.get('/post/:id/comments', (res, req) => {
     if (res.params.id === "notfound") return
-    con.query(`SELECT * FROM post_comments WHERE comment_post_id = ${res.params.id}`, (err, result) => {
+    con.query(`SELECT * FROM post_comments INNER JOIN accounts ON comment_author_id = accounts.account_id WHERE comment_post_id = ${res.params.id} AND post_comments.comment_on_comment_id = 0`, (err, result) => {
         if (err) throw err
         req.send(result)
         log("post comments", result)
+    })
+})
+
+api.get('/post/:id/comments/:onco', (res, req) => {
+    con.query(`SELECT * FROM post_comments WHERE comment_on_comment_id = ${res.params.onco} AND comment_post_id = ${res.params.id}`, (err, result) => {
+        if (err) throw err
+        log("COMMENTS ON COMMENT", result)
+        req.send(result)
+
     })
 })
 

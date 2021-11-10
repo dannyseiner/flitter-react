@@ -1,7 +1,6 @@
 import axios from 'axios'
 import url from '../config'
 
-
 const get_post = (postId, setPost, setComments) => {
     axios.get(`${url}/post/${postId}`)
         .then(response => {
@@ -27,8 +26,16 @@ const add_comment = (postId, authorId, comment, setComment) => {
 }
 
 
+const get_comments_on = (postId, commentId, setComment) => {
+    axios.get(`${url}/post/${postId}/comment/${commentId}`)
+        .then(response => { return response })
+}
+
+
+
 const functions = {
     get_post,
-    add_comment
+    add_comment,
+    get_comments_on
 }
 export default functions

@@ -62,11 +62,16 @@ const api_login_scripted = (isAdmin) => {
 }
 
 
+const generate_qr_code = () => {
+    console.log("generate qr - code")
+}
+
 
 const functions = {
     api_login,
     api_register,
-    api_login_scripted
+    api_login_scripted,
+    generate_qr_code
 }
 
 
