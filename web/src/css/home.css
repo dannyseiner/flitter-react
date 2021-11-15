@@ -53,6 +53,7 @@ body {
 }
 .timeline {
   margin: 4em auto;
+  margin-top: 0px;
   position: relative;
   max-width: 46em;
 }
@@ -145,7 +146,7 @@ body {
 .create-post-container {
   width: fit-content;
   height: fit-content;
-  margin: auto;
+  margin: 30px auto;
 }
 .create-post-container > input {
   width: 400px;
