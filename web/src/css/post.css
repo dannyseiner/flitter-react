@@ -213,13 +213,30 @@ ul {
   -moz-border-radius: 4px 4px 0 0;
   border-radius: 4px 4px 0 0;
 }
-
+.liked {
+  color: red !important;
+}
 .comment-box .comment-head i {
   float: right;
   margin-left: 14px;
   position: relative;
   top: 2px;
   color: #a6a6a6;
+  cursor: pointer;
+  -webkit-transition: color 0.3s ease;
+  -o-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+}
+.comment-box .comment-head button {
+  float: right;
+  margin-left: 14px;
+  position: relative;
+  top: 2px;
+  color: #a6a6a6;
+  border: none;
+  outline: none;
+  background: none;
+  background-color: none;
   cursor: pointer;
   -webkit-transition: color 0.3s ease;
   -o-transition: color 0.3s ease;
@@ -292,4 +309,19 @@ ul {
   .reply-list .comment-box {
     width: 320px;
   }
+}
+
+.heart {
+  width: 100px;
+  height: 100px;
+  background: url("https://cssanimation.rocks/images/posts/steps/heart.png")
+    no-repeat;
+  background-position: 0 0;
+  cursor: pointer;
+  transition: background-position 1s steps(28);
+  transition-duration: 0s;
+}
+.heart.is-active {
+  transition-duration: 1s;
+  background-position: -2800px 0;
 }

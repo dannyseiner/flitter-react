@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 const Post = ({ post }) => {
 
     const format_options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-    console.log(post)
     return (
         <li className="timeline-event" key={post.post_id}>
             <label className="timeline-event-icon"></label>
@@ -13,10 +12,10 @@ const Post = ({ post }) => {
                 <Link to={`profile/${post.post_author_id}`}><h4>{post.account_name}</h4></Link>
                 <p>{post.post_content}</p>
                 <div className='post-comments'>
-                    <div style={{ display: "inline-block", float: "right" }}>
-                        <button className="post-icon"><i className="far fa-thumbs-up"></i></button>
+                    {/* <div style={{ display: "inline-block", float: "right" }}>
+                        <button className="post-icon"><i className="far fa-heart"></i></button>
                         <button className="post-icon"><i className="fas fa-share"></i></button>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </li>

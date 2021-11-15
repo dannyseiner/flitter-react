@@ -1,11 +1,16 @@
-import React from 'react'
+import axios from 'axios'
+import url from '../config'
 
-const ChatEngine = () => {
-    return (
-        <div>
-            chatengine
-        </div>
-    )
+const get_user_friends = (userId, setFriends) => {
+    axios.get(`${url}/user/${userId}/messages`)
+        .then(response => {
+            let return_data = []
+            setFriends(response)
+        })
 }
 
-export default ChatEngine
+const exporter = {
+    get_user_friends
+}
+
+export default exporter

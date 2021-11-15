@@ -4,15 +4,19 @@ const PublicProfile = ({ match }) => {
     const [profile, setProfile] = useState({
         data: [{}]
     });
+    const [profileImage, setProfileImage] = useState([])
+
     useEffect(() => {
         ProfileHandler.get_user_data(match.params.id, setProfile)
+        setProfileImage(btoa(String.fromCharCode(...new Uint8Array(profile.data[0].account_image))))
     }, []);
+
     return (
         <div className="profile-container box-shadow">
-
             <div className="header">
                 <h2>{profile.data[0].account_name}</h2>
             </div>
+            <img src={`data:image/png;base64,${setProfileImage}`} alt="" />
 
             <div className="row">
                 <div className="leftcolumn">

@@ -20,6 +20,11 @@
   <body>
     <div id="root"></div>
     <script>
+		$(function() {
+  $(".heart").on("click", function() {
+    $(this).toggleClass("is-active");
+  });
+});
 	// REGISTER / LOGIN FORM 
 	$(document).ready(function () {
 	var panelOne = $(".form-panel.two").height(),

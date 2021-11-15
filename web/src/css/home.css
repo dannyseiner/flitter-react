@@ -141,3 +141,48 @@ body {
   margin-bottom: 1.2em;
   padding: 0.25em 1em 0.2em 1em;
 }
+/* CREATE POST CONTAINER */
+.create-post-container {
+  width: fit-content;
+  height: fit-content;
+  margin: auto;
+}
+.create-post-container > input {
+  width: 400px;
+  padding: 10px;
+  font-size: 18px;
+  display: block;
+  height: 50px;
+  resize: none;
+  border-top-left-radius: 9px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.create-post-container > textarea {
+  width: 400px;
+  padding: 10px;
+  font-size: 18px;
+  height: 100px;
+  resize: none;
+  border-bottom-left-radius: 9px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.create-post-container > button {
+  font-size: 20px;
+  text-align: center;
+  border: 1px solid #5160ce;
+  outline: none;
+  padding: 10px;
+  height: 150px;
+  position: relative;
+  top: -68px;
+  border-bottom-right-radius: 9px;
+  border-top-right-radius: 9px;
+  background-color: white;
+  color: #5160ce;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+.create-post-container > button:hover {
+  background-color: #5160ce;
+  color: white;
+}

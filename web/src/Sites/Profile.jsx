@@ -1,7 +1,15 @@
-import React, { useState } from 'react'
-const Profile = () => {
+import React, { useState, useEffect } from 'react'
+import ProfileHandler from '../Controllers/PrivateProfileHandler'
 
+const Profile = () => {
     const user = JSON.parse(sessionStorage.getItem("user"))
+    const [profile, setProfile] = useState({
+        data: []
+    })
+    useEffect(() => {
+        ProfileHandler.getUserData(user.account_id, setProfile)
+    }, [])
+
     const [status] = useState(
         user.account_role === 2 ?
             {
@@ -15,12 +23,11 @@ const Profile = () => {
 
 
     return (
-        <div className="box-shadow profile-container">
-            <div className="alert-status" style={{ display: status.display }}>{status.message}</div>
-            <h3>profile info:</h3>
-            <p>{user.account_name}</p>
-            <p>{user.account_email}</p>
-        </div >
+        <div className="container">
+            Main profile
+            {JSON.stringify(profile)}
+        </div>
+
     )
 }
 

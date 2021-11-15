@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 const Post = ({ match }) => {
     const [post_id] = useState(match.params.id)
     const user = JSON.parse(sessionStorage.getItem('user'))
+    const [likedPost, setLikedPost] = useState("fa fa-heart");
     const [post, setPost] = useState({});
     const [comment, setComment] = useState("");
     const [comments, setComments] = useState({
@@ -13,6 +14,7 @@ const Post = ({ match }) => {
 
     useEffect(() => {
         PostHandler.get_post(post_id, setPost, setComments)
+        PostHandler.is_post_liked(user.account_id, post_id, setLikedPost)
     }, [])
 
     const add_comment_recall = () => {
@@ -48,17 +50,27 @@ const Post = ({ match }) => {
                     <div className="comment-head">
                         <h6 className="comment-name by-author"><Link to={`/profile/${post.post_author_id}`}>{post.account_name}</Link></h6>
                         <span>{post.post_created}</span>
-                        <i className="fa fa-reply"></i>
-                        <i className="fa fa-heart"></i>
+                        {/* <button><i className="fa fa-reply"></i></button> */}
+                        {/* <button onClick={() => PostHandler.like_comment(post_id, user.account_id, setLikedPost)}><i className={likedPost}></i></button> */}
+
                     </div>
+                    <h4 style={{ fontSize: "30px", marginLeft: "30px" }}>{post.post_title}</h4>
                     <div className="comment-content">
                         {post.post_content}
                     </div>
+
                 </div>
             </div>
             <div>
-                <input type="text" onChange={e => setComment(e.target.value)} />
-                <button type="button" onClick={() => add_comment_recall()}>Send</button>
+
+
+                <div className="placement" style={{ display: "inline" }}>
+                    <div onClick={() => PostHandler.like_comment(post_id, user.account_id, setLikedPost)} className={likedPost}></div>
+                </div>
+                <div className="add-comment">
+                    <input type="text" onChange={e => setComment(e.target.value)} />
+                    <button type="button" onClick={() => add_comment_recall()}>Send</button>
+                </div>
             </div>
             <div className="comments-container">
                 <ul id="comments-list" className="comments-list">

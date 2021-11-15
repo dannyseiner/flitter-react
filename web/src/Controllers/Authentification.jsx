@@ -1,8 +1,8 @@
 import axios from 'axios'
-import url from '../config'
+import config from '../config'
 const passwordHash = require("password-hash")
 const api_login = (email, password, setStatusLogin, statusLogin) => {
-    axios.post(url + '/login', {
+    axios.post(config.restapi + '/login', {
         email: email,
         password: password
     })
@@ -34,7 +34,7 @@ const api_register = (reg_email, reg_name, reg_password, reg_password_C, setstat
         setstatusRegister({ display: "block", message: "Passwords must match!" })
         return
     }
-    axios.post(url + "/register", {
+    axios.post(config.restapi + "/register", {
         email: reg_email,
         username: reg_name,
         password: passwordHash.generate(reg_password)
@@ -53,7 +53,7 @@ const api_register = (reg_email, reg_name, reg_password, reg_password_C, setstat
 
 
 const api_login_scripted = (isAdmin) => {
-    axios.post(url + "/login", isAdmin ? { email: "admin@admin.com", password: "admin" } : { email: "dannyseiner@gmail.com", password: "admin" })
+    axios.post(config.restapi + "/login", isAdmin ? { email: "admin@admin.com", password: "admin" } : { email: "dannyseiner@gmail.com", password: "admin" })
         .then(response => {
             sessionStorage.setItem('user', JSON.stringify(response.data[0]))
             console.log(JSON.parse(sessionStorage.getItem('user')))

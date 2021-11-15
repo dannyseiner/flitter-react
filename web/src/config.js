@@ -1,4 +1,7 @@
-const url = "http://localhost:3001"
+const config = {
+    restapi: "http://localhost:3001",
+    date_format: { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' }
+}
 
 
-export default url
+export default config
