@@ -4,12 +4,15 @@ import ProfileHandler from '../Controllers/PrivateProfileHandler'
 const Profile = () => {
     const user = JSON.parse(sessionStorage.getItem("user"))
     const [profile, setProfile] = useState({
-        data: []
+        data: [{}]
     })
+
     useEffect(() => {
         ProfileHandler.getUserData(user.account_id, setProfile)
     }, [])
 
+
+    console.log(profile)
     const [status] = useState(
         user.account_role === 2 ?
             {
@@ -24,10 +27,11 @@ const Profile = () => {
 
     return (
         <div className="container">
-            Main profile
+            <h1>Main profile {profile.data[0].account_name}</h1>
+            <p>{status.message}</p>
+            <img src={profile.data[0].decoded_image} />
             {JSON.stringify(profile)}
         </div>
-
     )
 }
 

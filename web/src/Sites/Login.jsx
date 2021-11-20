@@ -45,8 +45,8 @@ const Login = () => {
 
                             <div className="form-group">
                                 <button type="button" disabled={statusLogin.disabled} onClick={() => Authentification.api_login(email, password, setStatusLogin, statusLogin)} >Log In</button>
-                                <button type="button" style={{ marginTop: "10px" }} onClick={() => Authentification.api_login_scripted(true)} >Admin</button>
-                                <button type="button" style={{ marginTop: "10px" }} onClick={() => Authentification.api_login_scripted(false)} >Standard</button>
+                                {/* <button type="button" style={{ marginTop: "10px" }} onClick={() => Authentification.api_login_scripted(true)} >Admin</button>
+                                <button type="button" style={{ marginTop: "10px" }} onClick={() => Authentification.api_login_scripted(false)} >Standard</button> */}
                             </div>
                         </form>
                     </div>

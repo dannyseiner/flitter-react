@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import config from '../config'
 import Post from '../Components/Post'
 import Handler from '../Controllers/HomeHandler'
 
