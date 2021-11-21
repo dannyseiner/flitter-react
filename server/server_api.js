@@ -43,6 +43,12 @@ api.get("/user/:id", (req, res) => {
     })
 })
 
+// LOAD USERS BY EXACT NAME
+api.get('/searchUser/:name', (req, res) => {
+    con.query(`SELECT * FROM accounts WHERE account_name = '${req.params.name}'`, (err, result) => {
+        res.send(result)
+    })
+})
 
 api.get('/posts', (req, res) => {
     con.query("SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id", (err, result) => {
@@ -54,7 +60,7 @@ api.get('/posts', (req, res) => {
 
 api.get('/post/:id', (req, res) => {
     if (req.params.id === "notfound") return
-    con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id WHERE post_id = ${res.params.id}`, (err, result) => {
+    con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id WHERE post_id = ${req.params.id}`, (err, result) => {
         if (err) throw err
         res.send(result)
         log("post", result)
@@ -62,7 +68,7 @@ api.get('/post/:id', (req, res) => {
 })
 
 api.get(`/post/:id/isliked/:accid`, (req, res) => {
-    con.query(`SELECT * FROM post_likes WHERE like_post_id = ${res.params.id} AND like_account_id = ${req.params.accid}`, (err, result) => {
+    con.query(`SELECT * FROM post_likes WHERE like_post_id = ${req.params.id} AND like_account_id = ${req.params.accid}`, (err, result) => {
         res.send(result)
     })
 })
