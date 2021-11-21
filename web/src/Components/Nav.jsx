@@ -31,6 +31,10 @@ const Nav = () => {
                     <li className="nav-item">
                         <PrivateLink to='/chat' className="nav-link"><i className="fas fa-comment-dots"></i>Chat</PrivateLink>
                     </li>
+                    <li className="nav-item">
+                        <Link to='/friends' className="nav-link"><i className="fas fa-comment-dots"></i>Friends</Link>
+                    </li>
+
                     <li className="nav-item" style={logoutBtn}>
                         <button onClick={logout} className="nav-link"><i className="far fa-calendar-alt"></i>Logout</button>
                     </li>

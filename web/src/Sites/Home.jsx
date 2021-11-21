@@ -18,11 +18,19 @@ const Home = () => {
 
     return (
         <div className="home-container box-shadow">
-            <div className="create-post-container">
+            <div className="close">
+                <i className="fa fa-close"></i>
+            </div>
+
+            <div className="search">
+                <i className="fa fa-search"></i>
+                <input type="text" className="input" placeholder="Search..." />
+            </div>
+            {/* <div className="create-post-container">
                 <input stype="text" onChange={(e) => setCreatePostTitle(e.target.value)} placeholder="What's on your mind?" />
                 <textarea onChange={e => setCreatePostText(e.target.value)} placeholder="Describe it"></textarea>
                 <button onClick={() => Handler.createPost(user.account_id, createPostTitle, createPostText)}>Post</button>
-            </div>
+            </div> */}
             <ul className="timeline">
                 {posts.map(post => (
                     <Post post={post} key={post.post_id} />

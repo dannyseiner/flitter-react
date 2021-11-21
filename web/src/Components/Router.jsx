@@ -12,6 +12,7 @@ import PrivateRoute from './PrivateRoute'
 import Post from '../Sites/Post'
 import NotFound from '../Sites/NotFound'
 import PublicProfile from '../Sites/PublicProfile'
+import Friends from '../Sites/Friends'
 
 
 const RouterCom = () => {
@@ -25,6 +26,8 @@ const RouterCom = () => {
                 <PrivateRoute path="/profile/:id" exact component={PublicProfile} />
                 <PrivateRoute path="/post/:id" component={Post} />
                 <PrivateRoute path='/chat' component={Chat} />
+                <PrivateRoute path='/friends' exact component={Friends} />
+
                 {/* ADMIN ROUTES */}
                 <AdminRoute path='/apiTest' component={Apitest} />
                 {/* PUBLIC ROUTES */}
