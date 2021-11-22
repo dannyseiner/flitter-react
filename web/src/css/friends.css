@@ -1,0 +1,48 @@
+.search-form {
+  width: fit-content;
+  height: fit-content;
+  margin: 30px auto;
+}
+
+.search-form > input {
+  width: 400px;
+  height: 40px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid black;
+  padding: 20px;
+  font-size: 25px;
+}
+
+.search-result {
+  width: 400px;
+  text-align: center;
+  margin: 20px auto;
+  font-size: 20px;
+}
+
+.search-add-icon {
+  float: right;
+  border: none;
+  font-size: 20px;
+  outline: none;
+  background: none;
+  background-color: none;
+  cursor: pointer;
+}
+
+.request-sent {
+  background-color: rgb(21, 170, 21);
+}
+.request-notaccapted {
+  background-color: rgb(255, 166, 0);
+}
+.request-bar {
+  margin: 10px auto;
+  width: 400px;
+  border-radius: 9px;
+  padding: 10px;
+}
+.request-already {
+  background-color: rgb(0, 219, 248);
+}
