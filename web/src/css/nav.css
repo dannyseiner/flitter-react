@@ -6,7 +6,7 @@
   width: 100%;
   padding: 0;
   margin: 0;
-  z-index: 6;
+  z-index: 900;
   text-align: center;
   transform: translateY(-50%);
 }
@@ -27,7 +27,7 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
-  z-index: 10;
+  z-index: 900;
 }
 .menu-icon:checked + label:before,
 .menu-icon:not(:checked) + label:before {
@@ -36,7 +36,7 @@
   display: block;
   width: 30px;
   height: 20px;
-  z-index: 20;
+  z-index: 900;
   top: 0;
   left: 0;
   border-top: 2px solid #ececee;
@@ -53,7 +53,7 @@
   display: block;
   width: 22px;
   height: 2px;
-  z-index: 20;
+  z-index: 900;
   top: 10px;
   right: 4px;
   background-color: #ececee;
@@ -91,7 +91,7 @@
   height: 80px;
   padding: 0;
   margin: 0;
-  z-index: 9;
+  z-index: 890;
   overflow: hidden;
   box-shadow: 0 8px 30px 0 rgba(0, 0, 0, 0.3);
   background-color: #353746;
@@ -148,7 +148,7 @@
   width: 100%;
   padding: 0;
   margin: 0;
-  z-index: 6;
+  z-index: 898;
   text-align: center;
   transform: translateY(-50%);
   list-style: none;

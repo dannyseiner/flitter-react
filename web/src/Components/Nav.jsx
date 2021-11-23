@@ -25,10 +25,10 @@ const Nav = () => {
             <nav className="nav">
                 <ul className="pt-5">
                     <li><Link to='/'><i className="fas fa-tachometer-alt"></i> Homepage</Link></li>
-                    <li><Link to='/friends'><i className="fas fa-user-friends"></i> Friends</Link></li>
-                    <li><AdminLink to='/apiTest' ><i class="fab fa-dev"></i> Api Test</AdminLink></li>
-                    <li><PrivateLink to='/profile'><i className="far fa-calendar-alt"></i> Profile</PrivateLink></li>
-                    <li> <Link to='' onClick={logout} className="nav-link"><i className="fas fa-sign-out-alt"></i> Logout</Link></li>
+                    <li><PrivateLink to='/friends'><i className="fas fa-user-friends"></i> Friends</PrivateLink></li>
+                    <li><AdminLink to='/apiTest' ><i className="fab fa-dev"></i> Api Test</AdminLink></li>
+                    <li><PrivateLink to='/profile'><i className="fas fa-user"></i> Profile</PrivateLink></li>
+                    <li><PrivateLink to='' onClick={logout} className="nav-link"><i className="fas fa-sign-out-alt"></i> Logout</PrivateLink></li>
                 </ul>
             </nav>
         </div>

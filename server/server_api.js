@@ -102,7 +102,7 @@ api.post('/sentfriendrequest', urlencodedParser, (req, res) => {
     })
 })
 api.get('/posts', (req, res) => {
-    con.query("SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id", (err, result) => {
+    con.query("SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id ORDER BY posts.post_created DESC", (err, result) => {
         if (err) throw err
         log("posts", result)
         res.send(result)
@@ -111,7 +111,12 @@ api.get('/posts', (req, res) => {
 
 // CREATE POST
 api.post("/createpost", urlencodedParser, (req, res) => {
-    console.log(req.body)
+    con.query(`INSERT INTO posts (post_author_id, post_title, post_content) VALUES (
+        ${req.body.author},
+        '${req.body.title}',
+        '${req.body.text}'
+    )`)
+    res.send(req.body)
 })
 api.get('/post/:id', (req, res) => {
     if (req.params.id === "notfound") return
