@@ -109,13 +109,30 @@ api.get('/posts', (req, res) => {
     })
 })
 
+// GET USER FRIENDS POSTS
+api.get('/postshome/:id', (req, res) => {
+    let otherId = 0
+    let sql_task = ""
+    con.query(`SELECT * FROM account_friends WHERE id_user1 = ${req.params.id} OR id_user2 = ${req.params.id}`, (err, result) => {
+        for (let i = 0; i < result.length; i++) {
+            otherId = req.params.id !== result[i].id_user1 ? result[i].id_user2 : result[i].id_user1
+            if (i === result.length - 1) sql_task += `post_author_id = ${otherId}`
+            else sql_task += `post_author_id = ${otherId} OR `
+
+        }
+        con.query(`SELECT * FROM posts WHERE ${sql_task}`, (error, response) => {
+            res.send(response)
+        })
+    })
+})
+
 // CREATE POST
 api.post("/createpost", urlencodedParser, (req, res) => {
-    con.query(`INSERT INTO posts (post_author_id, post_title, post_content) VALUES (
-        ${req.body.author},
-        '${req.body.title}',
-        '${req.body.text}'
-    )`)
+    con.query(`INSERT INTO posts(post_author_id, post_title, post_content) VALUES(
+                ${req.body.author},
+                '${req.body.title}',
+                '${req.body.text}'
+            )`)
     res.send(req.body)
 })
 api.get('/post/:id', (req, res) => {
@@ -172,12 +189,12 @@ api.post('/likePost', urlencodedParser, (req, res) => {
 api.post('/createPost', urlencodedParser, (req, res) => {
     log("CREATE POST", req.body)
     con.query(`INSERT INTO posts(post_author_id, post_title, post_content) VALUES
-        (
-            ${req.body.author_id},
-            '${req.body.title}',
-            '${req.body.content}'
-        )
-        `)
+                (
+                    ${req.body.author_id},
+                    '${req.body.title}',
+                    '${req.body.content}'
+                )
+                `)
     con.query(`SELECT * FROM posts WHERE post_author_id = ${req.body.author_id} AND post_title = '${req.body.title}' AND post_content = '${req.body.content}'`, (err, result) => {
         res.send(result)
     })
@@ -187,12 +204,12 @@ api.post('/createPost', urlencodedParser, (req, res) => {
 api.post('/addComment', urlencodedParser, (req, res) => {
     log("ADD COMMENT", req.body)
     con.query(`INSERT INTO post_comments(comment_post_id, comment_author_id, comment_content) VALUES
-        (
-            ${req.body.post_id},
-            ${req.body.author_id},
-            '${req.body.comment_content}'
-        )
-        `)
+                (
+                    ${req.body.post_id},
+                    ${req.body.author_id},
+                    '${req.body.comment_content}'
+                )
+                `)
 })
 
 api.get('/table/:table', (res, req) => {
@@ -223,11 +240,11 @@ api.post('/register', urlencodedParser, (req, res) => {
         // CREATE USER AND SEND DATA BACK
         if (result.length == 0) {
             con.query(`INSERT INTO accounts(account_email, account_name, account_password) VALUES
-        (
-            '${req.body.email}',
-            '${req.body.username}',
-            '${req.body.password}'
-        )`, (errr, resultt) => {
+                (
+                    '${req.body.email}',
+                    '${req.body.username}',
+                    '${req.body.password}'
+                )`, (errr, resultt) => {
                 res.send({ status: true })
                 log("register", { status: true })
             })
@@ -245,7 +262,7 @@ api.post('/register', urlencodedParser, (req, res) => {
 //      - LOGIN 
 api.post('/login', urlencodedParser, (req, res) => {
     console.log(req.body)
-    con.query(`SELECT * FROM accounts WHERE account_email = '${req.body.email}'`, (err, result) => {
+    con.query(`SELECT * FROM accounts WHERE account_email = '${req.body.email}' OR account_name = "${req.body.email}"`, (err, result) => {
         if (err) throw err
         if (result.length == 0) return res.send({ status: false })
         if (passwordHash.verify(req.body.password, result[0].account_password)) {

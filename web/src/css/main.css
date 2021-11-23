@@ -13,9 +13,13 @@
 
 * {
   font-family: "Open Sans", sans-serif;
+  background-repeat: no-repeat;
 }
 body {
-  background-image: url("https://www.m2c2.media/wp-content/uploads/2021/06/1092758.jpg");
+  background-color: #485461;
+  height: 100vh;
+  background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
+  color: white;
 }
 .main_container {
   background-color: rgba(0, 0, 0, 0.03);

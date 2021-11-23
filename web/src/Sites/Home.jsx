@@ -15,15 +15,20 @@ const Home = () => {
         Handler.getPosts(setPosts)
     }, [])
 
+    const renderPosts = posts.map(post => (
+        <Post post={post} key={post.post_id} />
+    ))
+
     return (
         <div className="home-container box-shadow">
 
 
             <div className="timeline">
-                {posts.map(post => (
-                    <Post post={post} key={post.post_id} />
-                ))}
+                {posts.length === 0 ? <div>
+                    <h1>You dont have any posts to show</h1>
+                </div> : renderPosts}
             </div>
+
             <div className="create-post" >
                 <Link to='/createpost'>
                     <i className="fas fa-plus"></i>

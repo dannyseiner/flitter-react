@@ -1,6 +1,8 @@
 import axios from 'axios'
 import config from '../config'
 
+const user = JSON.parse(sessionStorage.getItem('user'))
+
 const createPost = (userId, title, content) => {
     axios.post(`${config.restapi}/createPost`, {
         title: title,
@@ -12,7 +14,11 @@ const createPost = (userId, title, content) => {
 
 
 const getPosts = (setPosts) => {
-    axios.get(config.restapi + "/posts").then(json => setPosts(json.data))
+    axios.get(`${config.restapi}/postshome/${user.account_id}`).then(response => {
+        if (response.data === "") setPosts([])
+        else setPosts(response.data)
+    })
+    // axios.get(config.restapi + "/posts").then(json => setPosts(json.data))
 }
 
 const exporter = {
