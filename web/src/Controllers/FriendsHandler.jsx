@@ -10,6 +10,8 @@ const loadUser = (username, setSeachedUser) => {
         .then(response => setSeachedUser(response.data))
 }
 
+const correctName = (name, name2) => user.account_name === name ? name2 : name
+const correctId = (id, id2) => user.account_id === id ? id2 : id
 
 const sendFriendRequest = (target, setSentStatus) => {
     axios.post(`${config.restapi}/getuserfriendship`, {
@@ -26,6 +28,8 @@ const sendFriendRequest = (target, setSentStatus) => {
                     class: "request-sent request-bar",
                     text: "Request sent"
                 })
+                window.location.replace('/friends')
+
             } else if (response.data[0].friendship_status === 0) { // not accepted yet
                 setSentStatus({
                     class: "request-notaccapted request-bar",
@@ -41,6 +45,16 @@ const sendFriendRequest = (target, setSentStatus) => {
         })
 }
 
+const deleteFriend = (user1, user2) => {
+    console.log(user1, user2)
+    axios.post(`${config.restapi}/removefriend`, {
+        user1: user1,
+        user2: user2
+    })
+        .then(response => console.log(response))
+    window.location.replace('/friends')
+}
+
 
 const getUserFriends = (setUserFriends) => {
     axios.get(`${config.restapi}/getfriends/${user.account_id}`)
@@ -51,7 +65,10 @@ const getUserFriends = (setUserFriends) => {
 const exporter = {
     loadUser,
     sendFriendRequest,
-    getUserFriends
+    getUserFriends,
+    correctName,
+    correctId,
+    deleteFriend
 }
 
 export default exporter

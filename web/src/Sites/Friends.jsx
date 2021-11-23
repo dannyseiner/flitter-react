@@ -6,8 +6,8 @@ const Friends = () => {
     useEffect(() => {
         Handler.getUserFriends(setUserFriends)
     }, []);
-
-
+    const userJson = sessionStorage.getItem('user')
+    const user = JSON.parse(userJson)
     const [searchUser, setSearchUser] = useState([])
     const [userFriends, setUserFriends] = useState([])
     const [sentStatus, setSentStatus] = useState({
@@ -15,12 +15,12 @@ const Friends = () => {
         text: ""
     })
 
-    console.log(userFriends)
+    // console.log(userFriends)
 
     return (
         <div className='home-container box-shadow'>
             <div className="search-form">
-                <input type="text" placeholder="Enter username or email" onChange={e => { Handler.loadUser(e.target.value, setSearchUser); setSentStatus({ class: "", text: "" }) }} />
+                <input type="text" placeholder="Enter username or email" style={{ textAlign: "center" }} onChange={e => { Handler.loadUser(e.target.value, setSearchUser); setSentStatus({ class: "", text: "" }) }} />
                 <div className="search-result">
                     {searchUser.length === 0
                         ? <p>User not found</p>
@@ -36,8 +36,49 @@ const Friends = () => {
                         </div>
                     }
                 </div>
-                {userFriends.map((user, i) => (
-                    <p key={user.id_friendship}>{user.account_name} - {user.friendship_status}</p>
+                <h1>Friends</h1>
+                {userFriends.map((usr, i) => (
+                    <div key={i}>
+                        {usr.friendship_status === 1 ?
+                            <div className="friend-container" key={i} >
+                                <img src={usr.user2_image_render} />
+                                <Link to={`profile/${Handler.correctId(usr.user1_id, usr.user2_id)}`}>
+                                    {Handler.correctName(usr.user1_name, usr.user2_name)}
+                                </Link>
+                                <button className="friend-remove-button" onClick={() => Handler.deleteFriend(usr.user1_id, usr.user2_id)}>
+                                    <i className="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            : ""}
+                    </div>
+                ))}
+                <h1>Friend Requests</h1>
+                {userFriends.map((usr, i) => (
+                    <div key={i}>
+                        {usr.friendship_status === 0 ?
+                            <div className="friend-container" >
+                                <img src={usr.user2_image_render} />
+                                <Link to={`profile/${Handler.correctId(usr.user1_id, usr.user2_id)}`}>
+                                    {Handler.correctName(usr.user1_name, usr.user2_name)}
+                                </Link>
+                                {usr.user1_id !== user.account_id ?
+                                    <span>
+                                        <button className="friend-remove-button">
+                                            <i className="fas fa-trash"></i>
+                                        </button>
+                                        <button className="friend-accept-button">
+                                            <i className="fas fa-check"></i>
+                                        </button>
+                                    </span>
+                                    : <span>
+                                        <button className="friend-remove-button" onClick={() => Handler.deleteFriend(usr.user1_id, usr.user2_id)}>
+                                            <i className="fas fa-trash"></i>
+                                        </button>
+                                        <p className='friend-pending'>request pending</p>
+                                    </span>}
+                            </div>
+                            : ""}
+                    </div>
                 ))}
             </div>
 
