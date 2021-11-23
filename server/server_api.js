@@ -51,8 +51,7 @@ api.get('/searchUser/:name', (req, res) => {
     })
 })
 
-// DELETE FRIEND SHIP \
-
+// DELETE FRIEND SHIP 
 api.post('/removefriend', urlencodedParser, (req, res) => {
     con.query(`DELETE FROM account_friends WHERE id_user1=${req.body.user1} AND id_user2=${req.body.user2}`, (err, result) => {
         res.send({ status: "done" })
@@ -110,6 +109,10 @@ api.get('/posts', (req, res) => {
     })
 })
 
+// CREATE POST
+api.post("/createpost", urlencodedParser, (req, res) => {
+    console.log(req.body)
+})
 api.get('/post/:id', (req, res) => {
     if (req.params.id === "notfound") return
     con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id WHERE post_id = ${req.params.id}`, (err, result) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Post from '../Components/Post'
 import Handler from '../Controllers/HomeHandler'
-
+import { Link } from 'react-router-dom'
 const Home = () => {
     const [createPostTitle, setCreatePostTitle] = useState("")
     const [posts, setPosts] = useState([])
@@ -18,14 +18,7 @@ const Home = () => {
 
     return (
         <div className="home-container box-shadow">
-            <div className="close">
-                <i className="fa fa-close"></i>
-            </div>
 
-            <div className="search">
-                <i className="fa fa-search"></i>
-                <input type="text" className="input" placeholder="Search..." />
-            </div>
             {/* <div className="create-post-container">
                 <input stype="text" onChange={(e) => setCreatePostTitle(e.target.value)} placeholder="What's on your mind?" />
                 <textarea onChange={e => setCreatePostText(e.target.value)} placeholder="Describe it"></textarea>
@@ -36,7 +29,12 @@ const Home = () => {
                     <Post post={post} key={post.post_id} />
                 ))}
             </ul>
-        </div>
+            <div className="create-post" >
+                <Link to='/createpost'>
+                    <i class="fas fa-plus"></i>
+                </Link>
+            </div>
+        </div >
 
     )
 }

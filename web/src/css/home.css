@@ -10,11 +10,12 @@ body {
 }
 
 .home-container {
-  margin: 50px auto;
+  margin: 90px auto;
   width: 60%;
   min-width: fit-content;
   height: fit-content;
-  padding: 10px 20px 20px 10px;
+  /* padding: 10px 20px 20px 10px; */
+  padding: 40px;
   border-radius: 10px;
 }
 .post-icon {
@@ -251,4 +252,27 @@ body {
 .search.open {
   height: 4000px;
   width: 4000px;
+}
+
+/* CREATE POST BUTTON */
+
+.create-post {
+  position: fixed;
+  left: 76%;
+  top: 90%;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background-color: #5160ce;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  padding: 20px;
+}
+.create-post > a {
+  position: relative;
+  top: -8px;
+  left: -4px;
+  font-size: 20px;
+  color: white;
 }
