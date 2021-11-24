@@ -1,25 +1,25 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Config from '../config.js'
 const Post = ({ post }) => {
-
-    const format_options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
     return (
-        <li className="timeline-event" key={post.post_id}>
-            <label className="timeline-event-icon"></label>
-            <div className="timeline-event-copy">
-                <p className="timeline-event-thumbnail">{new Date(post.post_created).toLocaleDateString("en-US", format_options)}</p>
-                <Link to={`post/${post.post_id}`}><h3>{post.post_title}</h3></Link>
-                <Link to={`profile/${post.post_author_id}`}><h4>{post.account_name}</h4></Link>
-                <p>{post.post_content}</p>
-                <div className='post-comments'>
-                    {/* <div style={{ display: "inline-block", float: "right" }}>
-                        <button className="post-icon"><i className="far fa-heart"></i></button>
-                        <button className="post-icon"><i className="fas fa-share"></i></button>
-                    </div> */}
+        <div className="post-container">
+            <div className="post-author">
+                <img src={post.profile_image_encoded} className="post-author-image" />
+                <Link to={`profile/${post.post_author_id}`} className="post-author-name">{post.account_name}</Link>
+            </div>
+            <div className="post-content">
+                <Link to={`post/${post.post_id}`} className="post-title">{post.post_title}</Link>
+                <p className="post-content">{post.post_content}</p>
+            </div>
+            <div className="post-footer">
+                <p className="post-created">{new Date(post.post_created).toLocaleDateString("en-US", Config.format_options)}</p>
+                <div className="post-button-menu">
+                    <button className="post-button comment"><i class="fas fa-comment"></i></button>
+                    <button className="post-button like"><i class="fas fa-heart"></i></button>
                 </div>
             </div>
-        </li>
+        </div>
     )
 }
-
 export default Post

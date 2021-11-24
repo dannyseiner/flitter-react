@@ -20,9 +20,7 @@ const Home = () => {
     ))
 
     return (
-        <div className="home-container box-shadow">
-
-
+        <div className="home-container">
             <div className="timeline">
                 {posts.length === 0 ? <div>
                     <h1>You dont have any posts to show</h1>

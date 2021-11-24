@@ -18,7 +18,6 @@ const getPosts = (setPosts) => {
         if (response.data === "") setPosts([])
         else setPosts(response.data)
     })
-    // axios.get(config.restapi + "/posts").then(json => setPosts(json.data))
 }
 
 const exporter = {

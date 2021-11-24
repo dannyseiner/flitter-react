@@ -27,7 +27,7 @@ const Login = () => {
                         <form>
                             <div className="status-aut-log" style={statusLogin}>{statusLogin.message}</div>
                             <div className="form-group">
-                                <label htmlFor="email">Email</label>
+                                <label htmlFor="email">Email or Username</label>
                                 <input type="email" id="email" name="email" required="required" onChange={e => setEmail(e.target.value)} />
                             </div>
                             <div className="form-group">

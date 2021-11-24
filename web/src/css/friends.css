@@ -1,3 +1,11 @@
+.friend-main-container {
+  width: fit-content;
+  margin: 140px auto;
+  padding: 40px;
+  background-color: white;
+  color: black;
+  border-radius: 9px;
+}
 .search-form {
   width: fit-content;
   height: fit-content;
@@ -13,7 +21,9 @@
   padding: 20px;
   font-size: 25px;
 }
-
+a {
+  text-decoration: none;
+}
 .search-result {
   width: 400px;
   text-align: center;
@@ -49,7 +59,7 @@
 
 .friend-container {
   width: 400px;
-  background-color: #5161ce;
+  background-color: black;
   margin: 30px auto;
   border-radius: 10px;
   padding: 10px;

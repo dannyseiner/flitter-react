@@ -18,7 +18,7 @@ const Friends = () => {
     // console.log(userFriends)
 
     return (
-        <div className='home-container box-shadow'>
+        <div className='friend-main-container box-shadow'>
             <div className="search-form">
                 <input type="text" placeholder="Enter username or email" style={{ textAlign: "center" }} onChange={e => { Handler.loadUser(e.target.value, setSearchUser); setSentStatus({ class: "", text: "" }) }} />
                 <div className="search-result">

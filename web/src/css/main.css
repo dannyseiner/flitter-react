@@ -15,14 +15,28 @@
   font-family: "Open Sans", sans-serif;
   background-repeat: no-repeat;
 }
+
 body {
-  background-color: #485461;
-  height: 100vh;
-  background-image: linear-gradient(315deg, #485461 0%, #28313b 74%);
+  background: linear-gradient(-45deg, #100f0f, #484747, #373838, #383737);
+  background-size: 400% 400%;
+  animation: gradient 6s ease infinite;
   color: white;
 }
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .main_container {
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: rgba(255, 253, 253, 0.3);
   width: 80%;
   min-width: 400px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
