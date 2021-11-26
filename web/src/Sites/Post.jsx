@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import PostHandler from '../Controllers/PostHandler'
+import Config from '../config'
 import { Link } from 'react-router-dom'
 
 const Post = ({ match }) => {
@@ -25,58 +26,47 @@ const Post = ({ match }) => {
 
 
     const render_comments = comments.data.map(comm => (
-        <li key={comm.comment_id}>
+        <div key={comm.comment_id} class='comment-container'>
             <div className="comment-main-level">
-                <div className="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt="" /></div>
+                <div className="comment-avatar">
+                    <img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt="" className="comment-author-image" />
+                    <h5 className='comment-author-name'>{comm.account_name}</h5>
+                </div>
                 <div className="comment-box">
-                    <div className="comment-head">
-                        {comm.account_id === post.post_author_id ? <h6 className="comment-name by-author"><Link to={`/profile/${comm.account_id}`}>{comm.account_name}</Link></h6> : <h6 className="comment-name"><Link to={`/profile/${comm.account_id}`}>{comm.account_name}</Link></h6>}
+                    <div className="comment-content">
+                        {comm.comment_content}
+                    </div>
+                    <div className="comment-footer">
                         <span>{comm.comment_created}</span>
                         <i className="fa fa-reply"></i>
                         <i className="fa fa-heart"></i>
                     </div>
-                    <div className="comment-content">
-                        {comm.comment_content}
-                    </div>
+
                 </div>
             </div>
-        </li>
+        </div>
     ))
 
     return (
-        <div className="post-container box-shadow">
-            <div className="comment-main-level">
-                <div className="comment-box">
-                    <div className="comment-head">
-                        <h6 className="comment-name by-author"><Link to={`/profile/${post.post_author_id}`}>{post.account_name}</Link></h6>
-                        <span>{post.post_created}</span>
-                        {/* <button><i className="fa fa-reply"></i></button> */}
-                        {/* <button onClick={() => PostHandler.like_comment(post_id, user.account_id, setLikedPost)}><i className={likedPost}></i></button> */}
-
+        <div>
+            <div className="post-container">
+                <div className="post-author">
+                    <img src={post.profile_image_encoded} className="post-author-image" />
+                    <Link to={`profile/${post.post_author_id}`} className="post-author-name">{post.account_name}</Link>
+                </div>
+                <div className="post-content">
+                    <Link to={`post/${post.post_id}`} className="post-title">{post.post_title}</Link>
+                    <p className="post-content">{post.post_content}</p>
+                </div>
+                <div className="post-footer">
+                    <p className="post-created">{new Date(post.post_created).toLocaleDateString("en-US", Config.format_options)}</p>
+                    <div className="post-button-menu">
+                        <button className="post-button comment"><i className="fas fa-comment"></i></button>
+                        <button className="post-button like"><i className="fas fa-heart"></i></button>
                     </div>
-                    <h4 style={{ fontSize: "30px", marginLeft: "30px" }}>{post.post_title}</h4>
-                    <div className="comment-content">
-                        {post.post_content}
-                    </div>
-
                 </div>
             </div>
-            <div>
-
-
-                <div className="placement" style={{ display: "inline" }}>
-                    <div onClick={() => PostHandler.like_comment(post_id, user.account_id, setLikedPost)} className={likedPost}></div>
-                </div>
-                <div className="add-comment">
-                    <input type="text" onChange={e => setComment(e.target.value)} />
-                    <button type="button" onClick={() => add_comment_recall()}>Send</button>
-                </div>
-            </div>
-            <div className="comments-container">
-                <ul id="comments-list" className="comments-list">
-                    {render_comments}
-                </ul>
-            </div>
+            {render_comments}
         </div>
     )
 }

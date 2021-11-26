@@ -150,8 +150,12 @@ api.post("/createpost", urlencodedParser, (req, res) => {
 })
 api.get('/post/:id', (req, res) => {
     if (req.params.id === "notfound") return
-    con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id WHERE post_id = ${req.params.id}`, (err, result) => {
+    con.query(`SELECT * FROM posts 
+    INNER JOIN accounts ON posts.post_author_id = accounts.account_id 
+    INNER JOIN account_info ON posts.post_author_id = account_info.user_id
+    WHERE post_id = ${req.params.id}`, (err, result) => {
         if (err) throw err
+        result[0]["profile_image_encoded"] = decodeImage(result[0].account_image)
         res.send(result)
         log("post", result)
     })

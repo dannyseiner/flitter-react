@@ -15,8 +15,8 @@ const Post = ({ post }) => {
             <div className="post-footer">
                 <p className="post-created">{new Date(post.post_created).toLocaleDateString("en-US", Config.format_options)}</p>
                 <div className="post-button-menu">
-                    <button className="post-button comment"><i class="fas fa-comment"></i></button>
-                    <button className="post-button like"><i class="fas fa-heart"></i></button>
+                    <button className="post-button comment"><i className="fas fa-comment"></i></button>
+                    <button className="post-button like"><i className="fas fa-heart"></i></button>
                 </div>
             </div>
         </div>

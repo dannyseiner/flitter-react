@@ -33,10 +33,15 @@ body {
   font-weight: bold;
   padding: 20px;
 }
+
 .create-post > a {
   position: relative;
+  transition: 0.4s ease-in-out;
   top: -8px;
   left: -4px;
   font-size: 20px;
   color: white;
+}
+.create-post > a:hover {
+  transform: skewY(20deg);
 }

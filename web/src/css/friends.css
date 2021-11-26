@@ -6,6 +6,14 @@
   color: black;
   border-radius: 9px;
 }
+.friend-container > a {
+  font-size: 18px;
+  transition: 0.2s ease-in-out;
+}
+.friend-container > a:hover {
+  font-weight: bold;
+  color: skyblue;
+}
 .search-form {
   width: fit-content;
   height: fit-content;
@@ -59,7 +67,9 @@ a {
 
 .friend-container {
   width: 400px;
-  background-color: black;
+  background: linear-gradient(-45deg, #100f0f, #484747, #373838, #383737);
+  background-size: 400% 400%;
+  animation: gradient 6s ease infinite;
   margin: 30px auto;
   border-radius: 10px;
   padding: 10px;
@@ -69,7 +79,12 @@ a {
 .friend-container > img {
   width: 50px;
   height: 50px;
+  margin-top: 5px;
   border-radius: 50%;
+  transition: 0.3s ease-in-out;
+}
+.friend-container > img:hover {
+  border-radius: 0px;
 }
 .friend-container > a {
   color: white;
