@@ -43,7 +43,12 @@ api.get("/user/:id", (req, res) => {
         res.send(result)
     })
 })
-
+api.get('/userstats/:id', (req, res) => {
+    const eject = {}
+    con.query(`SELECT count('like_acount_id') as 'likes' from post_likes  WHERE like_account_id = ${req.params.id}`, (err, result) => {
+        res.send(result)
+    })
+})
 // LOAD USERS BY EXACT NAME OR EMAIL
 api.get('/searchUser/:name', (req, res) => {
     con.query(`SELECT * FROM accounts WHERE account_name = '${req.params.name}' OR account_email='${req.params.name}'`, (err, result) => {
@@ -108,7 +113,14 @@ api.get('/posts', (req, res) => {
         res.send(result)
     })
 })
-
+// GET USER POSTS
+api.get('/userposts/:id', (req, res) => {
+    con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id
+    INNER JOIN account_info ON posts.post_author_id = account_info.user_id WHERE posts.post_author_id = ${req.params.id}`, (err, result) => {
+        log("result", result)
+        res.send(result)
+    })
+})
 // GET USER FRIENDS POSTS
 api.get('/postshome/:id', (req, res) => {
     let otherId = 0
@@ -302,7 +314,7 @@ api.post('/postTest', urlencodedParser, function (req, res) {
     req.body.result = "WORKING"
     res.send(req.body)
 })
-api.listen(3001)
+api.listen(3002)
 
 
 // EXTENSIONS

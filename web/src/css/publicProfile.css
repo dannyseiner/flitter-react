@@ -1,59 +1,57 @@
-/* Header/Blog Title */
-.header {
-  padding: 30px;
-  font-size: 40px;
-  text-align: center;
-  background: white;
+.profile-container {
+  /* width: 80%; */
+  max-width: 1000px;
+  min-width: 200px;
+  margin: 100px auto;
 }
 
-/* Create two unequal columns that floats next to each other */
-/* Left column */
-.leftcolumn {
-  float: left;
-  width: 75%;
-}
-
-/* Right column */
-.rightcolumn {
-  float: left;
-  width: 25%;
-  padding-left: 20px;
-}
-
-/* Fake image */
-.fakeimg {
-  background-color: #aaa;
+.profile-card {
   width: 100%;
-  padding: 20px;
-}
-
-/* Add a card effect for articles */
-.card {
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 11px;
   background-color: white;
-  padding: 20px;
-  margin-top: 20px;
+  color: black;
 }
 
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+.profile-header {
+  background-color: inherit !important;
+  color: white;
 }
 
-/* Footer */
-.footer {
-  padding: 20px;
+.profile-header > h1 {
   text-align: center;
-  background: #ddd;
-  margin-top: 20px;
+  font-size: 30px;
+}
+.profile-header-image {
+  width: fit-content;
+  margin: auto;
+}
+.profile-header-image > img {
+  width: 300px;
+  height: 300px;
+  border-radius: 15px;
 }
 
-/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
-@media screen and (max-width: 800px) {
-  .leftcolumn,
-  .rightcolumn {
-    width: 100%;
-    padding: 0;
-  }
+.profile-social-stats {
+  width: 100%;
+  padding: 15px;
+}
+.stat-box {
+  display: inline-block;
+  text-align: center;
+  margin: 10px auto;
+  width: 100px;
+  font-size: 20px;
+  height: fit-content;
+}
+.stat-value {
+  font-weight: bold;
+}
+.profile-stats-container {
+  width: fit-content;
+  margin: auto;
+}
+.profile-posts {
+  background-color: inherit;
 }

@@ -1,5 +1,5 @@
 const config = {
-    restapi: "http://localhost:3001",
+    restapi: "http://localhost:3002",
     date_format: { hour: 'numeric', minute: "numeric", month: 'short', day: 'numeric' }
 }
 
