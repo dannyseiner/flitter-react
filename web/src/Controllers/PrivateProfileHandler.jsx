@@ -5,8 +5,17 @@ const getUserData = (userId, setProfile) => {
         .then(response => setProfile(response))
 }
 
+const getUserPosts = (id, setPosts) => {
+    axios.get(`${config.restapi}/userposts/${id}`)
+        .then(response => {
+            setPosts(response)
+            console.log(response)
+        })
+}
+
 const exporter = {
-    getUserData
+    getUserData,
+    getUserPosts
 }
 
 export default exporter

@@ -126,3 +126,9 @@
   background-color: rgba(0, 0, 0, 0.02);
   width: 100%;
 }
+.badge {
+  border-radius: 9px;
+  padding: 8px;
+  background-color: rgb(255, 162, 0);
+  margin-left: 20px;
+}

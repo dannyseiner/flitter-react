@@ -17,6 +17,8 @@
 .profile-header {
   background-color: inherit !important;
   color: white;
+  width: fit-content;
+  margin: auto;
 }
 
 .profile-header > h1 {
@@ -25,7 +27,7 @@
 }
 .profile-header-image {
   width: fit-content;
-  margin: auto;
+  display: inline-block;
 }
 .profile-header-image > img {
   width: 300px;
@@ -34,8 +36,12 @@
 }
 
 .profile-social-stats {
-  width: 100%;
-  padding: 15px;
+  width: 50%;
+  display: inline-block;
+  position: relative;
+  top: -50px !important;
+  left: 10px;
+  margin: 0px;
 }
 .stat-box {
   display: inline-block;
@@ -54,4 +60,47 @@
 }
 .profile-posts {
   background-color: inherit;
+}
+
+.profile-info-item {
+  font-size: 20px;
+}
+.profile-info-icon {
+  padding: 10px;
+}
+.profile-info {
+  margin: 0px;
+}
+@media only screen and (max-width: 730px) {
+  body {
+    background-color: red;
+  }
+  .profile-header {
+    width: 100%;
+  }
+  .profile-header-image {
+    margin: auto;
+  }
+  .profile-header-image > img {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .profile-stats-container {
+    max-width: 1000px;
+    min-width: 280px;
+  }
+  .profile-social-stats {
+    display: block;
+    margin: 10px auto !important;
+    width: 100%;
+    left: 0;
+    padding: 0px !important;
+    top: 0px !important;
+    max-width: 1000px;
+    min-width: 280px;
+  }
+  .profile-header-image {
+    width: fit-content !important;
+    display: block;
+  }
 }

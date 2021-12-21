@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import ProfileHandler from '../Controllers/PrivateProfileHandler'
-
+import Post from '../Components/Post'
 const Profile = () => {
     const user = JSON.parse(sessionStorage.getItem("user"))
     const [profile, setProfile] = useState({
         data: [{}]
     })
+    const [posts, setPosts] = useState({
+        data: [{}]
+    })
 
     useEffect(() => {
         ProfileHandler.getUserData(user.account_id, setProfile)
+        ProfileHandler.getUserPosts(user.account_id, setPosts)
     }, [])
+    console.log("posts", posts)
 
 
-    console.log(profile)
     const [status] = useState(
         user.account_role === 2 ?
             {
@@ -26,72 +30,50 @@ const Profile = () => {
 
 
     return (
-        <div class="container">
-            <header>
-                <i class="fa fa-bars" aria-hidden="true"></i>
-            </header>
-            <div class="row">
-                <div class="left col-lg-4">
-                    <div class="photo-left">
-                        <img class="photo" src="https://images.pexels.com/photos/1804796/pexels-photo-1804796.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
-                        <div class="active"></div>
-                    </div>
-                    <h4 class="name">Jane Doe</h4>
-                    <p class="info">UI/UX Designer</p>
-                    <p class="info">jane.doe@gmail.com</p>
-                    <div class="stats row">
-                        <div class="stat col-xs-4" style="padding-right: 50px;">
-                            <p class="number-stat">3,619</p>
-                            <p class="desc-stat">Followers</p>
+        <div className="profile-container">
+            <div className="profile-header  " >
+                <h1>{profile.data[0].account_name}</h1>
+                <div className='profile-header-image'>
+                    <img src={profile.data[0].decoded_image} className="profile-header-image" />
+                </div>
+
+                <div className="profile-social-stats profile-card box-shadow">
+                    <div className="profile-stats-container">
+                        <div className="stat-box">
+                            <p className="stat-type">Friends</p>
+                            <p className="stat-value">1 403</p>
                         </div>
-                        <div class="stat col-xs-4">
-                            <p class="number-stat">42</p>
-                            <p class="desc-stat">Following</p>
+                        <div className="stat-box">
+                            <p className="stat-type">Posts</p>
+                            <p className="stat-value">13</p>
                         </div>
-                        <div class="stat col-xs-4" style="padding-left: 50px;">
-                            <p class="number-stat">38</p>
-                            <p class="desc-stat">Uploads</p>
+                        <div className="stat-box">
+                            <p className="stat-type">Liked</p>
+                            <p className="stat-value">1 590</p>
                         </div>
-                    </div>
-                    <p class="desc">Hi ! My name is Jane Doe. I'm a UI/UX Designer from Paris, in France. I really enjoy photography and mountains.</p>
-                    <div class="social">
-                        <i class="fa fa-facebook-square" aria-hidden="true"></i>
-                        <i class="fa fa-twitter-square" aria-hidden="true"></i>
-                        <i class="fa fa-pinterest-square" aria-hidden="true"></i>
-                        <i class="fa fa-tumblr-square" aria-hidden="true"></i>
                     </div>
                 </div>
-                <div class="right col-lg-8">
-                    <ul class="nav">
-                        <li>Gallery</li>
-                        <li>Collections</li>
-                        <li>Groups</li>
-                        <li>About</li>
-                    </ul>
-                    <span class="follow">Follow</span>
-                    <div class="row gallery">
-                        <div class="col-md-4">
-                            <img src="https://images.pexels.com/photos/1036371/pexels-photo-1036371.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
-                        </div>
-                        <div class="col-md-4">
-                            <img src="https://images.pexels.com/photos/861034/pexels-photo-861034.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
-                        </div>
-                        <div class="col-md-4">
-                            <img src="https://images.pexels.com/photos/113338/pexels-photo-113338.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
-                        </div>
-                        <div class="col-md-4">
-                            <img src="https://images.pexels.com/photos/5049/forest-trees-fog-foggy.jpg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
-                        </div>
-                        <div class="col-md-4">
-                            <img src="https://images.pexels.com/photos/428431/pexels-photo-428431.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
-                        </div>
-                        <div class="col-md-4">
-                            <img src="https://images.pexels.com/photos/50859/pexels-photo-50859.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" />
-                        </div>
+
+                <div className="profile-info profile-card box-shadow">
+                    <div className="profile-info-item">
+                        <p><i className="profile-info-icon fas fa-envelope"></i>dannyseiner@gmail.com</p>
+                    </div>
+                    <div className="profile-info-item">
+                        <p><i className="profile-info-icon fas fa-birthday-cake"></i> 30.10.2002</p>
+                    </div>
+                    <div className="profile-info-item">
+                        <p><i className="profile-info-icon fas fa-map-pin"></i> CzechRepublic</p>
                     </div>
                 </div>
             </div>
-        </div>
+            <div>
+                {posts.data.map((post, i) =>
+                    <div key={i}>
+                        <Post post={post} postStyle={{ width: "100%" }} profileImage={profile.data[0].decoded_image} />
+                    </div>
+                )}
+            </div>
+        </div >
     )
 }
 

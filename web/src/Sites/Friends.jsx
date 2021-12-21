@@ -72,7 +72,7 @@ const Friends = () => {
                                     </span>
                                     : <span>
                                         <button className="friend-remove-button" onClick={() => Handler.deleteFriend(usr.user1_id, usr.user2_id)}>
-                                            <i className="fas fa-trash"></i>
+                                            <i className="icon fas fa-trash"></i>
                                         </button>
                                         <p className='friend-pending'>request pending</p>
                                     </span>}

@@ -21,10 +21,11 @@ const PublicProfile = ({ match }) => {
     return (
         <div className="profile-container">
             <div className="profile-header  " >
+                <h1>{profile.data[0].account_name}</h1>
                 <div className='profile-header-image'>
                     <img src={profile.data[0].decoded_image} className="profile-header-image" />
                 </div>
-                <h1>{profile.data[0].account_name}</h1>
+
                 <div className="profile-social-stats profile-card box-shadow">
                     <div className="profile-stats-container">
                         <div className="stat-box">
@@ -41,9 +42,21 @@ const PublicProfile = ({ match }) => {
                         </div>
                     </div>
                 </div>
+
+                <div className="profile-info profile-card box-shadow">
+                    <div className="profile-info-item">
+                        <p><i class="profile-info-icon fas fa-envelope"></i>dannyseiner@gmail.com</p>
+                    </div>
+                    <div className="profile-info-item">
+                        <p><i class="profile-info-icon fas fa-birthday-cake"></i> 30.10.2002</p>
+                    </div>
+                    <div className="profile-info-item">
+                        <p><i class="profile-info-icon fas fa-map-pin"></i> CzechRepublic</p>
+                    </div>
+                </div>
             </div>
 
-            <div className="">
+            <div>
                 {posts.data.map(post =>
                     <div key={post.post_id}>
                         <Post post={post} postStyle={{ width: "100%" }} profileImage={profile.data[0].decoded_image} />
