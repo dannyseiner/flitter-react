@@ -29,19 +29,18 @@ const Post = ({ match }) => {
         <div key={comm.comment_id} class='comment-container'>
             <div className="comment-main-level">
                 <div className="comment-avatar">
-                    <img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg" alt="" className="comment-author-image" />
-                    <h5 className='comment-author-name'>{comm.account_name}</h5>
+                    <img src={comm.decoded_image} alt="" className="comment-author-image" />
+                    <Link to={`/profile/${comm.account_id}`} className='comment-author-name'>{comm.account_name} {post.post_author_id === comm.account_id ? <span className="badge">Author</span> : ""} </Link>
                 </div>
                 <div className="comment-box">
                     <div className="comment-content">
                         {comm.comment_content}
                     </div>
                     <div className="comment-footer">
-                        <span>{comm.comment_created}</span>
+                        <span>{new Date(comm.comment_created).toLocaleDateString("en-US", Config.format_options)}</span>
                         <i className="fa fa-reply"></i>
                         <i className="fa fa-heart"></i>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -65,6 +64,13 @@ const Post = ({ match }) => {
                         <button className="post-button like"><i className="fas fa-heart"></i></button>
                     </div>
                 </div>
+            </div>
+            <div className="comment-form post-container">
+                <textarea className="comment-form-textarea" onChange={e => setComment(e.target.value)} placeholder="Comment content"></textarea>
+                <div className="comment-form-submit-container">
+                    <button className="comment-form-submit" onClick={() => PostHandler.add_comment(post_id, user.account_id, comment, setComment)}><i class="fas fa-plus"></i></button>
+                </div>
+
             </div>
             {render_comments}
         </div>

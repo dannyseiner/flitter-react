@@ -22,7 +22,7 @@ const add_comment = (postId, authorId, comment, setComment) => {
         author_id: authorId,
         comment_content: comment,
     })
-        .then(response => setComment(""))
+        .then(response => window.location.replace("/"))
 }
 
 
