@@ -11,7 +11,6 @@ const PublicProfile = ({ match }) => {
     const [stats, setStats] = useState({
         data: []
     })
-
     useEffect(() => {
         ProfileHandler.get_user_data(match.params.id, setProfile)
         ProfileHandler.get_user_posts(match.params.id, setPosts)
@@ -45,13 +44,13 @@ const PublicProfile = ({ match }) => {
 
                 <div className="profile-info profile-card box-shadow">
                     <div className="profile-info-item">
-                        <p><i class="profile-info-icon fas fa-envelope"></i>dannyseiner@gmail.com</p>
+                        <p><i className="profile-info-icon fas fa-envelope"></i>{profile.data[0].account_email}</p>
                     </div>
                     <div className="profile-info-item">
-                        <p><i class="profile-info-icon fas fa-birthday-cake"></i> 30.10.2002</p>
+                        <p><i className="profile-info-icon fas fa-birthday-cake"></i> 30.10.2002</p>
                     </div>
                     <div className="profile-info-item">
-                        <p><i class="profile-info-icon fas fa-map-pin"></i> CzechRepublic</p>
+                        <p><i className="profile-info-icon fas fa-map-pin"></i> CzechRepublic</p>
                     </div>
                 </div>
             </div>

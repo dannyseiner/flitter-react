@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom'
 const Post = ({ match }) => {
     const [post_id] = useState(match.params.id)
     const user = JSON.parse(sessionStorage.getItem('user'))
-    const [likedPost, setLikedPost] = useState("fa fa-heart");
-    const [post, setPost] = useState({});
-    const [comment, setComment] = useState("");
+    const [likedPost, setLikedPost] = useState("fa fa-heart")
+    const [post, setPost] = useState({})
+    const [comment, setComment] = useState("")
     const [comments, setComments] = useState({
         data: []
     });
@@ -26,7 +26,7 @@ const Post = ({ match }) => {
 
 
     const render_comments = comments.data.map(comm => (
-        <div key={comm.comment_id} class='comment-container'>
+        <div key={comm.comment_id} className='comment-container'>
             <div className="comment-main-level">
                 <div className="comment-avatar">
                     <img src={comm.decoded_image} alt="" className="comment-author-image" />
@@ -68,7 +68,10 @@ const Post = ({ match }) => {
             <div className="comment-form post-container">
                 <textarea className="comment-form-textarea" onChange={e => setComment(e.target.value)} placeholder="Comment content"></textarea>
                 <div className="comment-form-submit-container">
-                    <button className="comment-form-submit" onClick={() => PostHandler.add_comment(post_id, user.account_id, comment, setComment)}><i class="fas fa-plus"></i></button>
+                    <button className="comment-form-submit" onClick={() => {
+                        PostHandler.add_comment(post_id, user.account_id, comment, setComment)
+                        window.location.replace(`/post/${post_id}`)
+                    }}><i className="fas fa-plus"></i></button>
                 </div>
 
             </div>

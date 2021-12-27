@@ -56,3 +56,43 @@ body {
 .transition {
   transition: 0.3s ease-in-out;
 }
+
+/* GLOBAL CONTAINER */
+
+.modal-container {
+  diplay: none;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+}
+.modal-body {
+  position: relative;
+  top: 20%;
+  margin: auto;
+  width: fit-content;
+  text-align: center;
+}
+.modal-hide {
+  width: 150px;
+  display: block;
+  margin: 40px auto;
+  border-radius: 6px;
+  background-color: white;
+  color: black;
+  outline: none;
+  border: none;
+  padding: 5px;
+  transition: 0.1s ease-in-out;
+  color: red;
+  text-transform: uppercase;
+
+  font-weight: bold;
+}
+.modal-hide:hover {
+  border-radius: 0px;
+  transform: skewX(-10deg);
+}

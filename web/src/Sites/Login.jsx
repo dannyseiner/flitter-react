@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 import Authentification from '../Controllers/Authentification'
 import { Link } from 'react-router-dom'
+import QRCode from "react-qr-code";
+import config from '../config'
+var ip = require('ip');
+
+
 const Login = () => {
     // STATUS HOOKS
     const [statusLogin, setStatusLogin] = useState({ display: "none", failed: 0, disabled: false });
@@ -13,10 +18,29 @@ const Login = () => {
     const [reg_name, setReg_name] = useState("");
     const [reg_password, setReg_password] = useState("");
     const [reg_password_C, setReg_password_C] = useState("");
-
-
+    const [appLogin, setAppLogin] = useState({
+        id: Math.floor(Math.random() * 10000000) + 1,
+        display: "none",
+        status: false,
+        ipaddress: ip.address()
+    })
+    console.log(appLogin)
     return (
         <div>
+            <div className="modal-container" style={{ display: appLogin.display }}>
+                <div className="modal-body">
+                    <h1>Fast Login</h1>
+                    <QRCode value={`http://${config.ipaddress}:3000/login/${appLogin.id}`} />
+                    <button className="modal-hide" onClick={() => setAppLogin(
+                        {
+                            id: appLogin.id,
+                            display: "none",
+                            status: appLogin.status,
+                            ipaddress: ip.address()
+                        }
+                    )}>Close</button>
+                </div>
+            </div>
             <div className="form">
                 <div className="form-toggle"></div>
                 <div className="form-panel one">
@@ -40,9 +64,17 @@ const Login = () => {
                                 </label><Link to='/login' className="form-recovery">Forgot Password?</Link>
                             </div>
                             <p className="form-group">
-                                <button onClick={() => Authentification.generate_qr_code}>Log In with app</button>
-                            </p>
+                                <button type="button" onClick={() => {
+                                    setAppLogin({
+                                        id: appLogin.id,
+                                        display: "block",
+                                        status: appLogin.status,
+                                        ipaddress: ip.address()
 
+                                    })
+                                    Authentification.fast_access(appLogin, setAppLogin)
+                                }}>Log In with app</button>
+                            </p>
                             <div className="form-group">
                                 <button type="button" disabled={statusLogin.disabled} onClick={() => Authentification.api_login(email, password, setStatusLogin, statusLogin)} >Log In</button>
                                 {/* <button type="button" style={{ marginTop: "10px" }} onClick={() => Authentification.api_login_scripted(true)} >Admin</button>

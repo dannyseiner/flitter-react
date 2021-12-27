@@ -3,16 +3,16 @@
   height: fit-content;
   margin: auto;
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: white;
 }
 
 .insert-post > h3 {
   text-align: center;
   position: relative;
   width: 100%;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  background-color: rgb(26, 39, 58);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: black;
   color: white;
   padding: 15px;
 }
@@ -27,20 +27,27 @@
   border: none;
   border-radius: 9px;
   padding: 10px;
+  border: 1px solid rgb(245, 245, 245);
   transition: 0.3s ease-in-out !important;
+}
+.insert-post-input:focus {
+  border: 1px solid black;
 }
 .insert-post-textarea {
   width: 400px;
   height: 250px;
   display: block;
   margin: 20px auto;
+  border: 1px solid rgb(245, 245, 245);
   font-size: 20px;
   resize: none;
   outline: none;
-  border: none;
   border-radius: 9px;
   padding: 10px;
   transition: 0.3s ease-in-out !important;
+}
+.insert-post-textarea:focus {
+  border: 1px solid black;
 }
 .insert-port-form {
   padding: 30px;

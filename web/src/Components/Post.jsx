@@ -4,7 +4,6 @@ import Config from '../config.js'
 const Post = ({ post, postStyle, profileImage }) => {
     const userJson = sessionStorage.getItem('user')
     const user = JSON.parse(userJson)
-    console.log(post.post_author_id, user.account_id)
     return (
         <div className="post-container" style={postStyle}>
             <div className="post-author">

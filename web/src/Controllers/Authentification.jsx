@@ -61,17 +61,38 @@ const api_login_scripted = (isAdmin) => {
         })
 }
 
-
-const generate_qr_code = () => {
-    console.log("generate qr - code")
+const fast_access = (appLogin, setAppLogin) => {
+    axios.post(`${config.restapi}/fastaccess`, {
+        id: appLogin.id,
+        status: 0,
+        ipaddress: appLogin.ipaddress
+    })
+    let authChecker = setInterval(() => {
+        axios.post(`${config.restapi}/fastaccess`, {
+            id: appLogin.id,
+            status: 2,
+            ipaddress: appLogin.ipaddress
+        }).then(response => {
+            // console.log(response, "ass")
+            if (response.data.length != 0) {
+                axios.post(`${config.restapi}/fastaccess`, {
+                    id: appLogin.id,
+                    status: 3,
+                    account_id: response.data[0].account_id
+                }).then(resp => {
+                    sessionStorage.setItem("user", JSON.stringify(resp.data[0]))
+                    window.location.replace("/profile")
+                })
+            }
+        })
+    }, 3000)
 }
-
 
 const functions = {
     api_login,
     api_register,
     api_login_scripted,
-    generate_qr_code
+    fast_access,
 }
 
 

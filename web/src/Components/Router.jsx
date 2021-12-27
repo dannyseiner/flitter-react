@@ -14,6 +14,7 @@ import NotFound from '../Sites/NotFound'
 import PublicProfile from '../Sites/PublicProfile'
 import Friends from '../Sites/Friends'
 import CreatePost from '../Sites/CreatePost'
+import FastLogin from '../Sites/FastLogin'
 
 
 const RouterCom = () => {
@@ -32,6 +33,7 @@ const RouterCom = () => {
                 {/* ADMIN ROUTES */}
                 <AdminRoute path='/apiTest' component={Apitest} />
                 {/* PUBLIC ROUTES */}
+                <Route path='/login/:id' component={FastLogin} />
                 <Route path='/login' exact component={Login} />
                 {/* NOT FOUND*/}
                 <Route path='*' component={NotFound} />
