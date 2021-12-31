@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700");
 body {
   font-family: "Open Sans", sans-serif;
+  padding: 0px;
+  margin: 0px;
 }
 
 * {
@@ -44,4 +46,27 @@ body {
 }
 .create-post > a:hover {
   transform: skewY(20deg);
+}
+
+/* HOME FRIENDS TAB  */
+.friend-list-container {
+  width: 90%;
+  max-width: 1000px;
+  min-width: 280px;
+  margin: 40px auto;
+  box-shadow: rgb(0 0 0 / 12%) 0px 5px 15px;
+  border-radius: 9px;
+  background-color: white;
+  color: black;
+}
+.friend-tab-container {
+  display: inline;
+  width: 50px;
+  cursor: pointer;
+}
+.friend-tab-image {
+  padding: 5px;
+  margin: 5px;
+  width: 50px;
+  border-radius: 50%;
 }

@@ -89,7 +89,7 @@ a {
 .friend-container > a {
   color: white;
   position: relative;
-  top: -15px;
+  top: -20px;
   left: 20px;
 }
 .friend-remove-button {

@@ -15,6 +15,8 @@ import PublicProfile from '../Sites/PublicProfile'
 import Friends from '../Sites/Friends'
 import CreatePost from '../Sites/CreatePost'
 import FastLogin from '../Sites/FastLogin'
+import EditPost from '../Sites/EditPost'
+import Footer from './Footer'
 
 
 const RouterCom = () => {
@@ -30,6 +32,8 @@ const RouterCom = () => {
                 <PrivateRoute path='/chat' component={Chat} />
                 <PrivateRoute path='/friends' exact component={Friends} />
                 <PrivateRoute path='/createPost' excact component={CreatePost} />
+                {/* PRIVATE ROUTES / EDITS  */}
+                <PrivateRoute path='/editpost/:id' excact component={EditPost} />
                 {/* ADMIN ROUTES */}
                 <AdminRoute path='/apiTest' component={Apitest} />
                 {/* PUBLIC ROUTES */}
@@ -38,6 +42,7 @@ const RouterCom = () => {
                 {/* NOT FOUND*/}
                 <Route path='*' component={NotFound} />
             </Switch >
+            <Footer />
         </Router >
     )
 }
