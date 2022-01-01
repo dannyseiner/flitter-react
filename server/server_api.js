@@ -43,6 +43,35 @@ api.get("/user/:id", (req, res) => {
         res.send(result)
     })
 })
+
+api.get('/postStats/:id', (req, res) => {
+    con.query(`SELECT count(like_post_id) as count FROM post_likes WHERE like_post_id = ${req.params.id}`, (err, likes) => {
+        con.query(`SELECT count(comment_post_id) as count FROM post_comments WHERE comment_post_id = ${req.params.id}`, (err, comments) => {
+            res.send({ likes, comments })
+        })
+    })
+})
+
+
+api.post('/isliked', urlencodedParser, (req, res) => {
+    con.query(`SELECT * FROM post_likes WHERE like_post_id = ${req.body.postId} AND like_account_id = ${req.body.accId}`, (err, result) => {
+        res.send({ isliked: result.length === 0 ? false : true })
+        console.log({ isliked: result.length === 0 ? false : true }, result)
+    })
+})
+
+api.post('/likePost', urlencodedParser, (req, res) => {
+    con.query(`SELECT * FROM post_likes WHERE like_post_id = ${req.body.postId} AND like_account_id = ${req.body.accId}`, (err, result) => {
+        if (result.length === 0) {
+            con.query(`INSERT INTO post_likes (like_post_id, like_account_id) VALUES (${req.body.postId}, ${req.body.accId}) `)
+            res.send({ status: "inserted" })
+        } else {
+            con.query(`DELETE FROM post_likes WHERE like_post_id = ${req.body.postId} AND like_account_id = ${req.body.accId}`)
+            res.send({ status: "deleted" })
+        }
+    })
+})
+
 api.get('/userstats/:id', (req, res) => {
     const eject = {}
     con.query(`SELECT count('like_acount_id') as 'likes' from post_likes  WHERE like_account_id = ${req.params.id}`, (err, result) => {
@@ -173,11 +202,7 @@ api.get('/post/:id', (req, res) => {
     })
 })
 
-api.get(`/ post /: id / isliked /: accid`, (req, res) => {
-    con.query(`SELECT * FROM post_likes WHERE like_post_id = ${req.params.id} AND like_account_id = ${req.params.accid}`, (err, result) => {
-        res.send(result)
-    })
-})
+
 
 api.get('/post/:id/comments', (req, res) => {
     if (req.params.id === "notfound") return

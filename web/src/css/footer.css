@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,500,300,700);
 
 .footer-distributed {
-  background: #666;
+  background: rgba(102, 102, 102, 0.4);
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
   box-sizing: border-box;
   width: 100%;

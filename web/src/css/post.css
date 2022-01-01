@@ -81,6 +81,7 @@
   margin-right: 10px;
   font-size: 20px;
   border: none;
+  font-weight: bold;
   background: none;
   outline: none;
   background-color: none;
@@ -178,4 +179,8 @@
 .comment-form-submit-container {
   margin: 0px auto;
   width: fit-content;
+}
+
+.post-button-count {
+  padding: 5px;
 }

@@ -38,11 +38,7 @@ const like_comment = (postId, accountId, setLikedPost) => {
 }
 
 const is_post_liked = (accountId, postId, setLikedPost) => {
-    axios.get(`${config.restapi}/post/${postId}/isliked/${accountId}`)
-        .then(respond => {
-            if (respond.data.length === 0) setLikedPost("heart")
-            else setLikedPost("heart is-active")
-        })
+
 }
 
 const functions = {
