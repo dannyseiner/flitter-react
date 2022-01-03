@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
 const Footer = () => {
     return (
         <footer className="footer-distributed">
@@ -9,17 +9,11 @@ const Footer = () => {
                 <h3>Flitter<span> Web</span></h3>
 
                 <p className="footer-links">
-                    <a href="#" className="link-1">Home</a>
+                    <Link to='/'>Home</Link>
+                    <Link to='/profile'>Profile</Link>
+                    <Link to='/friends'>Friends</Link>
 
-                    <a href="#">Profile</a>
 
-                    <a href="#">Friends</a>
-
-                    <a href="#">About</a>
-
-                    <a href="#">Faq</a>
-
-                    <a href="#">Contact</a>
                 </p>
 
                 <p className="footer-company-name">FlitterEntertaiment© 2021</p>
@@ -53,10 +47,10 @@ const Footer = () => {
 
                 <div className="footer-icons">
 
-                    <a href="#"><i className="fab fa-facebook"></i></a>
-                    <a href="#"><i className="fab fa-twitter"></i></a>
-                    <a href="#"><i className="fab fa-linkedin"></i></a>
-                    <a href="#"><i className="fab fa-github"></i></a>
+                    <Link to='/'><i className="fab fa-facebook"></i></Link>
+                    <Link to='/'><i className="fab fa-twitter"></i></Link>
+                    <Link to='/'><i className="fab fa-linkedin"></i></Link>
+                    <Link to='/'><i className="fab fa-github"></i></Link>
 
                 </div>
 

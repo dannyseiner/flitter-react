@@ -63,10 +63,10 @@ const Friends = () => {
                                 </Link>
                                 {usr.user1_id !== user.account_id ?
                                     <span>
-                                        <button className="friend-remove-button">
+                                        <button className="friend-remove-button" onClick={() => Handler.deleteFriend(usr.user1_id, usr.user2_id)}>
                                             <i className="fas fa-trash"></i>
                                         </button>
-                                        <button className="friend-accept-button">
+                                        <button className="friend-accept-button" onClick={() => Handler.acceptFriend(usr.user1_id, usr.user2_id)}>
                                             <i className="fas fa-check"></i>
                                         </button>
                                     </span>

@@ -1,12 +1,10 @@
 import { Link } from 'react-router-dom'
-import React, { useState } from "react";
 // Custom components 
 import PrivateLink from './PrivateLink'
 import AdminLink from './AdminLink'
 
 const Nav = () => {
 
-    const [logoutBtn] = useState(sessionStorage.getItem('user') === null ? { display: "none" } : { display: "block" });
 
     const logout = () => {
         sessionStorage.removeItem('user')

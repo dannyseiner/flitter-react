@@ -118,6 +118,31 @@ api.get('/getfriends/:id', (req, res) => {
         res.send(result)
     })
 })
+// STRICT!!!
+api.get('/getfriendsstrict/:id', (req, res) => {
+    con.query(`
+    SELECT 
+        f.id_friendship,
+        f.friendship_status,
+        acc.account_id as user1_id,
+        acc.account_name as user1_name,
+        ac.account_id as user2_id,
+        ac.account_name as user2_name,
+        as1.account_image as user1_image,
+        as2.account_image as user2_image
+    FROM account_friends as f 
+        INNER JOIN accounts as acc ON f.id_user1 = acc.account_id
+        INNER JOIN accounts as ac ON f.id_user2 = ac.account_id 
+        INNER JOIN account_info as as1 ON f.id_user1 = as1.user_id
+        INNER JOIN account_info as as2 ON f.id_user2 = as2.user_id
+    WHERE f.id_user1 = '${req.params.id}' AND f.friendship_status = 1 OR f.id_user2 = '${req.params.id}' AND f.friendship_status = 1`, (err, result) => {
+        for (s of result) {
+            s["user1_image_render"] = decodeImage(s["user1_image"])
+            s["user2_image_render"] = decodeImage(s["user2_image"])
+        }
+        res.send(result)
+    })
+})
 
 // GET USER FRIENDSHIP 
 api.post('/getuserfriendship', urlencodedParser, (req, res) => {
@@ -125,6 +150,13 @@ api.post('/getuserfriendship', urlencodedParser, (req, res) => {
     id_user1 = ${req.body.user1} AND id_user2 = ${req.body.user2} 
     OR id_user1 = ${req.body.user2} AND id_user2 = ${req.body.user1}`, (err, result) => {
         res.send(result)
+    })
+})
+
+// ACCEPT FRIEND REQUEST
+api.post('/acceptfriend', urlencodedParser, (req, res) => {
+    con.query(`UPDATE account_friends SET friendship_status = 1 WHERE id_user1 = ${req.body.user1} AND id_user2 = ${req.body.user2}`, (err, result) => {
+        res.send({ status: "OK" })
     })
 })
 
@@ -154,7 +186,7 @@ api.get('/userposts/:id', (req, res) => {
 api.get('/postshome/:id', (req, res) => {
     let otherId = 0
     let sql_task = ""
-    con.query(`SELECT * FROM account_friends WHERE id_user1 = ${req.params.id} OR id_user2 = ${req.params.id}`, (err, result) => {
+    con.query(`SELECT * FROM account_friends WHERE id_user1 = ${req.params.id} AND friendship_status = 1 OR id_user2 = ${req.params.id} AND friendship_status = 1`, (err, result) => {
         for (let i = 0; i < result.length; i++) {
             console.log("result[i].id_user2", result[i].id_user2);
             console.log("result[i].id_user1", result[i].id_user1);

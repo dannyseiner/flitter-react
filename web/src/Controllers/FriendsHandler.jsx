@@ -45,6 +45,13 @@ const sendFriendRequest = (target, setSentStatus) => {
         })
 }
 
+const acceptFriend = (user1, user2) => {
+    axios.post(`${config.restapi}/acceptfriend`, {
+        user1: user1,
+        user2: user2
+    }).then(response => window.location.replace('/friends'))
+}
+
 const deleteFriend = (user1, user2) => {
     console.log(user1, user2)
     axios.post(`${config.restapi}/removefriend`, {
@@ -68,6 +75,7 @@ const exporter = {
     getUserFriends,
     correctName,
     correctId,
+    acceptFriend,
     deleteFriend
 }
 

@@ -78,7 +78,7 @@ const Apitest = () => {
     }
 
     return (
-        <div>
+        <div style={{ margin: "100px auto" }}>
             <div>
                 <h3>Login test</h3>
                 <input type='text' onChange={e => setEmail(e.target.value)} />

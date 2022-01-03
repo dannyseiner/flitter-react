@@ -2,18 +2,36 @@ import React, { useState, useEffect } from 'react'
 import Post from '../Components/Post'
 import Handler from '../Controllers/HomeHandler'
 import { Link } from 'react-router-dom'
+import config from '../config'
+import axios from 'axios'
 const Home = () => {
     const [createPostTitle, setCreatePostTitle] = useState("")
     const [posts, setPosts] = useState([])
     const [createPostText, setCreatePostText] = useState("")
-
+    const [friends, setFriends] = useState({
+        data: []
+    })
     const getUser = sessionStorage.getItem('user')
     const user = JSON.parse(getUser)
 
 
     useEffect(() => {
         Handler.getPosts(setPosts)
+        get_friends()
     }, [])
+
+
+    const get_friends = () => {
+        axios.get(`${config.restapi}/getfriendsstrict/${user.account_id}`)
+            .then(response => setFriends(response))
+    }
+    const renderFriends = friends.data.map(friendship => (
+        <div className="friend-tab-container" key={friendship.id_friendship}>
+            <Link to={friendship.user1_id === user.account_id ? `profile/${friendship.user2_id}` : `profile/${friendship.user1_id}`}>
+                <img src={friendship.user1_id === user.account_id ? friendship.user2_image_render : friendship.user1_image_render} className="friend-tab-image" />
+            </Link>
+        </div>
+    ))
 
     const renderPosts = posts.map(post => (
         <Post post={post} key={post.post_id} />
@@ -23,31 +41,7 @@ const Home = () => {
         <div className="home-container">
             <div className="timeline">
                 <div className="friend-list-container">
-                    <div className="friend-tab-container">
-                        <img src="https://pbs.twimg.com/profile_images/1429998870453489668/ULnm0BME.jpg" className="friend-tab-image" />
-                    </div>
-                    <div className="friend-tab-container">
-                        <img src="https://pbs.twimg.com/profile_images/1429998870453489668/ULnm0BME.jpg" className="friend-tab-image" />
-                    </div>
-                    <div className="friend-tab-container">
-                        <img src="https://pbs.twimg.com/profile_images/1429998870453489668/ULnm0BME.jpg" className="friend-tab-image" />
-                    </div>
-                    <div className="friend-tab-container">
-                        <img src="https://pbs.twimg.com/profile_images/1429998870453489668/ULnm0BME.jpg" className="friend-tab-image" />
-                    </div>
-                    <div className="friend-tab-container">
-                        <img src="https://pbs.twimg.com/profile_images/1429998870453489668/ULnm0BME.jpg" className="friend-tab-image" />
-                    </div>
-                    <div className="friend-tab-container">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/OOjs_UI_icon_info.svg/1200px-OOjs_UI_icon_info.svg.png" className="friend-tab-image" />
-                    </div>
-                    <div className="friend-tab-container">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/OOjs_UI_icon_info.svg/1200px-OOjs_UI_icon_info.svg.png" className="friend-tab-image" />
-                    </div>
-                    <div className="friend-tab-container">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/OOjs_UI_icon_info.svg/1200px-OOjs_UI_icon_info.svg.png" className="friend-tab-image" />
-                    </div>
-
+                    {friends.data.length === 0 ? <p style={{ padding: "15px", textAlign: "center" }}>You don't have friends :(</p> : renderFriends}
                 </div>
                 {posts.length === 0 ? <div>
                     <h1>You dont have any posts to show</h1>

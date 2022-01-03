@@ -19,7 +19,7 @@ const Post = ({ match }) => {
 
     useEffect(() => {
         PostHandler.get_post(post_id, setPost, setComments)
-    }, [])
+    }, [comment])
 
     // GET POST STATS
     useEffect(() => {
@@ -55,6 +55,16 @@ const Post = ({ match }) => {
             if (likeButtonClass === "far fa-heart") setLikeButtonClass("fas fa-heart like")
             else setLikeButtonClass("far fa-heart")
         })
+    }
+
+
+    const addComment = () => {
+        axios.post(`${Config.restapi}/addComment`, {
+            post_id: match.params.id,
+            author_id: user.account_id,
+            comment_content: comment,
+        })
+            .then(response => setComment(""))
     }
 
     const render_comments = comments.data.map(comm => (
@@ -106,10 +116,7 @@ const Post = ({ match }) => {
             <div className="comment-form post-container">
                 <textarea className="comment-form-textarea" onChange={e => setComment(e.target.value)} placeholder="Comment content"></textarea>
                 <div className="comment-form-submit-container">
-                    <button className="comment-form-submit" onClick={() => {
-                        PostHandler.add_comment(post_id, user.account_id, comment, setComment)
-                        window.location.replace(`/post/${post_id}`)
-                    }}>
+                    <button className="comment-form-submit" onClick={() => addComment()}>
                         <i className="fas fa-plus"></i>
                     </button>
                 </div>

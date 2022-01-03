@@ -22,7 +22,7 @@ const add_comment = (postId, authorId, comment, setComment) => {
         author_id: authorId,
         comment_content: comment,
     })
-        .then(response => window.location.replace("/"))
+        .then(response => setComment(""))
 }
 
 
@@ -37,15 +37,12 @@ const like_comment = (postId, accountId, setLikedPost) => {
         })
 }
 
-const is_post_liked = (accountId, postId, setLikedPost) => {
 
-}
 
 const functions = {
     get_post,
     get_comments,
     add_comment,
     like_comment,
-    is_post_liked
 }
 export default functions
