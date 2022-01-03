@@ -4,6 +4,9 @@ import config from '../config'
 const get_post = (postId, setPost, setComments) => {
     axios.get(`${config.restapi}/post/${postId}`)
         .then(response => {
+            if (response.data.status === 404) {
+                window.location.replace('/notfound')
+            }
             setPost(response.data[0])
             get_comments(postId, setComments)
         })

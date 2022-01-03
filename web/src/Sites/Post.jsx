@@ -89,8 +89,16 @@ const Post = ({ match }) => {
     ))
 
     return (
-        <div>
-            <div className="post-container" style={{ marginTop: "100px" }}>
+        <div style={{ marginTop: "100px" }}>
+            {user.account_id === post.post_author_id ?
+                <div className="content-menu ">
+                    <div className="content-center">
+                        <button className='content-button btn-edit'>Edit</button>
+                        <button className='content-button btn-stats'>Statistics</button>
+                        <button className='content-button btn-delete'>Delete</button>
+                    </div>
+                </div> : ""}
+            <div className="post-container" >
                 <div className="post-author">
                     <img src={post.profile_image_encoded} className="post-author-image" />
                     <Link to={`/profile/${post.post_author_id}`} className="post-author-name">{post.account_name}</Link>

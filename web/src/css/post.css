@@ -184,3 +184,56 @@
 .post-button-count {
   padding: 5px;
 }
+
+.content-menu {
+  width: 90%;
+  max-width: 1000px;
+  min-width: 280px;
+  margin: 40px auto;
+  border-radius: 9px;
+  color: black;
+}
+.content-center {
+  width: fit-content;
+  margin: 0px auto;
+}
+
+.content-button {
+  width: 100px;
+  padding: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 9px;
+  margin: 10px;
+  outline: none;
+  border: none;
+  transition: 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-edit {
+  background-color: inherit;
+  color: rgb(113, 113, 113);
+}
+.btn-edit:hover {
+  background-color: white;
+  color: black;
+}
+
+.btn-delete {
+  background-color: inherit;
+  color: rgb(113, 113, 113);
+}
+.btn-delete:hover {
+  background-color: red;
+  color: black;
+}
+
+.btn-stats {
+  background-color: inherit;
+  color: rgb(113, 113, 113);
+}
+.btn-stats:hover {
+  background-color: cyan;
+  color: black;
+}

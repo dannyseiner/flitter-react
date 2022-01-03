@@ -228,6 +228,10 @@ api.get('/post/:id', (req, res) => {
     INNER JOIN account_info ON posts.post_author_id = account_info.user_id
     WHERE post_id = ${req.params.id}`, (err, result) => {
         if (err) throw err
+        if (result.length === 0) {
+            res.send({ status: 404 })
+            return
+        }
         result[0]["profile_image_encoded"] = decodeImage(result[0].account_image)
         res.send(result)
         log("post", result)
