@@ -3,6 +3,7 @@ import PostHandler from '../Controllers/PostHandler'
 import Config from '../config'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import config from '../config'
 const Post = ({ match }) => {
     const [post_id] = useState(match.params.id)
     const user = JSON.parse(sessionStorage.getItem('user'))
@@ -64,7 +65,14 @@ const Post = ({ match }) => {
             author_id: user.account_id,
             comment_content: comment,
         })
-            .then(response => setComment(""))
+            .then(response => document.location.replace(`/post/${match.params.id}`))
+        document.location.replace(`/post/${match.params.id}`)
+    }
+
+    const deleteComment = (id) => {
+        axios.post(`${config.restapi}/deletecomment`, {
+            commentId: id
+        }).then(response => document.location.replace(`/post/${match.params.id}`))
     }
 
     const render_comments = comments.data.map(comm => (
@@ -82,20 +90,31 @@ const Post = ({ match }) => {
                         <span>{new Date(comm.comment_created).toLocaleDateString("en-US", Config.format_options)}</span>
                         <i className="fa fa-reply"></i>
                         <i className="fa fa-heart"></i>
+                        {user.account_id === comm.comment_author_id ?
+                            <i className="fa fa-trash deleteicon" onClick={() => deleteComment(comm.comment_id)}></i>
+                            : ""}
                     </div>
                 </div>
             </div>
         </div>
     ))
 
+
+    const delete_post = () => {
+        axios.post(`${config.restapi}/deletePost`, {
+            postId: match.params.id
+        })
+            .then(response => window.location.replace('/'))
+    }
+
     return (
         <div style={{ marginTop: "100px" }}>
             {user.account_id === post.post_author_id ?
                 <div className="content-menu ">
                     <div className="content-center">
-                        <button className='content-button btn-edit'>Edit</button>
+                        <Link to={`/editpost/${match.params.id}`} className='content-button btn-edit'>Edit</Link>
                         <button className='content-button btn-stats'>Statistics</button>
-                        <button className='content-button btn-delete'>Delete</button>
+                        <button className='content-button btn-delete' onClick={() => delete_post()}>Delete</button>
                     </div>
                 </div> : ""}
             <div className="post-container" >

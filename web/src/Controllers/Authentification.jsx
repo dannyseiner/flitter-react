@@ -7,7 +7,6 @@ const api_login = (email, password, setStatusLogin, statusLogin) => {
         password: password
     })
         .then((response) => {
-            console.log(response.data.status)
             if (statusLogin.failed === 5) {
                 setStatusLogin({ display: "block", failed: statusLogin.failed, message: "You must wait before trying again!", disabled: true })
                 setTimeout(() => {
@@ -17,12 +16,10 @@ const api_login = (email, password, setStatusLogin, statusLogin) => {
             }
             if (response.data.status === false) {
                 setStatusLogin({ display: "block", failed: statusLogin.failed + 1, message: "Incorrect email or password!" })
-                console.log("login failed")
                 return
 
             } else {
                 sessionStorage.setItem('user', JSON.stringify(response.data[0]))
-                console.log(JSON.parse(sessionStorage.getItem('user')))
                 window.location.replace("/")
             }
         })
@@ -46,7 +43,6 @@ const api_register = (reg_email, reg_name, reg_password, reg_password_C, setstat
             } else {
                 setstatusRegister({ display: "block", message: "Account was succesfully created! Log in :)" })
             }
-            console.log(response)
         })
 }
 
@@ -56,7 +52,6 @@ const api_login_scripted = (isAdmin) => {
     axios.post(config.restapi + "/login", isAdmin ? { email: "admin@admin.com", password: "admin" } : { email: "dannyseiner@gmail.com", password: "admin" })
         .then(response => {
             sessionStorage.setItem('user', JSON.stringify(response.data[0]))
-            console.log(JSON.parse(sessionStorage.getItem('user')))
             window.location.replace("/")
         })
 }
@@ -81,7 +76,7 @@ const fast_access = (appLogin, setAppLogin) => {
                     account_id: response.data[0].account_id
                 }).then(resp => {
                     sessionStorage.setItem("user", JSON.stringify(resp.data[0]))
-                    window.location.replace("/profile")
+                    window.location.replace("/")
                 })
             }
         })

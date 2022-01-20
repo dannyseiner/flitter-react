@@ -17,9 +17,11 @@ import CreatePost from '../Sites/CreatePost'
 import FastLogin from '../Sites/FastLogin'
 import EditPost from '../Sites/EditPost'
 import Footer from './Footer'
-
+import StickyFooter from './StickyFooter'
 
 const RouterCom = () => {
+    const user = JSON.parse(sessionStorage.getItem('user'))
+
     return (
         <Router >
             <Nav />
@@ -42,6 +44,9 @@ const RouterCom = () => {
                 {/* NOT FOUND*/}
                 <Route path='*' component={NotFound} />
             </Switch >
+            {user === null ? "" :
+                <StickyFooter />
+            }
             <Footer />
         </Router >
     )

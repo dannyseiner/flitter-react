@@ -24,7 +24,6 @@ const Login = () => {
         status: false,
         ipaddress: ip.address()
     })
-    console.log(appLogin)
     return (
         <div>
             <div className="modal-container" style={{ display: appLogin.display }}>

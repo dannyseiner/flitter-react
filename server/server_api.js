@@ -8,6 +8,8 @@ const config = require("./config.json")
 
 api.use(bodyParser.json())
 api.use(cors())
+api.set('json spaces', 2)
+
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 const log = (txt, data) => {
     console.clear()
@@ -24,7 +26,7 @@ con.connect(function (err) {
 
 // ROUTES
 api.get("/", (req, res) => {
-    res.send({ status: "WORKING" })
+    res.send({ status: "ONLINE", mysql_status: "ON", mysql: config })
     console.log("hompage", con, { status: "WORKING" })
 })
 
@@ -51,12 +53,29 @@ api.get('/postStats/:id', (req, res) => {
         })
     })
 })
+// EDIT POST
+api.post("/editpost", urlencodedParser, (req, res) => {
+    con.query(`UPDATE posts SET post_title ='${req.body.postTitle}' , post_content = '${req.body.postContent}' WHERE post_id = ${req.body.postId}`, (err, result) => {
+        con.query(`INSERT INTO notifications (account_id, not_header, not_link) 
+        VALUES (
+            ${req.body.accountId},
+            "You'r post has been updated",
+            "/post/${req.body.postId}"
+        ) `)
+        res.send({ status: "OK" })
+    })
+})
 
+// DELETE COMMENT 
 
+api.post("/deletecomment", urlencodedParser, (req, res) => {
+    con.query(`DELETE FROM post_comments WHERE comment_id = ${req.body.commentId}`, (err, result) => {
+        res.send({ status: "OK" })
+    })
+})
 api.post('/isliked', urlencodedParser, (req, res) => {
     con.query(`SELECT * FROM post_likes WHERE like_post_id = ${req.body.postId} AND like_account_id = ${req.body.accId}`, (err, result) => {
         res.send({ isliked: result.length === 0 ? false : true })
-        console.log({ isliked: result.length === 0 ? false : true }, result)
     })
 })
 
@@ -69,6 +88,24 @@ api.post('/likePost', urlencodedParser, (req, res) => {
             con.query(`DELETE FROM post_likes WHERE like_post_id = ${req.body.postId} AND like_account_id = ${req.body.accId}`)
             res.send({ status: "deleted" })
         }
+
+
+    })
+})
+
+// DELETE NOTIFICAITON 
+api.post('/deleteNotification', urlencodedParser, (req, res) => {
+
+    con.query(`DELETE FROM notifications WHERE not_id = ${req.body.notificationId} AND account_id = ${req.body.accountId}`, (err, result) => {
+        res.send(result)
+    })
+})
+
+// GET USER NOTIFICATIONS 
+api.post('/userNotifications', urlencodedParser, (req, res) => {
+    con.query(`SELECT * FROM notifications WHERE account_id = ${req.body.accountId}`, (err, result) => {
+        res.send(result)
+        console.log(result)
     })
 })
 
@@ -174,6 +211,17 @@ api.get('/posts', (req, res) => {
         res.send(result)
     })
 })
+// DELETE POST
+api.post('/deletePost', urlencodedParser, (req, res) => {
+    con.query(`DELETE FROM posts WHERE post_id = ${req.body.postId}`, (err, result) => {
+        con.query(`DELETE FROM post_comments WHERE comment_post_id = ${req.body.postId}`, (err1, result1) => {
+            con.query(`DELETE FROM post_likes WHERE like_post_id = ${req.body.postId}`, (err2, result2) => {
+                res.send({ status: "OK" })
+            })
+        })
+    })
+})
+
 // GET USER POSTS
 api.get('/userposts/:id', (req, res) => {
     con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id
@@ -219,6 +267,7 @@ api.post("/createpost", urlencodedParser, (req, res) => {
                 '${req.body.title}',
                 '${req.body.text}'
             )`)
+
     res.send(req.body)
 })
 api.get('/post/:id', (req, res) => {
@@ -277,24 +326,7 @@ api.get('/user/:id/info', (req, res) => {
     con.query(`SELECT count(posts.post_id) FROM posts WHERE posts.post_author_id = 1`, (err, respond) => console.log(respond))
 })
 
-// LIKE POST
-api.post('/likePost', urlencodedParser, (req, res) => {
-    log("LIKE POST", req.body)
-    con.query(`SELECT * FROM post_likes WHERE like_post_id = ${req.body.postId} AND like_account_id = ${req.body.accountId}`, (err, result) => {
-        console.log(result)
-        if (result.length == 0) {
-            con.query(`INSERT INTO post_likes(like_post_id, like_account_id) VALUES(${req.body.postId}, ${req.body.accountId})`, (err, result2) => {
-                res.send({ status: "liked" })
-                return
-            })
-        } else {
-            con.query(`DELETE FROM post_likes WHERE like_post_id = ${req.body.postId} AND like_account_id = ${req.body.accountId}`, (err, result3) => {
-                res.send({ status: "unliked" })
-                return
-            })
-        }
-    })
-})
+
 // CREATE POST
 api.post('/createPost', urlencodedParser, (req, res) => {
     log("CREATE POST", req.body)
@@ -372,10 +404,13 @@ api.post('/register', urlencodedParser, (req, res) => {
 //      - LOGIN 
 api.post('/login', urlencodedParser, (req, res) => {
     console.log(req.body)
-    con.query(`SELECT * FROM accounts WHERE account_email = '${req.body.email}' OR account_name = "${req.body.email}"`, (err, result) => {
+    con.query(`SELECT * FROM accounts 
+    INNER JOIN account_info ON accounts.account_id = account_info.user_id
+    WHERE account_email = '${req.body.email}' OR account_name = "${req.body.email}"`, (err, result) => {
         if (err) throw err
         if (result.length == 0) return res.send({ status: false })
         if (passwordHash.verify(req.body.password, result[0].account_password)) {
+            result[0]["profile_image_render"] = decodeImage(result[0]["account_image"])
             res.send(result)
             log("login", result)
         } else {
@@ -406,7 +441,11 @@ api.post('/fastaccess', urlencodedParser, (req, res) => {
             res.send(result)
         })
     } else if (req.body.status === 3) {
-        con.query(`SELECT * FROM accounts WHERE account_id = ${req.body.account_id}`, (err, result) => {
+        con.query(`SELECT * FROM accounts 
+        INNER JOIN account_info ON accounts.account_id = account_info.user_id
+        WHERE account_id = ${req.body.account_id}`, (err, result) => {
+            result[0]["profile_image_render"] = decodeImage(result[0]["account_image"])
+
             res.send(result)
         })
     }

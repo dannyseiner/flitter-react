@@ -8,6 +8,7 @@
 @import url("chat.css");
 @import url("footer.css");
 @import url("friends.css");
+@import url("stickyfooter.css");
 @import url("createpost.css");
 @import url("https://fonts.googleapis.com/css2?family=Baloo+Paaji+2:wght@400;500&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
@@ -96,4 +97,33 @@ body {
 .modal-hide:hover {
   border-radius: 0px;
   transform: skewX(-10deg);
+}
+
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+  left: -25px;
+  top: 40px;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

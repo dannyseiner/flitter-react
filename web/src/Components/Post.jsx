@@ -42,7 +42,8 @@ const Post = ({ post, postStyle, profileImage }) => {
     const likePost = () => {
         axios.post(`${Config.restapi}/likePost`, {
             postId: post.post_id,
-            accId: user.account_id
+            accId: user.account_id,
+            authorId: post.post_author_id
         }).then(response => {
             if (likeButtonClass === "far fa-heart") setLikeButtonClass("fas fa-heart like")
             else setLikeButtonClass("far fa-heart")

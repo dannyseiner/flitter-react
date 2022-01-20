@@ -237,3 +237,12 @@
   background-color: cyan;
   color: black;
 }
+
+.deleteicon {
+  transition: 0.3s ease-in-out;
+}
+
+.deleteicon:hover {
+  padding-right: 2px;
+  color: red;
+}

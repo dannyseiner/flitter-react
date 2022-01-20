@@ -18,8 +18,8 @@ const CreatePost = () => {
                     </div>  */}
 
                     <div className="insert-custom-button">
-                        <a class="white" href="#" onClick={() => Handler.InsertPost(postTitle, postText, setStatus)}>
-                            <p><span class="bg"></span><span class="base"></span><span class="text">Post</span></p>
+                        <a className="white" href="#" onClick={() => Handler.InsertPost(postTitle, postText, setStatus)}>
+                            <p><span className="bg"></span><span className="base"></span><span className="text">Post</span></p>
                         </a>
 
                     </div>
