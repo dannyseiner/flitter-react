@@ -18,7 +18,7 @@
   width: 80%;
   min-width: 400px;
   max-width: 600px;
-  height: 600px;
+  height: 800px !important;
   border-radius: 4px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;

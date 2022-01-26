@@ -1,6 +1,7 @@
 import axios from 'axios'
 import config from '../config'
 const passwordHash = require("password-hash")
+const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 const api_login = (email, password, setStatusLogin, statusLogin) => {
     axios.post(config.restapi + '/login', {
         email: email,
@@ -24,11 +25,21 @@ const api_login = (email, password, setStatusLogin, statusLogin) => {
             }
         })
 }
-
+function hasNumber(myString) {
+    return /\d/.test(myString);
+}
 
 const api_register = (reg_email, reg_name, reg_password, reg_password_C, setstatusRegister) => {
     if (reg_password !== reg_password_C) {
         setstatusRegister({ display: "block", message: "Passwords must match!" })
+        return
+    }
+    if (reg_password.length < 6) {
+        setstatusRegister({ display: "block", message: "Passwords must have atleast 6 characters!" })
+        return
+    }
+    if (!hasNumber(reg_password)) {
+        setstatusRegister({ display: "block", message: "Passwords must have atleast 1 number!" })
         return
     }
     axios.post(config.restapi + "/register", {

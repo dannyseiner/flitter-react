@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import ProfileHandler from '../Controllers/PublicProfileHandler'
 import Post from '../Components/Post'
+import axios from 'axios'
+import config from '../config'
 const PublicProfile = ({ match }) => {
+    const user = JSON.parse(sessionStorage.getItem('user'))
+
     const [profile, setProfile] = useState({
         data: [{}]
     });
@@ -11,11 +16,84 @@ const PublicProfile = ({ match }) => {
     const [stats, setStats] = useState({
         data: []
     })
+
+    const [friendMenu, setFriendMenu] = useState(
+        <div>
+        </div>
+    )
+
+
     useEffect(() => {
         ProfileHandler.get_user_data(match.params.id, setProfile)
         ProfileHandler.get_user_posts(match.params.id, setPosts)
         ProfileHandler.get_user_stats(match.params.id, setStats)
+        getFriendShipStatus()
     }, []);
+
+    useEffect(() => {
+        getFriendShipStatus()
+
+    }, [profile]);
+
+    useEffect(() => {
+        getFriendShipStatus()
+    }, [<button></button>]);
+
+    const getFriendShipStatus = () => {
+        if (profile.data[0].account_id === undefined) return
+        if (user.account_id === profile.data[0].account_id) return
+        axios.post(`${config.restapi}/getuserfriendship`, {
+            user1: user.account_id,
+            user2: profile.data[0].account_id
+        })
+            .then(response => {
+                if (response.data.length === 0) {
+                    setFriendMenu(
+                        <div className="friendMenuItem2">
+                            <div className="center-div">
+                                <button onClick={() => sentFriendRequest()}>Add Friend</button>
+                            </div>
+                        </div>
+                    )
+                }
+                else if (response.data[0].friendship_status === 0) {
+                    if (response.data[0].id_user1 === user.account_id) {
+                        setFriendMenu(
+                            <div className="friendMenuItem">
+                                <div className="center-div">
+                                    <span>Friend request pending</span>
+                                </div>
+                            </div>
+                        )
+                    } else {
+                        setFriendMenu(
+                            <div className="friendMenuItem">
+                                <div className="center-div">
+                                    <Link to={`/friends`}>This user wanst to be friends</Link>
+                                </div>
+                            </div>
+                        )
+                    }
+                }
+                else if (response.data[0].friendship_status === 1) {
+                    setFriendMenu(
+                        <div className="friendMenuItem">
+                            <div className="center-div">
+                                <span>Friends</span>
+                            </div>
+                        </div>
+                    )
+                }
+            })
+    }
+
+    const sentFriendRequest = () => {
+        axios.post(`${config.restapi}/sentfriendrequest`, {
+            user1: user.account_id,
+            user2: profile.data[0].account_id
+        })
+    }
+
 
     return (
         <div className="profile-container">
@@ -41,7 +119,6 @@ const PublicProfile = ({ match }) => {
                         </div>
                     </div>
                 </div>
-
                 <div className="profile-info profile-card box-shadow">
                     <div className="profile-info-item">
                         <p><i className="profile-info-icon fas fa-envelope"></i>{profile.data[0].account_email}</p>
@@ -53,6 +130,7 @@ const PublicProfile = ({ match }) => {
                         <p><i className="profile-info-icon fas fa-map-pin"></i> CzechRepublic</p>
                     </div>
                 </div>
+                {friendMenu}
             </div>
 
             <div>

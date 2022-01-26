@@ -208,7 +208,7 @@ api.get('/posts', (req, res) => {
     con.query("SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id ORDER BY posts.post_created DESC", (err, result) => {
         if (err) throw err
         log("posts", result)
-        res.send(result)
+        res.send({ status: true })
     })
 })
 // DELETE POST
@@ -375,22 +375,21 @@ api.get("/user/posts/:id", (res, req) => {
 // API POSTS
 //     - REGISTER
 api.post('/register', urlencodedParser, (req, res) => {
-    console.log()
     console.log(req.body)
     // CHECK FOR EMAIL 
     con.query(`SELECT * FROM accounts WHERE account_email = '${req.body.email}' OR account_name = '${req.body.username}'`, (err, result) => {
         // CREATE USER AND SEND DATA BACK
         if (result.length == 0) {
-            con.query(`INSERT INTO accounts(account_email, account_name, account_password) VALUES
+            con.query(`INSERT INTO accounts (account_email, account_name, account_password) VALUES
                 (
                     '${req.body.email}',
                     '${req.body.username}',
                     '${req.body.password}'
                 )`, (errr, resultt) => {
+                console.log("register sind")
                 res.send({ status: true })
                 log("register", { status: true })
             })
-
         } else {
             res.send({ status: false })
             log("register", { status: false })

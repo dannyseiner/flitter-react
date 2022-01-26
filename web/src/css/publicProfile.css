@@ -104,3 +104,76 @@
     display: block;
   }
 }
+
+.friendMenuItem {
+  background-color: white;
+  width: 100%;
+  margin: 10px auto;
+  position: relative;
+  top: 15px;
+  padding: 10px;
+  border-radius: 9px;
+}
+.friendMenuItem2 {
+  background-color: none;
+  width: 100%;
+  margin: 10px auto;
+  position: relative;
+  top: 15px;
+  padding: 10px;
+  border-radius: 9px;
+}
+
+.center-div > button {
+  position: relative;
+  display: inline-flex;
+  width: 180px;
+  height: 55px;
+  margin: 0 15px;
+  color: black;
+  perspective: 1000px;
+  text-align: center !important;
+}
+.center-div > button {
+  font-size: 19px;
+  width: 150px;
+  letter-spacing: 1px;
+  transition: transform 0.25s;
+  padding: 14px;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  cursor: pointer;
+  border-radius: 9px;
+  background-color: white;
+}
+.center-div > button:hover {
+  transform: scale(1.2);
+  background-color: black;
+  border: none;
+  color: white;
+}
+.center-div {
+  width: fit-content;
+  margin: auto;
+}
+.center-div > span {
+  font-size: 19px;
+  text-align: center;
+  color: black;
+  transition: transform 0.25s;
+  padding: 14px;
+  text-align: center;
+  font-family: "Montserrat";
+}
+
+.center-div > a {
+  color: black;
+  text-align: center;
+  width: auto;
+  margin: auto;
+  font-size: 19px;
+  transition: transform 0.25s;
+  padding: 14px;
+  text-align: center;
+  font-family: "Montserrat";
+}
