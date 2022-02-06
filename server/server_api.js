@@ -5,6 +5,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const passwordHash = require('password-hash');
 const config = require("./config.json")
+const { response } = require("express")
 
 api.use(bodyParser.json())
 api.use(cors())
@@ -13,9 +14,9 @@ api.set('json spaces', 2)
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 const log = (txt, data) => {
     console.clear()
-    console.log(`------------ < ${txt} > ------------`)
-    console.log(data)
-    console.log(`------------ < ${txt} /> ------------`)
+    // console.log(`------------ < ${txt} > ------------`)
+    // console.log(data)
+    // console.log(`------------ < ${txt} /> ------------`)
 }
 const con = mysql.createConnection(config)
 con.connect(function (err) {
@@ -53,6 +54,9 @@ api.get('/postStats/:id', (req, res) => {
         })
     })
 })
+
+
+
 // EDIT POST
 api.post("/editpost", urlencodedParser, (req, res) => {
     con.query(`UPDATE posts SET post_title ='${req.body.postTitle}' , post_content = '${req.body.postContent}' WHERE post_id = ${req.body.postId}`, (err, result) => {
@@ -105,13 +109,21 @@ api.post('/deleteNotification', urlencodedParser, (req, res) => {
 api.post('/userNotifications', urlencodedParser, (req, res) => {
     con.query(`SELECT * FROM notifications WHERE account_id = ${req.body.accountId}`, (err, result) => {
         res.send(result)
-        console.log(result)
     })
 })
 
 api.get('/userstats/:id', (req, res) => {
     const eject = {}
-    con.query(`SELECT count('like_acount_id') as 'likes' from post_likes  WHERE like_account_id = ${req.params.id}`, (err, result) => {
+    con.query(`SELECT
+    (
+        SELECT count(*) FROM post_likes WHERE post_likes.like_account_id = ${req.params.id}
+    ) AS "likes",
+    (
+        SELECT count(*) FROM posts WHERE posts.post_author_id = ${req.params.id}
+    ) AS "posts",
+    (
+        SELECT count(*) FROM account_friends WHERE account_friends.id_user1=${req.params.id} AND account_friends.friendship_status=1 OR account_friends.id_user2=${req.params.id} AND account_friends.friendship_status=1
+        ) AS "friends"`, (err, result) => {
         res.send(result)
     })
 })
@@ -204,11 +216,44 @@ api.post('/sentfriendrequest', urlencodedParser, (req, res) => {
         res.send(result)
     })
 })
+
+// UPDATE USER SETTINGS
+api.post('/updatesettings', urlencodedParser, (req, res) => {
+    let final_value = req.body.newValue === false ? 0 : 1
+    con.query(`UPDATE account_settings SET meta_value = ${final_value} WHERE meta_id = ${req.body.id} AND user_id = ${req.body.userId}`, (err, result) => {
+        console.log(`UPDATE account_settings SET meta_value = ${final_value} WHERE meta_id = ${req.body.id} AND user_id = ${req.body.userId}`)
+        res.send({ status: " true", process: "done" })
+    })
+})
+
+
+// GET USER SETTINGS 
+api.post('/getsettings', urlencodedParser, (req, res) => {
+    con.query(`SELECT * FROM account_settings WHERE user_id = ${req.body.userId}`, (err, result) => {
+        res.send(result)
+    })
+})
 api.get('/posts', (req, res) => {
-    con.query("SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id ORDER BY posts.post_created DESC", (err, result) => {
+    con.query(`SELECT * FROM posts 
+    INNER JOIN accounts ON posts.post_author_id = accounts.account_id 
+    INNER JOIN account_info ON posts.post_author_id = account_info.user_id
+    ORDER BY posts.post_created DESC`, (err, result) => {
+        for (s of result) {
+            s["render_user_image"] = decodeImage(s["account_image"])
+        }
         if (err) throw err
         log("posts", result)
-        res.send({ status: true })
+        res.send(result)
+    })
+})
+// RANDOM POSTS
+api.get('/notfriends/:id', (req, res) => {
+    con.query(`SELECT * FROM account_friends 
+    WHERE id_user1!=${req.params.id} AND id_user2!=${req.params.id} LIMIT 20`, (err, result) => {
+        for (s of result) {
+            // s["render_user_image"] = decodeImage(s["account_image"])
+        }
+        res.send(result)
     })
 })
 // DELETE POST
@@ -236,14 +281,10 @@ api.get('/postshome/:id', (req, res) => {
     let sql_task = ""
     con.query(`SELECT * FROM account_friends WHERE id_user1 = ${req.params.id} AND friendship_status = 1 OR id_user2 = ${req.params.id} AND friendship_status = 1`, (err, result) => {
         for (let i = 0; i < result.length; i++) {
-            console.log("result[i].id_user2", result[i].id_user2);
-            console.log("result[i].id_user1", result[i].id_user1);
 
-            console.log("req.params.id == result[i].id_user1", req.params.id == result[i].id_user1);
             if (req.params.id == result[i].id_user1) otherId = result[i].id_user2
             else if (req.params.id !== result[i].id_user2) otherId = result[i].id_user1
 
-            console.log("req.params.id", req.params.id, "otherId", otherId);
             sql_task += `post_author_id = ${otherId} OR `
         }
         sql_task += `post_author_id = ${req.params.id}`

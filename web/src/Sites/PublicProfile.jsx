@@ -13,9 +13,15 @@ const PublicProfile = ({ match }) => {
     const [posts, setPosts] = useState({
         data: []
     })
-    const [stats, setStats] = useState({
-        data: []
-    })
+    const [stats, setStats] = useState(
+        [
+            {
+                posts: 0,
+                likes: 0,
+                friends: 0
+            }
+        ]
+    )
 
     const [friendMenu, setFriendMenu] = useState(
         <div>
@@ -26,7 +32,7 @@ const PublicProfile = ({ match }) => {
     useEffect(() => {
         ProfileHandler.get_user_data(match.params.id, setProfile)
         ProfileHandler.get_user_posts(match.params.id, setPosts)
-        ProfileHandler.get_user_stats(match.params.id, setStats)
+        get_user_stats()
         getFriendShipStatus()
     }, []);
 
@@ -38,6 +44,15 @@ const PublicProfile = ({ match }) => {
     useEffect(() => {
         getFriendShipStatus()
     }, [<button></button>]);
+
+    useEffect(() => {
+        get_user_stats()
+    }, [<Post />])
+
+    const get_user_stats = () => {
+        axios.get(`${config.restapi}/userstats/${match.params.id}`)
+            .then(response => setStats(response.data))
+    }
 
     const getFriendShipStatus = () => {
         if (profile.data[0].account_id === undefined) return
@@ -107,15 +122,15 @@ const PublicProfile = ({ match }) => {
                     <div className="profile-stats-container">
                         <div className="stat-box">
                             <p className="stat-type">Friends</p>
-                            <p className="stat-value">1 403</p>
+                            <p className="stat-value">{stats[0].friends}</p>
                         </div>
                         <div className="stat-box">
                             <p className="stat-type">Posts</p>
-                            <p className="stat-value">13</p>
+                            <p className="stat-value">{stats[0].posts}</p>
                         </div>
                         <div className="stat-box">
                             <p className="stat-type">Liked</p>
-                            <p className="stat-value">1 590</p>
+                            <p className="stat-value">{stats[0].likes}</p>
                         </div>
                     </div>
                 </div>

@@ -53,7 +53,7 @@ const Home = () => {
                 </div> : renderPosts}
                 <div className="friend-list-container" style={{ padding: "10px", textAlign: "center" }}>
                     <h4>No more posts to show</h4>
-                    <p>You can find more people and posts in <Link to='/'>explore</Link> tab</p>
+                    <p>You can find more people and posts in <Link to='/explore'>explore</Link> tab</p>
                 </div>
             </div>
 

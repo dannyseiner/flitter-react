@@ -20,7 +20,7 @@ const get_user_posts = (id, setPosts) => {
 
 const get_user_stats = (id, setStats) => {
     axios.get(`${config.restapi}/userstats/${id}`)
-        .then(response => console.log(response.data))
+        .then(response => { setStats(response.data); console.log(response) })
 }
 
 const exporter = {

@@ -18,6 +18,8 @@ import FastLogin from '../Sites/FastLogin'
 import EditPost from '../Sites/EditPost'
 import Footer from './Footer'
 import StickyFooter from './StickyFooter'
+import Explore from '../Sites/Explore'
+import Settings from '../Sites/Settings'
 
 const RouterCom = () => {
     const user = JSON.parse(sessionStorage.getItem('user'))
@@ -34,6 +36,8 @@ const RouterCom = () => {
                 <PrivateRoute path='/chat' component={Chat} />
                 <PrivateRoute path='/friends' exact component={Friends} />
                 <PrivateRoute path='/createPost' excact component={CreatePost} />
+                <PrivateRoute path='/explore' excact component={Explore} />
+                <PrivateRoute path='/settings' excact component={Settings} />
                 {/* PRIVATE ROUTES / EDITS  */}
                 <PrivateRoute path='/editpost/:id' excact component={EditPost} />
                 {/* ADMIN ROUTES */}
