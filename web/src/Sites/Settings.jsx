@@ -19,12 +19,13 @@ const Settings = () => {
             .then(response => setSettings(response.data))
     }
 
-    const render_settings = settings.map(sett => (
+    const render_settings = settings.map((sett, i) => (
         <SettingsBar settings={{
             text: sett.meta_header,
             metakey: sett.meta_key,
             checked: sett.meta_value,
-            id: sett.meta_id
+            id: sett.meta_id,
+            index: i
         }} key={sett.meta_id} />
     ))
 

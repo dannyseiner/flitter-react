@@ -231,6 +231,7 @@ api.post('/updatesettings', urlencodedParser, (req, res) => {
 api.post('/getsettings', urlencodedParser, (req, res) => {
     con.query(`SELECT * FROM account_settings WHERE user_id = ${req.body.userId}`, (err, result) => {
         res.send(result)
+        console.log(result)
     })
 })
 api.get('/posts', (req, res) => {
