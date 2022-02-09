@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from "axios"
 import config from "../config"
+import { Redirect } from 'react-router-dom'
 const EditPost = ({ match }) => {
     const user = JSON.parse(sessionStorage.getItem('user'))
     const [postTitle, setPostTitle] = useState("")
@@ -23,7 +24,7 @@ const EditPost = ({ match }) => {
             postContent: postText,
             accountId: user.account_id
         })
-            .then(response => console.log(response))
+            .then(response => { console.log(response); redirectToPost() })
     }
 
     const getPost = () => {
@@ -39,6 +40,11 @@ const EditPost = ({ match }) => {
             })
     }
 
+    const redirectToPost = () => {
+        window.location.replace('/post/' + match.params.id)
+
+    }
+
     return (
         <div className='home-container'>
             <form className='insert-post box-shadow'>
@@ -49,6 +55,9 @@ const EditPost = ({ match }) => {
                     <div className="insert-custom-button">
                         <a className="white" href="#" onClick={() => updatePost()}>
                             <p><span className="bg"></span><span className="base"></span><span className="text">Edit</span></p>
+                        </a>
+                        <a className="white" href="#" onClick={() => redirectToPost()}>
+                            <p><span className="bg"></span><span className="base"></span><span className="text">Back to post</span></p>
                         </a>
                     </div>
                 </div>

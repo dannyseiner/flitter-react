@@ -10,7 +10,10 @@ const InsertPost = (title, text, setStatus) => {
         title: title,
         text: text
     })
-        .then(response => setStatus(response.data))
+        .then(response => {
+            setStatus(response.data);
+            window.location.replace('/')
+        })
 }
 
 const exporter = {

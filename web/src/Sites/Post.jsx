@@ -37,19 +37,24 @@ const Post = ({ match }) => {
 
     const check_for_covid_info = () => {
         if (Object.keys(post).length === 0) return
-        let title = post.post_title
-        let clear = title.replace(/[^a-zA-Z ]/g, "")
-        clear = clear.toLowerCase()
-        clear = clear.replace(/[0-9]/g, "")
-        clear = clear.replace(/\s/g, "")
-        if (clear.includes("covid")) {
+        let title = check_for_covid_in_textt(post.post_title)
+        let content = check_for_covid_in_textt(post.post_content)
+        if (title || content) {
             return <div className="covid-alert">
-                <i class="fas fa-exclamation-triangle"></i>
+                <i className="fas fa-exclamation-triangle"></i>
                 <p>
                     This post includes covid-19 informations. To verify them, visit <Link to='/covid'>global sources</Link>. Incase of disinformation, please report this post.
                 </p>
             </div>
         }
+    }
+
+    const check_for_covid_in_textt = (txt) => {
+        let tmp = txt.replace(/[^a-zA-Z ]/g, "")
+        tmp = tmp.toLowerCase()
+        tmp = tmp.replace(/[0-9]/g, "")
+        tmp = tmp.replace(/\s/g, "")
+        return tmp.includes("covid")
     }
 
     // IS THE POST LIKED ??? 
