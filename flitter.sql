@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 27, 2021 at 11:48 PM
--- Server version: 10.4.17-MariaDB
--- PHP Version: 8.0.1
+-- Host: localhost:8889
+-- Generation Time: Feb 09, 2022 at 08:15 AM
+-- Server version: 5.7.34
+-- PHP Version: 8.0.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,7 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Database: `flitter`
 --
-CREATE DATABASE IF NOT EXISTS `flitter` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `flitter` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `flitter`;
 
 -- --------------------------------------------------------
@@ -29,14 +29,15 @@ USE `flitter`;
 -- Table structure for table `accounts`
 --
 
+DROP TABLE IF EXISTS `accounts`;
 CREATE TABLE `accounts` (
   `account_id` mediumint(9) NOT NULL,
-  `account_role` tinyint(4) NOT NULL DEFAULT 1,
+  `account_role` tinyint(4) NOT NULL DEFAULT '1',
   `account_name` char(50) NOT NULL,
   `account_email` char(120) NOT NULL,
   `account_password` varchar(100) NOT NULL,
   `account_fastlogin_key` varchar(300) NOT NULL,
-  `account_created` datetime NOT NULL DEFAULT current_timestamp()
+  `account_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -49,18 +50,32 @@ INSERT INTO `accounts` (`account_id`, `account_role`, `account_name`, `account_e
 (16, 1, 'testovaci ucet', 'testovaciucet@gmail.com', 'sha1$88249496$1$6c14ed87160143ccff7038dd57916714a716593c', '', '2021-11-07 15:20:28'),
 (19, 1, 'jan port', 'janport@admin.cz', 'sha1$de88ddbe$1$e4730fa5e76ae1f54b91b60452bda970c9e2a0f0', '', '2021-11-22 18:23:24');
 
+--
+-- Triggers `accounts`
+--
+DROP TRIGGER IF EXISTS `insert_into_settings`;
+DELIMITER $$
+CREATE TRIGGER `insert_into_settings` AFTER INSERT ON `accounts` FOR EACH ROW BEGIN 
+INSERT INTO account_settings (meta_key, meta_value, meta_header, user_id) VALUES ("Dark Mode", 0,0, NEW.account_id);
+
+INSERT INTO account_settings (meta_key, meta_value, meta_header, user_id) VALUES ("Allow all people to be able to see your posts", 0,0, NEW.account_id);
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `account_friends`
 --
 
+DROP TABLE IF EXISTS `account_friends`;
 CREATE TABLE `account_friends` (
   `id_friendship` int(11) NOT NULL,
   `id_user1` smallint(6) NOT NULL,
   `id_user2` smallint(6) NOT NULL,
-  `friendship_status` tinyint(1) NOT NULL DEFAULT 0,
-  `friendship_created` datetime NOT NULL DEFAULT current_timestamp()
+  `friendship_status` tinyint(1) NOT NULL DEFAULT '0',
+  `friendship_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -70,7 +85,7 @@ CREATE TABLE `account_friends` (
 INSERT INTO `account_friends` (`id_friendship`, `id_user1`, `id_user2`, `friendship_status`, `friendship_created`) VALUES
 (19, 1, 2, 1, '2021-11-22 21:04:43'),
 (20, 1, 16, 0, '2021-11-22 21:05:44'),
-(22, 2, 16, 1, '2021-11-24 13:59:47');
+(25, 2, 16, 0, '2022-02-08 17:32:09');
 
 -- --------------------------------------------------------
 
@@ -78,6 +93,7 @@ INSERT INTO `account_friends` (`id_friendship`, `id_user1`, `id_user2`, `friends
 -- Table structure for table `account_info`
 --
 
+DROP TABLE IF EXISTS `account_info`;
 CREATE TABLE `account_info` (
   `info_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
@@ -87,7 +103,7 @@ CREATE TABLE `account_info` (
   `country` char(30) NOT NULL,
   `phone` int(9) NOT NULL,
   `phone_code` mediumint(3) NOT NULL,
-  `account_image` longblob DEFAULT NULL
+  `account_image` longblob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -107,6 +123,7 @@ INSERT INTO `account_info` (`info_id`, `user_id`, `street`, `city`, `zip`, `coun
 -- Table structure for table `account_role`
 --
 
+DROP TABLE IF EXISTS `account_role`;
 CREATE TABLE `account_role` (
   `role_id` int(11) NOT NULL,
   `role_name` char(20) NOT NULL
@@ -126,14 +143,24 @@ INSERT INTO `account_role` (`role_id`, `role_name`) VALUES
 -- Table structure for table `account_settings`
 --
 
+DROP TABLE IF EXISTS `account_settings`;
 CREATE TABLE `account_settings` (
-  `setttings_id` int(11) NOT NULL,
-  `settings_account_id` int(11) NOT NULL,
-  `dark_mode` tinyint(1) NOT NULL,
-  `accept_requests` tinyint(1) NOT NULL,
-  `show_friends` tinyint(1) NOT NULL,
-  `show_email` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `meta_id` int(11) NOT NULL,
+  `meta_key` char(100) NOT NULL,
+  `meta_value` tinyint(1) NOT NULL DEFAULT '0',
+  `meta_header` varchar(200) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `account_settings`
+--
+
+INSERT INTO `account_settings` (`meta_id`, `meta_key`, `meta_value`, `meta_header`, `user_id`) VALUES
+(1, 'dark_mode', 1, 'Dark mode', 2),
+(2, 'allow_all_see_posts', 0, 'Allow all people to be albe to see your posts', 2),
+(3, 'private_account', 0, 'Private Account ', 2),
+(4, 'fast_access', 1, 'Allow fast access into account', 2);
 
 -- --------------------------------------------------------
 
@@ -141,12 +168,13 @@ CREATE TABLE `account_settings` (
 -- Table structure for table `fastaccess`
 --
 
+DROP TABLE IF EXISTS `fastaccess`;
 CREATE TABLE `fastaccess` (
   `access_id` int(11) NOT NULL,
   `account_id` int(11) DEFAULT NULL,
   `ipaddress` varchar(20) NOT NULL,
-  `status` tinyint(1) NOT NULL DEFAULT 0,
-  `created` datetime NOT NULL DEFAULT current_timestamp()
+  `status` tinyint(1) NOT NULL DEFAULT '0',
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -160,15 +188,26 @@ INSERT INTO `fastaccess` (`access_id`, `account_id`, `ipaddress`, `status`, `cre
 (583603, 2, '', 0, '2021-12-27 16:53:06'),
 (1136421, NULL, '', 0, '2021-12-27 16:23:40'),
 (2136023, 2, '', 0, '2021-12-27 16:37:47'),
+(2464171, 2, '127.0.0.1', 0, '2022-02-08 17:27:19'),
+(2637039, 2, '127.0.0.1', 0, '2022-01-11 09:46:31'),
+(3587431, NULL, '127.0.0.1', 0, '2022-01-03 09:38:06'),
+(3656482, 2, '127.0.0.1', 0, '2022-01-11 09:49:48'),
 (3893921, 2, '', 0, '2021-12-27 16:50:40'),
 (3955090, 2, '', 0, '2021-12-27 16:31:01'),
+(4425075, 2, '127.0.0.1', 0, '2022-01-20 23:39:35'),
 (4670469, 2, '127.0.0.1', 0, '2021-12-27 23:35:13'),
+(5372853, 2, '127.0.0.1', 0, '2022-01-25 13:59:05'),
 (5582042, NULL, 'undefined', 0, '2021-12-27 23:28:05'),
 (6307492, NULL, '', 0, '2021-12-27 16:37:20'),
 (6689152, 2, '', 0, '2021-12-27 16:47:48'),
 (6730524, 2, '127.0.0.1', 0, '2021-12-27 23:37:32'),
+(6911633, 2, '127.0.0.1', 0, '2022-02-06 14:16:29'),
 (7144996, NULL, '', 0, '2021-12-27 16:23:35'),
-(7460764, 2, '', 0, '2021-12-27 16:43:46');
+(7460764, 2, '', 0, '2021-12-27 16:43:46'),
+(7856435, 2, '127.0.0.1', 0, '2022-01-03 09:42:37'),
+(8292707, NULL, '127.0.0.1', 0, '2022-01-20 23:41:56'),
+(9621931, 2, '127.0.0.1', 0, '2022-02-06 14:15:28'),
+(9909787, 2, '127.0.0.1', 0, '2022-01-20 23:46:23');
 
 -- --------------------------------------------------------
 
@@ -176,14 +215,23 @@ INSERT INTO `fastaccess` (`access_id`, `account_id`, `ipaddress`, `status`, `cre
 -- Table structure for table `notifications`
 --
 
+DROP TABLE IF EXISTS `notifications`;
 CREATE TABLE `notifications` (
   `not_id` int(11) NOT NULL,
   `account_id` mediumint(9) NOT NULL,
   `not_header` char(70) NOT NULL,
-  `not_content` varchar(250) NOT NULL,
   `not_link` varchar(200) DEFAULT NULL,
-  `not_created` datetime NOT NULL DEFAULT current_timestamp()
+  `not_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`not_id`, `account_id`, `not_header`, `not_link`, `not_created`) VALUES
+(7, 1, 'You have recieved new like', 'post/10', '2022-01-20 23:19:35'),
+(8, 2, 'You have recieved new like', 'post/6', '2022-01-20 23:21:51'),
+(10, 16, 'You\'r post has been updated', '/post/3', '2022-01-25 13:57:52');
 
 -- --------------------------------------------------------
 
@@ -191,12 +239,13 @@ CREATE TABLE `notifications` (
 -- Table structure for table `posts`
 --
 
+DROP TABLE IF EXISTS `posts`;
 CREATE TABLE `posts` (
   `post_id` int(11) NOT NULL,
   `post_author_id` mediumint(9) NOT NULL,
   `post_title` char(100) NOT NULL,
   `post_content` varchar(200) NOT NULL,
-  `post_created` datetime NOT NULL DEFAULT current_timestamp()
+  `post_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -204,15 +253,17 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`post_id`, `post_author_id`, `post_title`, `post_content`, `post_created`) VALUES
-(1, 1, 'Testing api server title', 'Testing api server content title Testing api server content title Testing api server content title Testing api server content title ', '2021-11-03 11:30:38'),
-(2, 1, 'Testing api', 'Testing api LOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUN ', '2021-11-03 11:31:00'),
-(3, 16, 'testin insert post', 'test inserting post ', '2021-11-15 22:21:49'),
-(4, 2, 'asdas', 'dsdsagegkmooko', '2021-11-15 22:22:33'),
-(5, 1, 'lkesa', 'asdafgewgwg', '2021-11-15 22:23:06'),
-(6, 2, 'ads', 'asd', '2021-11-15 22:24:07'),
+(2, 1, 'Testing covid 19', 'Testing api LOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUNLOREM INPSUN ', '2021-11-03 11:31:00'),
+(3, 16, 'c o v i * d afgrgrg', 'test inserting post ', '2021-11-15 22:21:49'),
+(5, 1, 'c @#o2 v i * d afgrgrg', 'asdafgewgwg', '2021-11-15 22:23:06'),
+(6, 2, 'ads test test', 'asd test testdsadasda', '2021-11-15 22:24:07'),
 (7, 1, 'tesgin senf', 'dqsfgew[k[ef ', '2021-11-15 22:26:33'),
 (8, 2, 'asasd', 'adsdsaads', '2021-11-15 22:27:25'),
-(9, 2, 'last test', 'upadter', '2021-11-15 22:29:02');
+(9, 2, 'last test', 'upadter testovani', '2021-11-15 22:29:02'),
+(10, 1, 'prispevek', 'ahojx', '2022-01-10 22:12:49'),
+(11, 1, 'prispevek', 'ahojx', '2022-01-10 22:12:52'),
+(12, 1, 'testovaci pridani IN', 'testovaci pridani ', '2022-01-20 15:30:30'),
+(15, 2, 'prispevek', 'vytvorit pop', '2022-02-06 14:18:26');
 
 -- --------------------------------------------------------
 
@@ -220,13 +271,14 @@ INSERT INTO `posts` (`post_id`, `post_author_id`, `post_title`, `post_content`, 
 -- Table structure for table `post_comments`
 --
 
+DROP TABLE IF EXISTS `post_comments`;
 CREATE TABLE `post_comments` (
   `comment_id` int(11) NOT NULL,
   `comment_post_id` mediumint(9) NOT NULL,
   `comment_author_id` smallint(6) NOT NULL,
-  `comment_on_comment_id` mediumint(9) NOT NULL DEFAULT 0,
+  `comment_on_comment_id` mediumint(9) NOT NULL DEFAULT '0',
   `comment_content` varchar(300) NOT NULL,
-  `comment_created` datetime NOT NULL DEFAULT current_timestamp()
+  `comment_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -247,7 +299,14 @@ INSERT INTO `post_comments` (`comment_id`, `comment_post_id`, `comment_author_id
 (11, 1, 2, 0, 'ahoj ja jsem karel', '2021-12-27 23:20:12'),
 (12, 1, 2, 0, 'testovani komentare s reloadem', '2021-12-27 23:21:05'),
 (13, 1, 2, 0, 'dasdada', '2021-12-27 23:38:14'),
-(14, 1, 2, 0, 'pepega', '2021-12-27 23:39:32');
+(14, 1, 2, 0, 'pepega', '2021-12-27 23:39:32'),
+(15, 6, 2, 0, 'Ahoj pridavam komentar ', '2022-01-10 11:06:01'),
+(16, 6, 2, 0, 'Ahoj pridavam komentar ', '2022-01-10 11:06:02'),
+(17, 6, 2, 0, 'pridavam dasli negre', '2022-01-10 11:06:49'),
+(18, 6, 2, 0, 'ss', '2022-01-10 11:19:18'),
+(19, 6, 2, 0, 'asd', '2022-01-10 11:20:35'),
+(20, 10, 2, 0, 'Komentar :)', '2022-01-25 10:50:46'),
+(22, 2, 2, 0, 'asasd', '2022-02-08 17:30:30');
 
 -- --------------------------------------------------------
 
@@ -255,6 +314,7 @@ INSERT INTO `post_comments` (`comment_id`, `comment_post_id`, `comment_author_id
 -- Table structure for table `post_likes`
 --
 
+DROP TABLE IF EXISTS `post_likes`;
 CREATE TABLE `post_likes` (
   `like_id` int(11) NOT NULL,
   `like_post_id` mediumint(9) NOT NULL,
@@ -267,7 +327,16 @@ CREATE TABLE `post_likes` (
 
 INSERT INTO `post_likes` (`like_id`, `like_post_id`, `like_account_id`) VALUES
 (8, 1, 2),
-(10, 1, 1);
+(11, 1, 1),
+(14, 7, 1),
+(16, 2, 1),
+(17, 8, 1),
+(60, 9, 2),
+(68, 5, 2),
+(70, 12, 2),
+(74, 7, 2),
+(76, 2, 2),
+(77, 6, 2);
 
 --
 -- Indexes for dumped tables
@@ -305,8 +374,8 @@ ALTER TABLE `account_role`
 -- Indexes for table `account_settings`
 --
 ALTER TABLE `account_settings`
-  ADD PRIMARY KEY (`setttings_id`),
-  ADD KEY `settings_account_id` (`settings_account_id`);
+  ADD PRIMARY KEY (`meta_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `fastaccess`
@@ -359,7 +428,7 @@ ALTER TABLE `accounts`
 -- AUTO_INCREMENT for table `account_friends`
 --
 ALTER TABLE `account_friends`
-  MODIFY `id_friendship` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_friendship` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `account_info`
@@ -377,37 +446,37 @@ ALTER TABLE `account_role`
 -- AUTO_INCREMENT for table `account_settings`
 --
 ALTER TABLE `account_settings`
-  MODIFY `setttings_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `meta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `fastaccess`
 --
 ALTER TABLE `fastaccess`
-  MODIFY `access_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7460765;
+  MODIFY `access_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9909788;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `not_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `not_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `post_comments`
 --
 ALTER TABLE `post_comments`
-  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `comment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `post_likes`
 --
 ALTER TABLE `post_likes`
-  MODIFY `like_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `like_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- Constraints for dumped tables

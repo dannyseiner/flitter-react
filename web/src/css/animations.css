@@ -1,0 +1,41 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideFromTop {
+  from {
+    position: relative;
+    top: -200px;
+  }
+  to {
+    position: relative;
+    top: 0;
+  }
+}
+
+@keyframes slideFromRight {
+  from {
+    position: relative;
+    left: 200px;
+  }
+  to {
+    position: relative;
+    right: 0;
+  }
+}
+
+@keyframes slideFromLeft {
+  from {
+    position: relative;
+    left: -200px;
+  }
+  to {
+    position: relative;
+    left: 0;
+  }
+}

@@ -150,7 +150,7 @@ const PublicProfile = ({ match }) => {
 
             <div>
                 {posts.data.map(post =>
-                    <div key={post.post_id}>
+                    <div key={post.post_id} className="anim-top">
                         <Post post={post} postStyle={{ width: "100%" }} profileImage={profile.data[0].decoded_image} />
                     </div>
                 )}

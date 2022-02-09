@@ -35,6 +35,23 @@ const Post = ({ match }) => {
             }))
     }
 
+    const check_for_covid_info = () => {
+        if (Object.keys(post).length === 0) return
+        let title = post.post_title
+        let clear = title.replace(/[^a-zA-Z ]/g, "")
+        clear = clear.toLowerCase()
+        clear = clear.replace(/[0-9]/g, "")
+        clear = clear.replace(/\s/g, "")
+        if (clear.includes("covid")) {
+            return <div className="covid-alert">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>
+                    This post includes covid-19 informations. To verify them, visit <Link to='/covid'>global sources</Link>. Incase of disinformation, please report this post.
+                </p>
+            </div>
+        }
+    }
+
     // IS THE POST LIKED ??? 
     useEffect(() => {
         isPostLiked()
@@ -125,6 +142,7 @@ const Post = ({ match }) => {
                 <div className="post-content">
                     <Link to={`/post/${post.post_id}`} className="post-title">{post.post_title}</Link>
                     <p className="post-content">{post.post_content}</p>
+                    {check_for_covid_info()}
                 </div>
                 <div className="post-footer">
                     <p className="post-created">{new Date(post.post_created).toLocaleDateString("en-US", Config.format_options)}</p>

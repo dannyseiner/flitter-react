@@ -7,6 +7,17 @@
   border-radius: 9px;
   background-color: white;
   color: black;
+  animation-name: fadeIn;
+  animation-duration: 2s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .post-author {
@@ -245,4 +256,18 @@
 .deleteicon:hover {
   padding-right: 2px;
   color: red;
+}
+
+.covid-alert {
+  margin: 3px;
+  padding: 10px;
+}
+.covid-alert > p {
+  display: inline;
+  font-size: 17px;
+}
+.covid-alert > i {
+  color: rgb(252, 178, 49);
+  font-size: 30px;
+  padding: 10px;
 }

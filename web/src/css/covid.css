@@ -1,0 +1,35 @@
+.covid-block {
+  width: 100%;
+  height: "fit-content";
+  border-radius: 9px;
+  background-color: white;
+  color: black;
+  padding: 10px;
+  margin-bottom: 30px;
+}
+.covid-header {
+  display: inline;
+  position: relative;
+  top: -2px;
+  font-size: 18px;
+}
+.covid-header-link {
+  top: -2px;
+  text-align: center;
+  font-size: 18px;
+  margin: 0px auto;
+  width: fit-content;
+}
+.covid-detail {
+  font-weight: bold;
+  position: relative;
+  float: right;
+  font-size: 20px;
+  right: 15px;
+}
+.covid-icon {
+  font-size: 30px;
+  padding: 15px;
+  position: relative;
+  top: 5px;
+}

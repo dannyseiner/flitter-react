@@ -35,7 +35,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {user === null ?
+        {user !== null ?
           <Stack.Screen name="Login" component={LoginScreen} /> :
           <Stack.Screen name="Home" component={HomeScreen} />}
         <Stack.Screen name="Post" component={PostScreen} />

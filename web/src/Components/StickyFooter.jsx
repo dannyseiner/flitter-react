@@ -13,9 +13,7 @@ const StickyFooter = () => {
         getNotifications()
     }, []);
 
-    useEffect(() => {
-        getNotifications()
-    }, [<Notification />])
+
 
     const getNotifications = () => {
         axios.post(`${config.restapi}/userNotifications`, {
@@ -34,7 +32,7 @@ const StickyFooter = () => {
                     <button className="close-button" onClick={() => setNotificationMenu({ display: "none" })}>X</button>
                     <div style={{ marginTop: "40px" }}></div>
                     {notifications.map(not => (
-                        <Notification key={not.not_id} notification={not} />
+                        <Notification onClick={() => getNotifications()} key={not.not_id} notification={not} />
 
                     ))}
                 </div>

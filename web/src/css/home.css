@@ -58,6 +58,8 @@ body {
   border-radius: 9px;
   background-color: white;
   color: black;
+  animation-name: slideFromTop;
+  animation-duration: 3s;
 }
 .friend-tab-container {
   display: inline;

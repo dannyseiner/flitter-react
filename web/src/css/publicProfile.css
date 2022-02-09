@@ -26,6 +26,8 @@
   font-size: 30px;
 }
 .profile-header-image {
+  animation-name: slideFromLeft;
+  animation-duration: 2s;
   width: fit-content;
   display: inline-block;
 }
@@ -42,6 +44,8 @@
   top: -50px !important;
   left: 10px;
   margin: 0px;
+  animation-name: slideFromRight;
+  animation-duration: 2s;
 }
 .stat-box {
   display: inline-block;
@@ -70,6 +74,8 @@
 }
 .profile-info {
   margin: 0px;
+  animation-name: slideFromTop;
+  animation-duration: 2s;
 }
 @media only screen and (max-width: 730px) {
   body {
@@ -176,4 +182,9 @@
   padding: 14px;
   text-align: center;
   font-family: "Montserrat";
+}
+
+.anim-top {
+  animation-name: fadeIn;
+  animation-duration: 2s;
 }

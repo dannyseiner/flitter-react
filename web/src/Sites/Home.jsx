@@ -45,7 +45,7 @@ const Home = () => {
     return (
         <div className="home-container">
             <div className="timeline">
-                <div className="friend-list-container">
+                <div className="friend-list-container" >
                     {friends.data.length === 0 ? <p style={{ padding: "15px", textAlign: "center" }}>You don't have friends :(</p> : renderFriends}
                 </div>
                 {posts.length === 0 ? <div>
@@ -57,7 +57,7 @@ const Home = () => {
                 </div>
             </div>
 
-            <div className="create-post" >
+            <div className="create-post"  >
                 <Link to='/createpost'>
                     <i className="fas fa-plus"></i>
                 </Link>

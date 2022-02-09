@@ -47,7 +47,7 @@ const Footer = () => {
 
                 <div className="footer-icons">
 
-                    <Link to='/'><i class="fab fa-app-store-ios"></i></Link>
+                    <Link to='/'><i className="fab fa-app-store-ios"></i></Link>
                     <Link to='/'><i className="fab fa-linkedin"></i></Link>
                     <Link to='/'><i className="fab fa-github"></i></Link>
 
