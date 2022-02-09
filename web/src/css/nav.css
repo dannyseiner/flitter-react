@@ -233,6 +233,9 @@
 .menu-icon:checked ~ .nav ul li:nth-child(5) {
   transition-delay: 1720ms;
 }
+.menu-icon:checked ~ .nav ul li:nth-child(6) {
+  transition-delay: 1800ms;
+}
 
 .logo {
   position: absolute;

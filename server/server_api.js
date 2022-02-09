@@ -64,7 +64,7 @@ api.post("/editpost", urlencodedParser, (req, res) => {
         con.query(`INSERT INTO notifications (account_id, not_header, not_link) 
         VALUES (
             ${req.body.accountId},
-            "You'r post has been updated",
+            "Your post has been updated",
             "/post/${req.body.postId}"
         ) `)
         res.send({ status: "OK" })

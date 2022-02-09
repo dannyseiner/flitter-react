@@ -3,12 +3,16 @@
   color: black;
   padding: 20px;
   border-radius: 9px;
+  animation: slideFromTop 2.5s;
 }
 .settings-block {
   width: 100%;
   margin-top: 30px;
   margin-bottom: 30px;
   padding: 5px;
+  padding-left: 20px;
+  animation-name: fadeIn;
+  animation-duration: 2s;
 }
 .settings-description {
   display: block;

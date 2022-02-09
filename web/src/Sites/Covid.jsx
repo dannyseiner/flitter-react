@@ -59,7 +59,7 @@ const Covid = () => {
         axios.get('https://api.covidtracking.com/v1/us/current.json')
             .then(response => { setCovidInfo(response.data[0]) })
     }
-    return <div className="home-container">
+    return <div className="home-container covid-container">
         <div className="covid-block">
             <p className="covid-header-link">
                 For more or specific informations you can use trusted source as <Link to='/googleredirect' target="_blank">Google</Link>

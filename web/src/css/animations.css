@@ -39,3 +39,14 @@
     left: 0;
   }
 }
+
+@keyframes slideFormBottom {
+  from {
+    position: relative;
+    top: -300px;
+  }
+  to {
+    position: relative;
+    top: 0px;
+  }
+}

@@ -32,6 +32,7 @@ const Settings = () => {
 
     return <div className="home-container">
         <div className="settings-container">
+            <h1>Settings</h1>
             {render_settings}
         </div>
     </div>
