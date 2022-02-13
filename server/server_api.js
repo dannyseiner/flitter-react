@@ -39,6 +39,7 @@ io.on("connection", (socket) => {
     socket.on("join_room", (data) => {
         console.log(`Room ID ${data}`);
         socket.join(data)
+        // socket.to(data).emmet("user_is_active")
     })
     socket.on("send_message", (data) => {
         console.log(data)

@@ -18,7 +18,7 @@ const Chat = () => {
     const [friends, setFriends] = useState([
         {}
     ])
-    const [message, setMessage] = useState()
+    const [message, setMessage] = useState("")
     const [messages, setMessages] = useState([])
 
     useEffect(() => {
@@ -67,6 +67,7 @@ const Chat = () => {
             .then(response => setMessages(response.data))
     }
     const selectChatRoom = (data) => {
+        setMessage("")
         socket.emit("join_room", data.id)
         setChatRoom(data)
         getMessages()
@@ -114,7 +115,7 @@ const Chat = () => {
                                 Today at 12:56
                             </div>
                         </div> : ""}
-                    <div className="messages" id="chat" style={chatRoom.id === 0 ? { borderRadius: "16px" } : { borderRadius: "0px" }} id="chat">
+                    <div className="messages" id="chat" style={chatRoom.id === 0 ? { borderRadius: "16px" } : { borderRadius: "0px" }} >
                         {renderMessages}
                     </div>
                     <div className="input" style={chatRoom.id === 0 ? { display: "none" } : { display: "flex" }}>

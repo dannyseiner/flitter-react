@@ -69,6 +69,14 @@
     2rem 2rem 4rem -3rem rgba(0, 0, 0, 0.5);
   transition: transform 500ms;
 }
+@media screen and (max-width: 966px) {
+  .contacts {
+    transform: translate(-6rem, -50%);
+  }
+  .chat {
+    width: 100px;
+  }
+}
 .contacts h2 {
   margin: 0.5rem 0 1.5rem 5rem;
 }
