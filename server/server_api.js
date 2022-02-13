@@ -5,7 +5,12 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const passwordHash = require('password-hash');
 const config = require("./config.json")
-const { response } = require("express")
+// SOCKETS
+const http = require('http')
+const chatapp = express()
+const { Server } = require("socket.io")
+const server = http.createServer()
+chatapp.use(cors())
 
 api.use(bodyParser.json())
 api.use(cors())
@@ -23,6 +28,38 @@ con.connect(function (err) {
     console.log("Connected!")
 })
 
+// SOCKET {CHAT APP}
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+    },
+})
+io.on("connection", (socket) => {
+    socket.on("join_room", (data) => {
+        console.log(`Room ID ${data}`);
+        socket.join(data)
+    })
+    socket.on("send_message", (data) => {
+        console.log(data)
+        con.query(`INSERT INTO messages (friendship_id, from_id, message) VALUES (
+            ${data.roomId},
+            ${data.fromId},
+            '${data.message}'
+        )`)
+        con.query(`SELECT * FROM messages WHERE friendship_id = ${data.roomId}  LIMIT 30`, (err, result) => {
+            socket.to(data.roomId).emit("receive_message", result)
+        })
+    })
+
+    socket.on("disconnect", () => {
+        console.log("user disconnected", socket.id)
+    })
+})
+
+server.listen(3003, () => {
+    console.log("SERVER RUNNING")
+})
 
 // ROUTES
 api.get("/", (req, res) => {

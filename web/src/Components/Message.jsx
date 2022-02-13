@@ -8,7 +8,7 @@ const Message = ({ data, index }) => {
 
     const user = JSON.parse(sessionStorage.getItem("user"))
     return (
-        <div class="">
+        <div>
             {index % 5 === 0 ? <div className="time">
                 {new Date(data.sent).toLocaleDateString("en-US", config.format_options)}
             </div> : ""}

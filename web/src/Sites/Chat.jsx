@@ -3,9 +3,12 @@ import { useState, useEffect } from 'react'
 import ChatContact from "../Components/ChatContact"
 import Message from '../Components/Message'
 import config from "../config"
+import io from "socket.io-client"
+import { animateScroll } from "react-scroll";
+
+const socket = io.connect(`${config.socket}`)
 
 const Chat = () => {
-    let bool = false
     const user = JSON.parse(sessionStorage.getItem('user'))
     const [chatRoom, setChatRoom] = useState({
         id: 0,
@@ -15,8 +18,24 @@ const Chat = () => {
     const [friends, setFriends] = useState([
         {}
     ])
-    const [message, setMessage] = useState("")
+    const [message, setMessage] = useState()
     const [messages, setMessages] = useState([])
+
+    useEffect(() => {
+        socket.on("receive_message", (data) => {
+            setMessages(data)
+        })
+
+
+    }, [socket])
+
+    useEffect(() => {
+        animateScroll.scrollToBottom({
+            containerId: "chat"
+        });
+        console.log("scroll")
+    }, [messages])
+
     const getFriends = () => {
         axios.get(`${config.restapi}/getfriendsstrict/${user.account_id}`)
             .then(response => setFriends(response.data))
@@ -48,6 +67,7 @@ const Chat = () => {
             .then(response => setMessages(response.data))
     }
     const selectChatRoom = (data) => {
+        socket.emit("join_room", data.id)
         setChatRoom(data)
         getMessages()
     }
@@ -56,11 +76,13 @@ const Chat = () => {
     ))
     const sentMessage = () => {
         if (message.length === 0) return
-        axios.post(`${config.restapi}/sentMessage`, {
+        socket.emit("send_message", {
             roomId: chatRoom.id,
             fromId: user.account_id,
-            message: message,
+            message: message
         })
+        getMessages()
+        setMessage("")
     }
     useEffect(() => {
         getFriends()
@@ -81,7 +103,7 @@ const Chat = () => {
                     </h2>
                     {renderFriends}
                 </div>
-                <div className="chat">
+                <div className="chat" >
                     {chatRoom.id !== 0 ?
                         <div className="contact bar">
                             <img className="pic" src={chatRoom.image} />
@@ -92,13 +114,13 @@ const Chat = () => {
                                 Today at 12:56
                             </div>
                         </div> : ""}
-                    <div className="messages" style={chatRoom.id === 0 ? { borderRadius: "16px" } : { borderRadius: "0px" }} id="chat">
+                    <div className="messages" id="chat" style={chatRoom.id === 0 ? { borderRadius: "16px" } : { borderRadius: "0px" }} id="chat">
                         {renderMessages}
                     </div>
                     <div className="input" style={chatRoom.id === 0 ? { display: "none" } : { display: "flex" }}>
                         <i className="fas fa-camera"></i>
                         <i className="far fa-laugh-beam"></i>
-                        <input onChange={e => setMessage(e.target.value)} placeholder="Message..." type="text" />
+                        <input value={message} onChange={e => setMessage(e.target.value)} placeholder="Message..." type="text" />
                         <i className="fas fa-paper-plane" onClick={() => sentMessage()}></i>
                     </div>
                 </div>
