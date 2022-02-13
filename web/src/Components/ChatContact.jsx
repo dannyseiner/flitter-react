@@ -1,16 +1,18 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
-const ChatContact = ({ username, userimage, badge, lastmesasge = "last message" }) => {
-    if (badge === undefined) badge = 0
+const ChatContact = ({ user }) => {
+    if (user.badge === undefined) user.badge = 0
     return (
         <div className="contact">
-            <div className={userimage}></div>
-            {parseInt(badge) !== 0 ? <div className="badge">{badge}</div> : ''}
+            <img className="pic" src={user.image} alt="profile-image" />
+            {parseInt(user.badge) !== 0 ? <div className="badge">{user.badge}</div> : ''}
             <div className="name">
-                {username}
+                {/* <Link to={`profile/${user.id}`}>{user.username}</Link> */}
+                {user.username}
             </div>
             <div className="message">
-                {lastmesasge}
+                Online
             </div>
         </div>
     )

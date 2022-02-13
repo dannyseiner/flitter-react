@@ -1,5 +1,6 @@
 const getter = sessionStorage.getItem("user")
 const user = JSON.parse(getter)
+
 const getUser = () => {
     return user
 }

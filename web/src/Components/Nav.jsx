@@ -26,6 +26,7 @@ const Nav = () => {
                     <li><Link to='/'><i className="fas fa-archive"></i> Homepage</Link></li>
                     <li><PrivateLink to='/friends'><i className="fas fa-user-friends"></i> Friends</PrivateLink></li>
                     <li><AdminLink to='/apiTest' ><i className="fab fa-dev"></i> Api Test</AdminLink></li>
+                    <li><PrivateLink to={user === null ? "" : `/chat`}><i className="fas fa-envelope"></i> Chat</PrivateLink></li>
                     <li><PrivateLink to={user === null ? "" : `/profile/${user.account_id}`}><i className="fas fa-user"></i> Profile</PrivateLink></li>
                     <li><PrivateLink to={user === null ? "" : `/settings`}><i className="fas fa-cog"></i> Settings</PrivateLink></li>
                     <li><PrivateLink to='' onClick={logout} className="nav-link"><i className="fas fa-sign-out-alt"></i> Logout</PrivateLink></li>

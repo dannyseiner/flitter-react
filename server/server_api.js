@@ -15,9 +15,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 const log = (txt, data) => {
     console.clear()
-    // console.log(`------------ < ${txt} > ------------`)
-    // console.log(data)
-    // console.log(`------------ < ${txt} /> ------------`)
+
 }
 const con = mysql.createConnection(config)
 con.connect(function (err) {
@@ -235,6 +233,28 @@ api.post('/getsettings', urlencodedParser, (req, res) => {
         console.log(result)
     })
 })
+
+
+// GET MESSAGES
+api.get('/getMessages/:id', (req, res) => {
+    con.query(`SELECT * FROM messages WHERE friendship_id = ${req.params.id}`, (err, result) => {
+        res.send(result)
+    })
+})
+
+// SENT MESSAGE
+api.post('/sentMessage', urlencodedParser, (req, res) => {
+    con.query(`INSERT INTO messages (friendship_id, from_id, message) VALUES (
+        ${req.body.roomId},
+        ${req.body.fromId},
+        '${req.body.message}'
+    )`, (err, result) => {
+        res.send({ status: "OK" })
+    })
+})
+
+
+
 api.get('/posts', (req, res) => {
     con.query(`SELECT * FROM posts 
     INNER JOIN accounts ON posts.post_author_id = accounts.account_id 

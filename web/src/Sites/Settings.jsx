@@ -34,6 +34,8 @@ const Settings = () => {
         <div className="settings-container">
             <h1>Settings</h1>
             {render_settings}
+            <h1>Profile</h1>
+
         </div>
     </div>
 };

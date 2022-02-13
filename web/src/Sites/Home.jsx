@@ -29,7 +29,7 @@ const Home = () => {
     }
     const renderFriends = friends.data.map(friendship => (
         <div className="friend-tab-container" key={friendship.id_friendship}>
-            <div className="tooltip">
+            <div className="tooltip" style={{ display: "inline-block" }}>
                 <Link to={friendship.user1_id === user.account_id ? `profile/${friendship.user2_id}` : `profile/${friendship.user1_id}`}>
                     <img src={friendship.user1_id === user.account_id ? friendship.user2_image_render : friendship.user1_image_render} className="friend-tab-image" />
                     <p className="tooltiptext">{friendship.user1_id === user.account_id ? friendship.user2_name : friendship.user1_name}</p>

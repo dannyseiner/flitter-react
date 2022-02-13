@@ -1,87 +1,105 @@
+import axios from 'axios'
 import { useState, useEffect } from 'react'
 import ChatContact from "../Components/ChatContact"
-import engine from '../Controllers/ChatEngine'
-
+import Message from '../Components/Message'
+import config from "../config"
 
 const Chat = () => {
-    const [friends, setFriends] = useState({
-        data: []
-    })
+    let bool = false
     const user = JSON.parse(sessionStorage.getItem('user'))
+    const [chatRoom, setChatRoom] = useState({
+        id: 0,
+        username: "",
+        image: "",
+    })
+    const [friends, setFriends] = useState([
+        {}
+    ])
+    const [message, setMessage] = useState("")
+    const [messages, setMessages] = useState([])
+    const getFriends = () => {
+        axios.get(`${config.restapi}/getfriendsstrict/${user.account_id}`)
+            .then(response => setFriends(response.data))
+    }
+    const renderFriends = friends.map((friend, i) => (
+        <div key={i}
+            onClick={() => {
+                selectChatRoom({
+                    id: friend.id_friendship,
+                    username: user.account_id === friend.user1_id ? friend.user2_name : friend.user1_name,
+                    image: user.account_id === friend.user1_id ? friend.user2_image_render : friend.user1_image_render,
+                })
+            }}
+        >
+            <ChatContact user={{
+                id: user.account_id === friend.user1_id ? friend.user2_id : friend.user1_id,
+                username: user.account_id === friend.user1_id ? friend.user2_name : friend.user1_name,
+                image: user.account_id === friend.user1_id ? friend.user2_image_render : friend.user1_image_render,
+                lastMessage: "Last messge",
+                badge: 0,
+            }}
+            />
+        </div>
+    ))
 
+    const getMessages = () => {
+        if (chatRoom === 0) return
+        axios.get(`${config.restapi}/getMessages/${chatRoom.id}`)
+            .then(response => setMessages(response.data))
+    }
+    const selectChatRoom = (data) => {
+        setChatRoom(data)
+        getMessages()
+    }
+    const renderMessages = messages.map((msg, i) => (
+        <Message data={msg} index={i} key={i} />
+    ))
+    const sentMessage = () => {
+        if (message.length === 0) return
+        axios.post(`${config.restapi}/sentMessage`, {
+            roomId: chatRoom.id,
+            fromId: user.account_id,
+            message: message,
+        })
+    }
     useEffect(() => {
-        engine.get_user_friends(user.account_id, setFriends)
+        getFriends()
     }, []);
 
+    useEffect(() => {
+        getMessages()
+
+    }, [])
+
     return (
-        <div>
+        <div style={{ minHeight: "100vh", top: "50px", position: "relative" }}>
             <div className="center">
                 <div className="contacts">
                     <i className="fas fa-bars fa-2x"></i>
                     <h2>
                         Contacts
                     </h2>
-                    {friends.data.map((usr, index) => (
-                        <ChatContact key={index} username="aa" userimage="pic stark" badge="4" />
-                    ))}
-                    <div className="contact">
-                        <div className="pic thor"></div>
-                        <div className="name">
-                            Thor Odinson
-                        </div>
-                        <div className="badge">
-                            3
-                        </div>
-                        <div className="message">
-                            I like this one
-                        </div>
-                    </div>
-                    <div className="contact">
-                        <div className="pic danvers"></div>
-                        <div className="badge">
-                            2
-                        </div>
-                        <div className="name">
-                            Carol Danvers
-                        </div>
-                        <div className="message">
-                            Hey Peter Parker, you got something for me?
-                        </div>
-                    </div>
+                    {renderFriends}
                 </div>
                 <div className="chat">
-                    <div className="contact bar">
-                        <div className="pic stark"></div>
-                        <div className="name">
-                            Tony Stark
-                        </div>
-                        <div className="seen">
-                            Today at 12:56
-                        </div>
+                    {chatRoom.id !== 0 ?
+                        <div className="contact bar">
+                            <img className="pic" src={chatRoom.image} />
+                            <div className="name">
+                                {chatRoom.username}
+                            </div>
+                            <div className="seen">
+                                Today at 12:56
+                            </div>
+                        </div> : ""}
+                    <div className="messages" style={chatRoom.id === 0 ? { borderRadius: "16px" } : { borderRadius: "0px" }} id="chat">
+                        {renderMessages}
                     </div>
-                    <div className="messages" id="chat">
-                        <div className="time">
-                            Today at 11:41
-                        </div>
-                        <div className="message parker">
-                            Hey, man! What's up, Mr Stark? 👋
-                        </div>
-                        <div className="message stark">
-                            Kid, where'd you come from?
-                        </div>
-                        <div className="message parker">
-                            Field trip! 🤣
-                        </div>
-                        <div className="message parker">
-                            Uh, what is this guy's problem, Mr. Stark? 🤔
-                        </div>
-                        <div className="message stark">
-                            Uh, he's from space, he came here to steal a necklace from a wizard.
-                        </div>
-                        {/* \ */}
-                    </div>
-                    <div className="input">
-                        <i className="fas fa-camera"></i><i className="far fa-laugh-beam"></i><input placeholder="Type your message here!" type="text" /><i className="fas fa-microphone"></i>
+                    <div className="input" style={chatRoom.id === 0 ? { display: "none" } : { display: "flex" }}>
+                        <i className="fas fa-camera"></i>
+                        <i className="far fa-laugh-beam"></i>
+                        <input onChange={e => setMessage(e.target.value)} placeholder="Message..." type="text" />
+                        <i className="fas fa-paper-plane" onClick={() => sentMessage()}></i>
                     </div>
                 </div>
             </div >
