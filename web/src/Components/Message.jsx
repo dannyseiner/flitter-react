@@ -15,7 +15,7 @@ const Message = ({ data, index }) => {
 
             <div className={`message tooltip ${user.account_id === data.from_id ? "from" : ""}`}>
                 {data.message}
-                <div className="tooltiptext" style={{ left: "50px" }}>{new Date(data.sent).toLocaleDateString("en-US", config.format_options)}</div>
+                <div className="tooltiptext" >{new Date(data.sent).toLocaleDateString("en-US", config.format_options)}</div>
             </div>
         </div>
     )

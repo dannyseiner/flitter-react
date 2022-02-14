@@ -43,11 +43,7 @@ io.on("connection", (socket) => {
     })
     socket.on("send_message", (data) => {
         console.log(data)
-        con.query(`INSERT INTO messages (friendship_id, from_id, message) VALUES (
-            ${data.roomId},
-            ${data.fromId},
-            '${data.message}'
-        )`)
+        con.query(`INSERT INTO messages (friendship_id, from_id, message) VALUES (${data.roomId},${data.fromId},'${data.message}')`)
         con.query(`SELECT * FROM messages WHERE friendship_id = ${data.roomId}  LIMIT 30`, (err, result) => {
             socket.to(data.roomId).emit("receive_message", result)
         })

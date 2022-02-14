@@ -1,17 +1,19 @@
-import axios from 'axios'
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import axios from 'axios'
 import ChatContact from "../Components/ChatContact"
 import Message from '../Components/Message'
 import config from "../config"
 import io from "socket.io-client"
 import { animateScroll } from "react-scroll";
 
-const socket = io.connect(`${config.socket}`)
+const socket = io.connect(config.socket)
 
 const Chat = () => {
     const user = JSON.parse(sessionStorage.getItem('user'))
     const [chatRoom, setChatRoom] = useState({
         id: 0,
+        userId: 0,
         username: "",
         image: "",
     })
@@ -45,6 +47,7 @@ const Chat = () => {
             onClick={() => {
                 selectChatRoom({
                     id: friend.id_friendship,
+                    userId: user.account_id === friend.user1_id ? friend.user2_id : friend.user1_id,
                     username: user.account_id === friend.user1_id ? friend.user2_name : friend.user1_name,
                     image: user.account_id === friend.user1_id ? friend.user2_image_render : friend.user1_image_render,
                 })
@@ -108,15 +111,15 @@ const Chat = () => {
                     {chatRoom.id !== 0 ?
                         <div className="contact bar">
                             <img className="pic" src={chatRoom.image} />
-                            <div className="name">
+                            <Link to={`profile/${chatRoom.userId}`} className="name">
                                 {chatRoom.username}
-                            </div>
+                            </Link>
                             <div className="seen">
                                 Today at 12:56
                             </div>
                         </div> : ""}
                     <div className="messages" id="chat" style={chatRoom.id === 0 ? { borderRadius: "16px" } : { borderRadius: "0px" }} >
-                        {renderMessages}
+                        {messages.length === 0 ? "" : renderMessages}
                     </div>
                     <div className="input" style={chatRoom.id === 0 ? { display: "none" } : { display: "flex" }}>
                         <i className="fas fa-camera"></i>
