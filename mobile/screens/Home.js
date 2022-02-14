@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, ScrollView } from 'react-native';
 import axios from 'axios'
 import config from '../config'
 import { Icon } from 'react-native-elements';
-import footer from '../footer'
+import Footer from '../components/Footer';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -19,6 +19,7 @@ const HomeScreen = ({ navigation }) => {
         axios.get(`${config.restapi}/posts`)
             .then(response => setPosts(response.data))
     }
+
 
     return (
         <View>
@@ -37,39 +38,7 @@ const HomeScreen = ({ navigation }) => {
 
 
 
-            <View style={footer.footer}>
-                <View style={footer.footerBlock}>
-                    <Icon
-                        name='search'
-                        type="font-awesome"
-                        color='#00aced' />
-                    <Text style={footer.footerText}>Find</Text>
-                </View>
-                <View style={footer.footerBlock}>
-                    <Icon
-                        name='user'
-                        type="font-awesome"
-                        color='#00aced'
-                        title="Go to post"
-                        onPress={() => navigation.navigate('Profile')}
-                    />
-                    <Text style={footer.footerText}>Profile</Text>
-                </View>
-                <View style={footer.footerBlock}>
-                    <Icon
-                        name='users'
-                        type="font-awesome"
-                        color='#00aced' />
-                    <Text style={footer.footerText}>Friends</Text>
-                </View>
-                <View style={footer.footerBlock}>
-                    <Icon
-                        name='cog'
-                        type="font-awesome"
-                        color='#00aced' />
-                    <Text style={footer.footerText}>Settings</Text>
-                </View>
-            </View>
+            <Footer navigation={navigation} active="Home" />
         </View>
     );
 }
@@ -92,7 +61,7 @@ const styles = StyleSheet.create({
         fontSize: 17
     },
     scoll: {
-        marginBottom: 100
+        paddingBottom: 200
     }
 })
 

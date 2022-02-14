@@ -2,11 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Button, TextInput } from 'react-native';
 import axios from 'axios'
 import config from '../config'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const Login = () => {
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
+const Stack = createNativeStackNavigator();
 
+const Login = ({ navigation }) => {
+    const [username, setUsername] = useState("dannyseiner")
+    const [password, setPassword] = useState("admin")
+    const [data, setData] = useState("")
+
+    useEffect(() => {
+        getMyStringValue()
+    })
 
     const login = () => {
         axios.post(`${config.restapi}/login`, {
@@ -14,23 +23,37 @@ const Login = () => {
             password: password
         })
             .then(response => {
-                if (response.data.length === 0) return
-                _storeData(response.data[0])
+                console.log(response.data.length)
+                if (response.data.length === 0) {
+                    alert("Wrong username password! Please try again")
+                    return
+                }
+                setStringValue(response.data[0].account_id)
+                navigation.navigate('Home')
+
             })
     }
 
 
-    _storeData = async (data) => {
+
+    const setStringValue = async (data) => {
         try {
-            await AsyncStorage.setItem(
-                'user',
-                JSON.stringify(data)
-            );
-        } catch (error) {
-            // Error saving data
+            await AsyncStorage.setItem('user', data)
+        } catch (e) {
+            console.log(e)
         }
     }
 
+    const getMyStringValue = async () => {
+        try {
+            const getData = await AsyncStorage.getItem('key')
+            if (getData !== null) {
+                navigation.navigate('Home')
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
 
     return (

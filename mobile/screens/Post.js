@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, Button, Image } from 'react-native';
+import Footer from '../components/Footer';
 import config from '../config'
 const PostScreen = ({ route, navigation }) => {
     const post = route.params
@@ -7,7 +8,7 @@ const PostScreen = ({ route, navigation }) => {
     post.render_user_image = post.render_user_image.replace(/\s/g, '');
 
     return (
-        <View>
+        <View style={styles.container}>
             <Text style={styles.postTitle}>{post.post_title}</Text>
             <Text style={styles.postCreated}>{new Date(post.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
             <View style={styles.postHeader}>
@@ -21,18 +22,22 @@ const PostScreen = ({ route, navigation }) => {
                 <Text
                     title={post.account_name}
                     style={styles.postHeaderName}
-                    onPress={() => navigation.navigate('Profile', post)}>
+                    onPress={() => navigation.navigate('Profile', post.account_id)}>
                     {post.account_name}
                 </Text>
             </View>
             <View style={styles.postContent}>
                 <Text style={styles.postContentText}>{post.post_content}</Text>
             </View>
+            <Footer navigation={navigation} active="Home" />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        height: "100%",
+    },
     postTitle: {
         fontSize: 30,
         textAlign: "center",
