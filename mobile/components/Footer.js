@@ -16,6 +16,11 @@ const Footer = ({ navigation, active }) => {
                 text: "Profile"
             }} />
             <Block navigation={navigation} active={active} options={{
+                name: "plus",
+                type: "font-awesome",
+                text: "Create"
+            }} />
+            <Block navigation={navigation} active={active} options={{
                 name: "users",
                 type: "font-awesome",
                 text: "Friends"
@@ -65,7 +70,7 @@ const footer = StyleSheet.create({
 
     },
     footerBlock: {
-        width: "25%",
+        width: "20%",
         height: 80,
         paddingTop: 15,
         backgroundColor: "black",
@@ -73,12 +78,12 @@ const footer = StyleSheet.create({
         textAlign: "center"
     },
     footerText: {
-        color: "cyan",
+        color: "#00aced",
         textAlign: "center",
         fontWeight: "bold"
     },
     active: {
-        width: "25%",
+        width: "20%",
         height: 80,
         paddingTop: 15,
         color: "white",

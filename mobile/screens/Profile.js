@@ -13,7 +13,7 @@ const Profile = ({ route, navigation }) => {
     })
     useEffect(() => {
         if (params === undefined) {
-            getLoggedUser(2)
+            getLoggedUser(null)
         } else {
             getLoggedUser(params)
         }
@@ -21,7 +21,7 @@ const Profile = ({ route, navigation }) => {
     const getLoggedUser = async (id) => {
         try {
             const getData = await AsyncStorage.getItem('user')
-            axios.get(`${config.restapi}/user/${id}`)
+            axios.get(`${config.restapi}/user/${id === null ? getData : id}`)
                 .then(response => setData(response.data[0]))
         } catch (e) {
             console.log(e)

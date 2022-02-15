@@ -11,7 +11,6 @@ const Stack = createNativeStackNavigator();
 const Login = ({ navigation }) => {
     const [username, setUsername] = useState("dannyseiner")
     const [password, setPassword] = useState("admin")
-    const [data, setData] = useState("")
 
     useEffect(() => {
         getMyStringValue()

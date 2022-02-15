@@ -1,5 +1,6 @@
 const config = {
     restapi: "http://172.20.10.3:3002",
+    socket: "172.20.10.3:3003",
     date_format: { hour: 'numeric', minute: "numeric", month: 'short', day: 'numeric' },
     ipaddress: "172.20.10.3",
 

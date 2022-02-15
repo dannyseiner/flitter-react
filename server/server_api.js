@@ -25,13 +25,13 @@ const log = (txt, data) => {
 const con = mysql.createConnection(config)
 con.connect(function (err) {
     if (err) throw err
-    console.log("Connected!")
+    console.log("DB - ONLINE")
 })
 
 // SOCKET {CHAT APP}
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "*",
         methods: ["GET", "POST"],
     },
 })
@@ -55,7 +55,7 @@ io.on("connection", (socket) => {
 })
 
 server.listen(3003, () => {
-    console.log("SERVER RUNNING")
+    console.log("SOCKET - ONLINE ")
 })
 
 // ROUTES
@@ -345,7 +345,7 @@ api.get('/postshome/:id', (req, res) => {
         con.query(`SELECT * FROM posts 
         INNER JOIN accounts ON posts.post_author_id = accounts.account_id
         INNER JOIN account_info ON posts.post_author_id = account_info.user_id
-        WHERE ${sql_task}`, (error, response) => {
+        WHERE ${sql_task} ORDER BY post_created DESC`, (error, response) => {
             for (let i = 0; i < response.length; i++) {
                 response[i]["profile_image_encoded"] = decodeImage(response[i].account_image)
             }
