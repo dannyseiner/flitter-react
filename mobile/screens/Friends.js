@@ -25,7 +25,7 @@ const Friends = ({ navigation }) => {
 
     const renderFriends = friends.map((friend, i) => (
         <FriendBlock key={i} navigation={navigation} data={{
-            id: friend.user1_id === userId ? friend.user1_id : friend.user2_id,
+            userid: friend.user1_id === userId ? friend.user2_id : friend.user1_id,
             friendshipId: friend.friendship_id,
             image: friend.user1_id === userId ? friend.user1_image_render : friend.user2_image_render,
             name: friend.user1_id === userId ? friend.user1_name : friend.user2_name,
@@ -36,9 +36,12 @@ const Friends = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.spacer}></View>
-            <ScrollView>
+            <Text>Friends</Text>
+            <ScrollView style={{ height: "40%" }}>
                 {renderFriends}
             </ScrollView>
+            <Text>Requests</Text>
+
             <Footer navigation={navigation} active={"Friends"} />
         </View>
     );
@@ -49,7 +52,7 @@ const FriendBlock = ({ navigation, data }) => {
     return (
         <View style={styles.friendBlock}>
             <Text
-                onPress={() => navigation.navigate("Profile", data.id)}>
+                onPress={() => navigation.navigate("Profile", data.userid)}>
                 <Image
                     style={styles.friendImage}
                     source={{
@@ -75,6 +78,7 @@ const styles = StyleSheet.create({
     },
     friendBlock: {
         left: "20%",
+        top: 10,
     },
     friendImage: {
         width: 60,

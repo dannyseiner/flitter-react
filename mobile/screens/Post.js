@@ -5,7 +5,7 @@ import config from '../config'
 const PostScreen = ({ route, navigation }) => {
     const post = route.params
     console.log(post.render_user_image)
-    post.render_user_image = post.render_user_image.replace(/\s/g, '');
+    post.render_user_image = post.profile_image_encoded.replace(/\s/g, '');
 
     return (
         <View style={styles.container}>
@@ -18,7 +18,6 @@ const PostScreen = ({ route, navigation }) => {
                         uri: post.render_user_image,
                     }}
                 />
-
                 <Text
                     title={post.account_name}
                     style={styles.postHeaderName}

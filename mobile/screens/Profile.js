@@ -34,14 +34,15 @@ const Profile = ({ route, navigation }) => {
                 {data.decoded_image === undefined ? <></> : data.decoded_image === "" ? <></> :
                     <Image
                         style={styles.image}
-                        source={{
-                            uri: data.decoded_image.replace(/\s/g, ''),
-                        }}
+                        source={
+                            {
+                                uri: data.decoded_image.replace(/\s/g, ''),
+                            }}
                     />}
                 <Text style={styles.name}>{data.account_name}</Text>
                 <Text>{JSON.stringify(data)}</Text>
             </ScrollView>
-            <Footer navigation={navigation} active={"Profile"} />
+            {params === undefined ? <Footer navigation={navigation} active={"Profile"} /> : <Footer navigation={navigation} active={"Friends"} />}
         </View>
     );
 }

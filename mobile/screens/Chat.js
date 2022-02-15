@@ -1,12 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput } from 'react-native';
 import Footer from '../components/Footer'
 const Chat = ({ navigation }) => {
     return (
         <View>
             <View style={styles.container}>
                 <Text>Chat</Text>
+                <ScrollView>
+                    <Text>Message1</Text>
+                    <Text>Message2</Text>
+                    <Text>Message3</Text>
 
+                </ScrollView>
+                <TextInput placeholer="message" />
             </View>
         </View>
     );

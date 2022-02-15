@@ -337,14 +337,11 @@ api.get('/postshome/:id', (req, res) => {
     let sql_task = ""
     con.query(`SELECT * FROM account_friends WHERE id_user1 = ${req.params.id} AND friendship_status = 1 OR id_user2 = ${req.params.id} AND friendship_status = 1`, (err, result) => {
         for (let i = 0; i < result.length; i++) {
-
             if (req.params.id == result[i].id_user1) otherId = result[i].id_user2
             else if (req.params.id !== result[i].id_user2) otherId = result[i].id_user1
-
             sql_task += `post_author_id = ${otherId} OR `
         }
         sql_task += `post_author_id = ${req.params.id}`
-
         con.query(`SELECT * FROM posts 
         INNER JOIN accounts ON posts.post_author_id = accounts.account_id
         INNER JOIN account_info ON posts.post_author_id = account_info.user_id

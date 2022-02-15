@@ -4,6 +4,7 @@ import axios from 'axios'
 import config from '../config'
 import { Icon } from 'react-native-elements';
 import Footer from '../components/Footer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = ({ navigation }) => {
 
@@ -15,53 +16,79 @@ const HomeScreen = ({ navigation }) => {
     }, [])
 
 
-    const loadPosts = () => {
-        axios.get(`${config.restapi}/posts`)
+    const loadPosts = async () => {
+        const getData = await AsyncStorage.getItem('user')
+        axios.get(`${config.restapi}/postshome/${getData}`)
             .then(response => setPosts(response.data))
     }
 
 
     return (
-        <View>
+        <View style={styles.container}>
             <ScrollView style={styles.scroll}>
-                {posts.map(post => (
-                    <View key={post.post_id} style={styles.postContainer}>
-                        <Text
-                            title="Go to post"
-                            onPress={() => navigation.navigate('Post', post)}
-                            style={styles.postTitle}>{post.post_title}</Text>
-                        <Text style={styles.postAuthor}>{post.account_name}</Text>
-                        <Text style={styles.postCreated}>{new Date(post.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
-                    </View>
+                {posts.map((post, i) => (
+                    <PostBlock data={post} navigation={navigation} key={post.post_id} />
                 ))}
+                <View style={{ height: 100 }}></View>
             </ScrollView>
-
-
 
             <Footer navigation={navigation} active="Home" />
         </View>
     );
 }
 
+
+const PostBlock = ({ navigation, data }) => {
+    return (
+        <View style={styles.postContainer}>
+            <Text onPress={() => navigation.navigate("Post", data)} style={styles.postHeader}>{data.post_title}</Text>
+            <Text style={styles.postText}>{data.post_content}</Text>
+
+            <Text style={styles.postDate}>{new Date(data.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
+            <Text style={styles.postAuthor} onPress={() => navigation.navigate("Profile", data.post_author_id)}>{data.account_name}</Text>
+        </View>
+    )
+}
+
 const styles = StyleSheet.create({
-    postTitle: {
-        textAlign: "center",
-        fontSize: 20,
-        fontWeight: "bold"
+    container: {
+        height: "100%"
     },
     postContainer: {
-        margin: 30
+        width: "90%",
+        left: "5%%",
+        marginTop: 15,
+        padding: 15,
+        borderRadius: 12,
+        backgroundColor: "black",
+        color: "white",
+    },
+    postHeader: {
+        top: 5,
+        color: "white",
+        left: 5,
+        fontSize: 25,
+        fontWeight: "bold"
+    },
+    postText: {
+        top: 5,
+        color: "white",
+        left: 20,
+        fontSize: 19,
+        fontWeight: "400",
+    },
+    postDate: {
+        color: "white",
+        fontWeight: "600",
+        top: 23,
+        left: "67%",
     },
     postAuthor: {
-        textAlign: "right",
-        fontSize: 17
-    },
-    postCreated: {
-        top: -17,
-        fontSize: 17
-    },
-    scoll: {
-        paddingBottom: 200
+        color: "white",
+        fontWeight: "600",
+        left: 10,
+        fontSize: 15,
+        top: 5,
     }
 })
 
