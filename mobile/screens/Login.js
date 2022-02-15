@@ -23,16 +23,17 @@ const Login = ({ navigation }) => {
             password: password
         })
             .then(response => {
-                console.log(response.data.length)
                 if (response.data.length === 0) {
                     alert("Wrong username password! Please try again")
                     return
                 }
-                setStringValue(response.data[0].account_id)
+                console.log(response.data[0].account_id)
+                setStringValue(`${response.data[0].account_id}`)
                 navigation.navigate('Home')
 
             })
     }
+
 
 
 
@@ -46,7 +47,7 @@ const Login = ({ navigation }) => {
 
     const getMyStringValue = async () => {
         try {
-            const getData = await AsyncStorage.getItem('key')
+            const getData = await AsyncStorage.getItem('user')
             if (getData !== null) {
                 navigation.navigate('Home')
             }

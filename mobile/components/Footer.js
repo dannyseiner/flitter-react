@@ -6,7 +6,7 @@ const Footer = ({ navigation, active }) => {
     return (
         <View style={footer.footerContainer}>
             <Block navigation={navigation} active={active} options={{
-                name: "search",
+                name: "archive",
                 type: "font-awesome",
                 text: "Home"
             }} />

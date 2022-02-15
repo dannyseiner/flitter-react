@@ -7,19 +7,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Profile = ({ route, navigation }) => {
+    const params = route.params
     const [data, setData] = useState({
         decoded_image: ""
     })
-
-    const params = route.params
-    console.log(params)
     useEffect(() => {
         if (params === undefined) {
             getLoggedUser(2)
         } else {
             getLoggedUser(params)
         }
-    }, [id])
+    }, [])
     const getLoggedUser = async (id) => {
         try {
             const getData = await AsyncStorage.getItem('user')
@@ -29,8 +27,6 @@ const Profile = ({ route, navigation }) => {
             console.log(e)
         }
     }
-
-    console.log(data.decoded_image)
 
     return (
         <View style={styles.container}>
