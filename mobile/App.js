@@ -14,6 +14,7 @@ import FriendsScreen from './screens/Friends';
 import SettingsScreen from './screens/Settings'
 import ChatScreen from './screens/Chat';
 import CreateScreen from './screens/Create';
+import MapScreen from './screens/Map'
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
         <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
         <Stack.Screen name="Create" component={CreateScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
+        <Stack.Screen name="Map" component={MapScreen} options={headerTitleStyle} />
         <Stack.Screen name="Chat" component={ChatScreen} options={headerTitleStyle} />
       </Stack.Navigator>
     </NavigationContainer>

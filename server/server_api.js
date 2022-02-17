@@ -22,6 +22,8 @@ const log = (txt, data) => {
     console.clear()
 
 }
+let userLocations = []
+let userIds = []
 const con = mysql.createConnection(config)
 con.connect(function (err) {
     if (err) throw err
@@ -35,11 +37,23 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     },
 })
+const users = []
 io.on("connection", (socket) => {
+    //  MAP
+    socket.on("join_map", (data) => {
+        if (data.location.latitude === 0) return
+        if (data.userId === 0 || data.userId === null) return
+        if (data === null) return
+        console.log("NEW MAP -" + data)
+        console.log(data)
+        userLocations.push(data)
+        socket.broadcast.emit("new_locations", userLocations)
+    })
+
+    // CHAT
     socket.on("join_room", (data) => {
         console.log(`Room ID ${data}`);
-        socket.join(data)
-        // socket.to(data).emmet("user_is_active")
+
     })
     socket.on("send_message", (data) => {
         console.log(data)
