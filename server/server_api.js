@@ -22,8 +22,6 @@ const log = (txt, data) => {
     console.clear()
 
 }
-let userLocations = []
-let userIds = []
 const con = mysql.createConnection(config)
 con.connect(function (err) {
     if (err) throw err
@@ -54,8 +52,8 @@ io.on("connection", (socket) => {
             if (result.length === 0) {
                 con.query(`INSERT INTO location (user_id, latitude, longtitude,latitudeDelta,longitudeDelta) VALUES (${data.userId}, ${data.location.latitude}, ${data.location.longitude}, ${data.location.latitudeDelta}, ${data.location.longitudeDelta})`)
             } else {
-                console.log()
-                con.query(`UPDATE location SET latitude=${data.location.latitude}, longtitude=${data.location.longitude}, latitudeDelta=${data.location.latitudeDelta}, longitudeDelta=${data.location.longitudeDelta} WHERE user_id = ${data.userId}`)
+                console.log(`UPDATE location SET latitude=${data.location.latitude}, longtitude=${data.location.longitude}, latitudeDelta=${data.location.latitudeDelta}, longitudeDelta=${data.location.longitudeDelta}, last_update='${data.last_update}' WHERE user_id = ${data.userId}`)
+                con.query(`UPDATE location SET latitude=${data.location.latitude}, longtitude=${data.location.longitude}, latitudeDelta=${data.location.latitudeDelta}, longitudeDelta=${data.location.longitudeDelta}, last_update='${data.last_update}' WHERE user_id = ${data.userId}`)
             }
         })
         con.query("SELECT * FROM location INNER JOIN accounts ON location.user_id = accounts.account_id INNER JOIN account_info ON location.user_id = account_info.user_id", (err, result2) => {

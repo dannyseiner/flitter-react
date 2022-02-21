@@ -19,7 +19,6 @@ const socket = io.connect(`http://${config.socket}`, connectionConfig)
 
 const Map = ({ route, navigation }) => {
     const params = route.params
-    console.log(params)
 
     const [places, setPlaces] = useState([])
     const [userId, setUserId] = useState(0)
@@ -36,20 +35,21 @@ const Map = ({ route, navigation }) => {
     });
 
     useEffect(() => {
-        console.log("MAP UPDATED [join_map]")
-        console.log(location)
+        let date = new Date()
+        date.setHours(date.getHours() + 1);
+
+        console.log(date)
         socket.emit("join_map", {
             location: location,
             userId: userId,
+            last_update: date.toISOString().slice(0, 19).replace('T', ' ')
         })
     }, [location])
 
 
     useEffect(() => {
         socket.on("new_locations", (data) => {
-            console.log("NEW LOCATION")
             setPins(data)
-
         })
     }, [socket])
 
@@ -137,42 +137,7 @@ const Map = ({ route, navigation }) => {
     ))
 
     const renderPeople = pins.map((pin, i) => (
-        <View key={i}>
-            {pin.account_id + "" === userId + "" ?
-                <Marker
-                    key={i}
-                    coordinate={{ latitude: pin.latitude, longitude: pin.longtitude }}
-                    title={`${pin.account_name}`}
-                    description={"Active"}>
-                    <View style={styles.mapmarkerUser}>
-                        <Image
-                            style={styles.image}
-                            source={
-                                {
-                                    uri: pin.render_image.replace(/\s/g, ''),
-                                }}
-                        />
-                    </View>
-
-                </Marker> :
-                <Marker
-                    key={i}
-                    coordinate={{ latitude: pin.latitude, longitude: pin.longtitude }}
-                    title={`${pin.account_name}`}
-                    description={"Active"}>
-                    <View style={styles.mapmarker}>
-                        <Image
-                            style={styles.image}
-                            source={
-                                {
-                                    uri: pin.render_image.replace(/\s/g, ''),
-                                }}
-                        />
-                    </View>
-
-                </Marker>
-            }
-        </View>
+        <PeopleBlock data={pin} key={i} userId={userId} />
     ))
 
 
@@ -201,6 +166,73 @@ const Map = ({ route, navigation }) => {
             }
         </View>
     );
+}
+
+const PeopleBlock = ({ data, userId }) => {
+    const [lastActive, setLastActive] = useState("")
+
+    useEffect(() => {
+        console.log(data.account_name)
+        const date = new Date(data.last_update)
+        const now = new Date()
+        var diffMs = (now - date); // milliseconds between now & Christmas
+        var diffDays = Math.floor(diffMs / 86400000); // days
+        console.log("diffDays", diffDays);
+        var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+        console.log("diffHrs", diffHrs);
+        var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+        console.log("diffMins ", diffMins);
+
+        if (diffDays === 0) {
+            if (diffHrs === 0) {
+                if (diffMins < 5) {
+                    setLastActive("Active now")
+                } else {
+                    setLastActive(`Active ${diffMins} minutes ago`)
+                }
+            } else {
+                setLastActive(`Active ${diffHrs} hours ago`)
+            }
+        } else {
+            setLastActive(`Active ${diffDays} hours ago`)
+        }
+    }, []);
+    return (
+        <View >
+            {data.account_id + "" === userId + "" ?
+                <Marker
+                    coordinate={{ latitude: data.latitude, longitude: data.longtitude }}
+                    title={`${data.account_name}`}
+                    description={lastActive}>
+                    <View style={styles.mapmarkerUser}>
+                        <Image
+                            style={styles.image}
+                            source={
+                                {
+                                    uri: data.render_image.replace(/\s/g, ''),
+                                }}
+                        />
+                    </View>
+
+                </Marker> :
+                <Marker
+                    coordinate={{ latitude: data.latitude, longitude: data.longtitude }}
+                    title={`${data.account_name}`}
+                    description={lastActive}>
+                    <View style={styles.mapmarker}>
+                        <Image
+                            style={styles.image}
+                            source={
+                                {
+                                    uri: data.render_image.replace(/\s/g, ''),
+                                }}
+                        />
+                    </View>
+
+                </Marker>
+            }
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
