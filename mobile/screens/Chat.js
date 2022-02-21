@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView, TextInput } from 'react-native';
 import io from "socket.io-client"
 import axios from "axios"
 import config from "../config"
@@ -44,8 +44,6 @@ const Chat = ({ route, navigation }) => {
     useEffect(() => {
         console.log("ACCESS")
         socket.on("receive_message", (data) => {
-            console.log("RECEVE_MESSAGE")
-            // setMessages(data)
             getMessages()
         })
     }, [socket])
@@ -75,7 +73,28 @@ const Chat = ({ route, navigation }) => {
                 : <></>}
             {msg.from_id + "" === userId + "" ?
                 <View style={styles.MymessageContainer}>
-                    <Text style={styles.MymessageText}>
+                    <Text style={styles.MymessageText}
+                        onLongPress={() => {
+                            Alert.alert(
+                                "Do you want to delete this message?",
+                                "This action cannot be returned",
+                                [
+                                    {
+                                        text: "Cancel",
+                                        style: "cancel"
+                                    },
+                                    {
+                                        text: "Delete", onPress: () => {
+                                            axios.post(`${config.restapi}/deletemessage`, {
+                                                messageId: msg.message_id
+                                            }).then(response => {
+                                                socket.emit("delete_message", { roomId: params })
+                                                getMessages()
+                                            })
+                                        }
+                                    }
+                                ])
+                        }}>
                         {msg.message}
                     </Text>
                 </View>

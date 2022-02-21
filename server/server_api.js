@@ -79,6 +79,12 @@ io.on("connection", (socket) => {
         })
     })
 
+    socket.on("delete_message", (data) => {
+        con.query(`SELECT * FROM messages WHERE friendship_id = ${data}  LIMIT 30`, (err, result) => {
+            socket.broadcast.emit("receive_message", result)
+        })
+    })
+
     socket.on("disconnect", () => {
         console.log("user disconnected", socket.id)
     })
@@ -97,6 +103,8 @@ api.get("/", (req, res) => {
 // CHAT
 api.post('/deletemessage', urlencodedParser, (req, res) => {
     con.query(`DELETE FROM messages WHERE message_id = ${req.body.messageId}`)
+    res.send({ status: "ok" })
+
 })
 
 // MAPVIEW
