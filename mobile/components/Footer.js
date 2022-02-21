@@ -19,7 +19,7 @@ const Footer = ({ navigation, active }) => {
             <Block navigation={navigation} active={active} options={{
                 name: "map",
                 type: "font-awesome",
-                text: "Map"
+                text: "Maps"
             }} />
             <Block navigation={navigation} active={active} options={{
                 name: "users",

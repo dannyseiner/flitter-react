@@ -27,6 +27,7 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+
             <ScrollView
                 style={styles.scroll}
                 onScrollToTop={() => loadPosts()}>
@@ -37,7 +38,9 @@ const HomeScreen = ({ navigation }) => {
 
                 <View style={{ height: 100 }}></View>
             </ScrollView>
-
+            <View style={{ position: "absolute", fontSize: 20, top: "80%", right: 30, backgroundColor: "#00aced", width: 50, height: 50, borderRadius: "100%" }}>
+                <Text onPress={() => navigation.navigate("Create")} style={{ fontSize: 25, color: "white", fontWeight: "bold", textAlign: "center", padding: 10 }}>+</Text>
+            </View>
             <Footer navigation={navigation} active="Home" />
         </View>
     );

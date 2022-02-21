@@ -209,6 +209,7 @@ const Map = ({ route, navigation }) => {
                         </>
                         : <>
                             <Marker
+                                onPress={() => selectPlace({ place_id: 1, latitude: params.latitude, longitude: params.longitude })}
                                 coordinate={{ latitude: params.latitude, longitude: params.longitude }}
                                 description={`Place created by ${params.account_name}`}
                                 title={params.place_name}>

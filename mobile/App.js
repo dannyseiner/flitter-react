@@ -57,8 +57,8 @@ function App() {
         <Stack.Screen name="Post" component={PostScreen} options={headerTitleStyle} />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
-        <Stack.Screen name="Create" component={CreateScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
-        <Stack.Screen name="Map" component={MapScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Create" component={CreateScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Maps" component={MapScreen} options={headerTitleStyle} />
         <Stack.Screen name="Chat" component={ChatScreen} options={headerTitleStyle} />
       </Stack.Navigator>
     </NavigationContainer>
