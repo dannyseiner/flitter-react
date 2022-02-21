@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Icon } from 'react-native-elements';
 
 const Footer = ({ navigation, active }) => {
@@ -36,6 +37,15 @@ const Footer = ({ navigation, active }) => {
 }
 
 const Block = ({ navigation, active, options }) => {
+    const [userId, setUserId] = useState(0)
+    const loadUser = async () => {
+        const data = await AsyncStorage.getItem("user")
+        setUserId(data)
+    }
+    useEffect(() => {
+        loadUser()
+    }, []);
+
     return (
         <>
             {active === options.text ? <View style={footer.active}>
@@ -47,12 +57,21 @@ const Block = ({ navigation, active, options }) => {
                 <Text style={footer.activeText}>{options.text}</Text>
             </View> :
                 <View style={footer.footerBlock}>
-                    <Icon
-                        name={options.name}
-                        type={options.type}
-                        onPress={() => navigation.navigate(options.text)}
-                        color='#00aced' />
+                    {options.text === "Profile" ?
+                        <Icon
+                            name={options.name}
+                            type={options.type}
+                            onPress={() => navigation.navigate("Profile", userId)}
+                            color='#00aced' />
+                        :
+                        <Icon
+                            name={options.name}
+                            type={options.type}
+                            onPress={() => navigation.navigate(options.text)}
+                            color='#00aced' />
+                    }
                     <Text style={footer.footerText}>{options.text}</Text>
+
                 </View>
             }
         </>
@@ -73,7 +92,7 @@ const footer = StyleSheet.create({
         width: "20%",
         height: 80,
         paddingTop: 15,
-        backgroundColor: "black",
+        backgroundColor: "white",
         color: "white",
         textAlign: "center"
     },

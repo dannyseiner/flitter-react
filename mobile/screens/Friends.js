@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     friendBlock: {
         left: "5%",
         top: 10,
-        backgroundColor: "black",
+        backgroundColor: "white",
         width: "90%",
         paddingLeft: 10,
         paddingRight: 10,
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     },
     friendName: {
         fontSize: 20,
-        color: "white",
+        color: "black",
         left: 80,
         top: -43
     }

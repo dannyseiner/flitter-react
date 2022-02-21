@@ -29,11 +29,12 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.container}>
             <ScrollView
                 style={styles.scroll}
-                onScrollToTop={() => loadPosts()}
-            >
+                onScrollToTop={() => loadPosts()}>
+
                 {posts.map((post, i) => (
                     <PostBlock data={post} userId={userId} navigation={navigation} key={post.post_id} />
                 ))}
+
                 <View style={{ height: 100 }}></View>
             </ScrollView>
 
@@ -44,7 +45,7 @@ const HomeScreen = ({ navigation }) => {
 
 
 const PostBlock = ({ navigation, userId, data }) => {
-    const [like, setLike] = useState("white")
+    const [like, setLike] = useState("grey")
     const [postStats, setPostStats] = useState({
         likes: 0,
         comments: 0
@@ -78,7 +79,8 @@ const PostBlock = ({ navigation, userId, data }) => {
             postId: id,
             accId: userId
         })
-            .then(setLike(like === "white" ? "#00aced" : "white"))
+            .then(setLike(like === "grey" ? "#00aced" : "grey"))
+        getPostStats()
     }
     return (
         <View style={styles.postContainer}>
@@ -92,10 +94,10 @@ const PostBlock = ({ navigation, userId, data }) => {
                         <Icon
                             name="comments"
                             type="font-awesome"
-                            color="white"
+                            color="black"
                             style={{ padding: 5, marginRight: 20, top: -5 }}
                         />
-                        <Text style={{ color: "white", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -70 }}>{postStats.comments}</Text>
+                        <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -70 }}>{postStats.comments}</Text>
                     </>
                 }
                 <Icon
@@ -104,7 +106,7 @@ const PostBlock = ({ navigation, userId, data }) => {
                     color={like}
                     onPress={() => likePost(data.post_id)}
                 />
-                <Text style={{ color: "white", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -40 }}>{postStats.likes}</Text>
+                <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -40 }}>{postStats.likes}</Text>
             </View>
         </View>
     )
@@ -120,32 +122,32 @@ const styles = StyleSheet.create({
         marginTop: 15,
         padding: 15,
         borderRadius: 12,
-        backgroundColor: "black",
-        color: "white",
+        backgroundColor: "white",
+        color: "black",
         paddingBottom: -10
     },
     postHeader: {
         top: -10,
-        color: "white",
+        color: "black",
         left: 5,
         fontSize: 25,
         fontWeight: "bold"
     },
     postText: {
         top: -5,
-        color: "white",
+        color: "black",
         left: 20,
         fontSize: 19,
         fontWeight: "400",
     },
     postDate: {
-        color: "white",
+        color: "grey",
         fontWeight: "600",
         top: -10,
         left: "67%",
     },
     postAuthor: {
-        color: "white",
+        color: "grey",
         fontWeight: "600",
         left: 10,
         fontSize: 15,

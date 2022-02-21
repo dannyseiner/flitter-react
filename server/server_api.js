@@ -39,15 +39,31 @@ const io = new Server(server, {
 })
 const users = []
 io.on("connection", (socket) => {
+
+
+
     //  MAP
     socket.on("join_map", (data) => {
         if (data.location.latitude === 0) return
         if (data.userId === 0 || data.userId === null) return
         if (data === null) return
-        console.log("NEW MAP -" + data)
         console.log(data)
-        userLocations.push(data)
-        socket.broadcast.emit("new_locations", userLocations)
+
+        con.query(`SELECT * FROM location WHERE user_id=${data.userId}`, (err, result) => {
+            console.log(result)
+            if (result.length === 0) {
+                con.query(`INSERT INTO location (user_id, latitude, longtitude,latitudeDelta,longitudeDelta) VALUES (${data.userId}, ${data.location.latitude}, ${data.location.longitude}, ${data.location.latitudeDelta}, ${data.location.longitudeDelta})`)
+            } else {
+                console.log()
+                con.query(`UPDATE location SET latitude=${data.location.latitude}, longtitude=${data.location.longitude}, latitudeDelta=${data.location.latitudeDelta}, longitudeDelta=${data.location.longitudeDelta} WHERE user_id = ${data.userId}`)
+            }
+        })
+        con.query("SELECT * FROM location INNER JOIN accounts ON location.user_id = accounts.account_id INNER JOIN account_info ON location.user_id = account_info.user_id", (err, result2) => {
+            for (s of result2) {
+                s["render_image"] = decodeImage(s["account_image"])
+            }
+            socket.broadcast.emit("new_locations", result2)
+        })
     })
 
     // CHAT
@@ -59,7 +75,7 @@ io.on("connection", (socket) => {
         console.log(data)
         con.query(`INSERT INTO messages (friendship_id, from_id, message) VALUES (${data.roomId},${data.fromId},'${data.message}')`)
         con.query(`SELECT * FROM messages WHERE friendship_id = ${data.roomId}  LIMIT 30`, (err, result) => {
-            socket.to(data.roomId).emit("receive_message", result)
+            socket.broadcast.emit("receive_message", result)
         })
     })
 
@@ -76,6 +92,37 @@ server.listen(3003, () => {
 api.get("/", (req, res) => {
     res.send({ status: "ONLINE", mysql_status: "ON", mysql: config })
     console.log("hompage", con, { status: "WORKING" })
+})
+
+// CHAT
+api.post('/deletemessage', urlencodedParser, (req, res) => {
+    con.query(`DELETE FROM messages WHERE message_id = ${req.body.messageId}`)
+})
+
+// MAPVIEW
+api.get('/locations', (req, res) => {
+    con.query("SELECT * FROM location INNER JOIN accounts ON location.user_id = accounts.account_id INNER JOIN account_info ON location.user_id = account_info.user_id", (err, result) => {
+        for (s of result) {
+            s["render_image"] = decodeImage(s["account_image"])
+        }
+        res.send(result)
+    })
+})
+
+api.get("/places", (req, res) => {
+    con.query("SELECT * FROM places INNER JOIN accounts ON places.user_id = accounts.account_id", (err, result) => {
+        res.send(result)
+    })
+})
+
+api.get("/places/:id", (req, res) => {
+    con.query(`SELECT * FROM places INNER JOIN accounts ON places.user_id = accounts.account_id WHERE places.user_id = ${req.params.id}`, (err, result) => {
+        res.send(result)
+    })
+})
+
+api.post('/createplace', urlencodedParser, (req, res) => {
+    con.query(`INSERT INTO places (user_id, place_name, latitude, longitude, latitudeDelta, longitudeDelta) VALUES (${req.body.user_id}, '${req.body.place_name}',${req.body.latitude}, ${req.body.longitude}, ${req.body.latitudeDelta}, ${req.body.longitudeDelta})`)
 })
 
 // GET USER
@@ -341,7 +388,9 @@ api.post('/deletePost', urlencodedParser, (req, res) => {
 api.get('/userposts/:id', (req, res) => {
     con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id
     INNER JOIN account_info ON posts.post_author_id = account_info.user_id WHERE posts.post_author_id = ${req.params.id}`, (err, result) => {
-        log("result", result)
+        for (let i = 0; i < result.length; i++) {
+            result[i]["profile_image_encoded"] = decodeImage(result[i].account_image)
+        }
         res.send(result)
     })
 })
@@ -453,13 +502,7 @@ api.post('/createPost', urlencodedParser, (req, res) => {
 // POST COMMENT
 api.post('/addComment', urlencodedParser, (req, res) => {
     log("ADD COMMENT", req.body)
-    con.query(`INSERT INTO post_comments(comment_post_id, comment_author_id, comment_content) VALUES
-                (
-                    ${req.body.post_id},
-                    ${req.body.author_id},
-                    '${req.body.comment_content}'
-                )
-                `)
+    con.query(`INSERT INTO post_comments(comment_post_id, comment_author_id, comment_content) VALUES ( ${req.body.post_id}, ${req.body.author_id}, '${req.body.comment_content}')`)
 })
 
 api.get('/table/:table', (res, req) => {

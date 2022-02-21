@@ -29,9 +29,9 @@ const Chat = ({ route, navigation }) => {
         const getData = await AsyncStorage.getItem('user')
         setUserId(getData)
     }
-    getUserId()
 
     useEffect(() => {
+        getUserId()
         getMessages()
         socket.emit("join_room", params)
 
@@ -42,8 +42,11 @@ const Chat = ({ route, navigation }) => {
     }, [userId])
 
     useEffect(() => {
+        console.log("ACCESS")
         socket.on("receive_message", (data) => {
-            setMessages(data)
+            console.log("RECEVE_MESSAGE")
+            // setMessages(data)
+            getMessages()
         })
     }, [socket])
 
