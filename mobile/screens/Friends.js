@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Image, Button, Text } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Text } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
 import config from '../config'
@@ -27,10 +27,10 @@ const Friends = ({ navigation }) => {
         <View key={i}>
             {friend.friendship_status === 1 ?
                 <FriendBlock key={i} navigation={navigation} data={{
-                    userid: friend.user1_id === userId ? friend.user2_id : friend.user1_id,
+                    userid: friend.user1_id + "" === userId + "" ? friend.user2_id : friend.user1_id,
                     friendshipId: friend.friendship_id,
-                    image: friend.user1_id === userId ? friend.user1_image_render : friend.user2_image_render,
-                    name: friend.user1_id === userId ? friend.user1_name : friend.user2_name,
+                    image: friend.user1_id + "" === userId + "" ? friend.user2_image_render : friend.user1_image_render,
+                    name: friend.user1_id + "" === userId + "" ? friend.user2_name : friend.user1_name,
                     redirect: () => navigation.navigate("Chat", friend.id_friendship)
                 }}
                 />
@@ -47,7 +47,6 @@ const Friends = ({ navigation }) => {
                     friendshipId: friend.friendship_id,
                     image: friend.user1_id + "" === userId + "" ? friend.user2_image_render : friend.user1_image_render,
                     name: friend.user1_id + "" === userId + "" ? friend.user2_name : friend.user1_name,
-                    redirect: () => navigation.navigate("Profile", friend.user1_id === userId ? friend.user2_id : friend.user1_id)
                 }}
                 />
                 : <></>}

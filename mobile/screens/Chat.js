@@ -74,6 +74,7 @@ const Chat = ({ route, navigation }) => {
             {msg.from_id + "" === userId + "" ?
                 <View style={styles.MymessageContainer}>
                     <Text style={styles.MymessageText}
+                        onPress={() => Alert.alert(msg.created)}
                         onLongPress={() => {
                             Alert.alert(
                                 "Do you want to delete this message?",

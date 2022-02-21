@@ -38,8 +38,6 @@ const io = new Server(server, {
 const users = []
 io.on("connection", (socket) => {
 
-
-
     //  MAP
     socket.on("join_map", (data) => {
         if (data.location.latitude === 0) return

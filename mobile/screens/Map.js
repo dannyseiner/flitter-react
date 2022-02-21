@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, Text, Alert } from 'react-native';
+import { View, StyleSheet, Image, Text, Alert, Linking } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios"
 import config from '../config';
-import io from "socket.io-client"
+import openMap from 'react-native-open-maps';
 
+
+
+const GOOGLE_MAPS_APIKEY = "AIzaSyChfA223jwm8F4SB2_TgIiBzikdLRPpyOc"
+const origin = { latitude: 37.3318456, longitude: -122.0296002 };
+const destination = { latitude: 37.771707, longitude: -122.4053769 };
+
+import io from "socket.io-client"
+let global_date
 const connectionConfig = {
     jsonp: false,
     reconnection: true,
@@ -22,7 +30,14 @@ const Map = ({ route, navigation }) => {
 
     const [places, setPlaces] = useState([])
     const [userId, setUserId] = useState(0)
+    const [userPlaces, setUserPlaces] = useState()
     const [pins, setPins] = useState([])
+    const [selectedPlace, setSelectedPlace] = useState({
+        place_id: 0,
+        longtitude: 0,
+        latitude: 0,
+        show: false
+    })
     const [userData, setUserData] = useState({
         account_name: "",
         decoded_image: ""
@@ -35,21 +50,22 @@ const Map = ({ route, navigation }) => {
     });
 
     useEffect(() => {
-        let date = new Date()
-        date.setHours(date.getHours() + 1);
-
-        console.log(date)
+        console.log("map update")
+        global_date = new Date()
+        global_date.setHours(global_date.getHours() + 1);
         socket.emit("join_map", {
             location: location,
             userId: userId,
-            last_update: date.toISOString().slice(0, 19).replace('T', ' ')
+            last_update: global_date.toISOString().slice(0, 19).replace('T', ' ')
         })
+        loadLocations()
     }, [location])
 
 
     useEffect(() => {
         socket.on("new_locations", (data) => {
-            setPins(data)
+            // setPins(data)
+            loadLocations()
         })
     }, [socket])
 
@@ -57,11 +73,17 @@ const Map = ({ route, navigation }) => {
         loadUser()
         loadLocations()
         loadPlaces()
+        countUserPlaces()
     }, [])
 
     const loadPlaces = () => {
         axios.get(`${config.restapi}/places`)
             .then(response => { setPlaces(response.data) })
+    }
+
+    const countUserPlaces = () => {
+        axios.get(`${config.restapi}/places/${userId}`)
+            .then(reponse => setUserPlaces(reponse.data.length))
     }
 
     const loadLocations = () => {
@@ -75,6 +97,18 @@ const Map = ({ route, navigation }) => {
         axios.get(`${config.restapi}/user/${userId}`)
             .then(response => setUserData(response.data))
     }
+
+    const selectPlace = (place) => {
+        console.log(location)
+        if (selectedPlace.place_id === place.place_id) {
+            openMap({ latitude: place.latitude, longitude: place.longitude, zoom: 20, provider: "google", travelType: "drive", navigate: true });
+            // Linking.openURL(`https://www.google.com/maps/@${place.latitude},${place.longitude},14z`)
+
+        } else {
+            setSelectedPlace(place)
+        }
+    }
+
     useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -95,6 +129,10 @@ const Map = ({ route, navigation }) => {
 
 
     const addNewMark = (coords) => {
+        if (userPlaces === 3) {
+            Alert.alert("You already have 3 places")
+            return
+        }
         const tmp_location = {
             "latitude": coords.latitude,
             "latitudeDelta": 0.0922,
@@ -125,19 +163,33 @@ const Map = ({ route, navigation }) => {
     }
 
     const renderPlaces = places.map((plc, i) => (
-        <Marker
-            key={i}
-            coordinate={{ latitude: plc.latitude, longitude: plc.longitude }}
-            description={`Place created by ${plc.account_name}`}
-            title={plc.place_name}>
-            <View style={styles.place_container}>
-                <Text style={styles.place_text}>{plc.place_name}</Text>
-            </View>
-        </Marker>
+        <View key={i}>
+            {plc.user_id + "" === userId + "" ?
+                <Marker
+                    onPress={() => selectPlace({ place_id: plc.place_id, latitude: plc.latitude, longitude: plc.longitude })}
+                    coordinate={{ latitude: plc.latitude, longitude: plc.longitude }}
+                    description={`Place created by ${plc.account_name}`}
+                    title={plc.place_name}>
+                    <View style={styles.myplace_container}>
+                        <Text style={styles.place_text}>{plc.place_name}</Text>
+                    </View>
+                </Marker>
+                :
+                <Marker
+                    onPress={() => selectPlace({ place_id: plc.place_id, latitude: plc.latitude, longitude: plc.longitude })}
+                    coordinate={{ latitude: plc.latitude, longitude: plc.longitude }}
+                    description={`Place created by ${plc.account_name}`}
+                    title={plc.place_name}>
+                    <View style={styles.place_container}>
+                        <Text style={styles.place_text}>{plc.place_name}</Text>
+                    </View>
+                </Marker>
+            }
+        </View>
     ))
 
     const renderPeople = pins.map((pin, i) => (
-        <PeopleBlock data={pin} key={i} userId={userId} />
+        <PeopleBlock navigation={navigation} data={pin} key={i} userId={userId} />
     ))
 
 
@@ -148,8 +200,12 @@ const Map = ({ route, navigation }) => {
                     onLongPress={e => addNewMark(e.nativeEvent.coordinate)}>
                     {params === undefined ?
                         <>
+
+
                             {renderPeople}
                             {renderPlaces}
+
+
                         </>
                         : <>
                             <Marker
@@ -168,20 +224,31 @@ const Map = ({ route, navigation }) => {
     );
 }
 
-const PeopleBlock = ({ data, userId }) => {
+const PeopleBlock = ({ data, userId, navigation }) => {
     const [lastActive, setLastActive] = useState("")
+    const [selectedPlace, setSelectedPlace] = useState({
+        place_id: 0,
+        longtitude: 0,
+        latitude: 0,
+        show: false
+    })
+    const selectPlace = (place) => {
+        if (selectedPlace.place_id === place.place_id) {
+            openMap({ latitude: place.latitude, longitude: place.longitude, zoom: 20, provider: "google" });
+            // Linking.openURL(`https://www.google.com/maps/@${place.latitude},${place.longitude},14z`)
 
+        } else {
+            setSelectedPlace(place)
+        }
+    }
     useEffect(() => {
         console.log(data.account_name)
+        global_date = new Date()
         const date = new Date(data.last_update)
-        const now = new Date()
-        var diffMs = (now - date); // milliseconds between now & Christmas
+        var diffMs = (global_date - date); // milliseconds between now & Christmas
         var diffDays = Math.floor(diffMs / 86400000); // days
-        console.log("diffDays", diffDays);
         var diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-        console.log("diffHrs", diffHrs);
         var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
-        console.log("diffMins ", diffMins);
 
         if (diffDays === 0) {
             if (diffHrs === 0) {
@@ -201,11 +268,14 @@ const PeopleBlock = ({ data, userId }) => {
         <View >
             {data.account_id + "" === userId + "" ?
                 <Marker
+                    onPress={() => selectPlace({ place_id: data.user_id, latitude: data.latitude, longitude: data.longtitude, show: false })}
                     coordinate={{ latitude: data.latitude, longitude: data.longtitude }}
                     title={`${data.account_name}`}
                     description={lastActive}>
                     <View style={styles.mapmarkerUser}>
                         <Image
+                            onLongPress={() => navigation.navigate("Profile", data.account_id)}
+                            onPress={() => console.log("press")}
                             style={styles.image}
                             source={
                                 {
@@ -216,11 +286,14 @@ const PeopleBlock = ({ data, userId }) => {
 
                 </Marker> :
                 <Marker
+                    onPress={() => selectPlace({ place_id: data.user_id, latitude: data.latitude, longitude: data.longtitude, show: false })}
                     coordinate={{ latitude: data.latitude, longitude: data.longtitude }}
                     title={`${data.account_name}`}
                     description={lastActive}>
                     <View style={styles.mapmarker}>
                         <Image
+                            onLongPress={() => navigation.navigate("Profile", data.account_id)}
+
                             style={styles.image}
                             source={
                                 {
@@ -252,7 +325,7 @@ const styles = StyleSheet.create({
         borderRadius: 100
     },
     mapmarkerUser: {
-        backgroundColor: "cyan",
+        backgroundColor: "#00aced",
         padding: 2,
         borderRadius: 100,
     },
@@ -260,6 +333,11 @@ const styles = StyleSheet.create({
         padding: 2,
         borderRadius: 100,
         backgroundColor: "#550bcc"
+    },
+    myplace_container: {
+        padding: 5,
+        borderRadius: 9,
+        backgroundColor: "#00aced"
     },
     place_container: {
         padding: 5,
