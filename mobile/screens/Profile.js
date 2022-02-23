@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, ScrollView, StyleSheet, Text, Button } from 'react-native';
+import { View, ActivityIndicator, Image, ScrollView, StyleSheet, Alert, Text, Button } from 'react-native';
 import Footer from '../components/Footer';
 import { Icon } from 'react-native-elements';
 import axios from "axios"
@@ -10,12 +10,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Profile = ({ route, navigation }) => {
     const params = route.params
     const [userId, setUserId] = useState(0)
+    const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%", marginBottom: 300 }} />)
     const [posts, setPosts] = useState([])
     const [places, setPlaces] = useState([])
 
     const [data, setData] = useState({
         decoded_image: ""
     })
+
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            getPosts()
+            loadPlaces()
+            setLoadingStatus(<></>)
+        });
+
+        return unsubscribe;
+    }, [navigation]);
+
     useEffect(() => {
         if (params === undefined) {
             getLoggedUser(null)
@@ -27,7 +39,7 @@ const Profile = ({ route, navigation }) => {
     }, [])
     const getLoggedUser = async (id) => {
         const getData = await AsyncStorage.getItem('user')
-        setUserId(id === null ? params : id)
+        setUserId(getData)
         console.log(userId)
         axios.get(`${config.restapi}/user/${id === null ? getData : id}`)
             .then(response => setData(response.data[0]))
@@ -35,28 +47,61 @@ const Profile = ({ route, navigation }) => {
 
     const getPosts = () => {
         axios.get(`${config.restapi}/userposts/${params}`)
-            .then(response => setPosts(response.data))
+            .then(response => {
+                setPosts(response.data)
+                setLoadingStatus(<></>)
+            })
     }
 
     const loadPlaces = () => {
         axios.get(`${config.restapi}/places/${params}`)
             .then(response => setPlaces(response.data))
     }
+    const deletePlace = id => {
+        Alert.alert(
+            "Delete place",
+            "Do you want to permanently delete this place?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel",
+                },
+                {
+                    text: "Delete",
+                    onPress: () => {
+                        axios.post(`${config.restapi}/deleteplace`, {
+                            placeId: id
+                        }).then(response => loadPlaces())
+                    },
+                },
+            ])
+    }
+
+
     const renderPosts = posts.map(post => (
         <PostBlock key={post.post_id} navigation={navigation} userId={userId} data={post} />
     ))
     const renderPlaces = places.map((plc, i) => (
         <View key={i}
             style={styles.placecontainer}>
-            <Text style={styles.placetext}
-                onPress={place => navigation.navigate("Map", { longitude: plc.longitude, latitude: plc.latitude, account_name: plc.account_name, place_name: plc.place_name })}
-            >{plc.place_name}</Text>
+
+            {plc.user_id + "" === userId + "" ?
+                <Text style={styles.placetext}
+                    onLongPress={() => deletePlace(plc.place_id)}
+                    onPress={place => navigation.navigate("Maps", { longitude: plc.longitude, latitude: plc.latitude, account_name: plc.account_name, place_name: plc.place_name })}
+                >{plc.place_name}</Text>
+                :
+                <Text style={styles.placetext}
+                    onPress={place => navigation.navigate("Maps", { longitude: plc.longitude, latitude: plc.latitude, account_name: plc.account_name, place_name: plc.place_name })}
+                >{plc.place_name}</Text>
+            }
         </View >
     ))
 
 
     return (
         <View style={styles.container}>
+            {loadingStatus}
             <ScrollView>
                 {data.decoded_image === undefined ? <></> : data.decoded_image === "" ? <></> :
                     <Image
@@ -81,7 +126,7 @@ const Profile = ({ route, navigation }) => {
 
 
 
-const PostBlock = ({ navigation, userId, data }) => {
+const PostBlock = ({ navigation, userId, data, deleteFce }) => {
     const [like, setLike] = useState("grey")
     const [postStats, setPostStats] = useState({
         likes: 0,

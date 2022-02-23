@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import config from '../config'
 import axios from 'axios'
-import { View, StyleSheet, Text, Button, TextInput } from 'react-native';
+import { View, StyleSheet, Text, Button, Alert, TextInput } from 'react-native';
 import Footer from '../components/Footer'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Create = ({ navigation }) => {
-    const [title, setTitle] = useState("")
-    const [text, setText] = useState("")
+const Create = ({ route, navigation }) => {
+    const editData = route.params
+
+    const [title, setTitle] = useState(editData !== undefined ? editData.post_title : "")
+    const [text, setText] = useState(editData !== undefined ? editData.post_content : "")
+    const [buttonText, setButtonText] = useState(editData !== undefined ? "Edit Post" : "Create Post")
     const [userId, setUserId] = useState(0)
 
     useEffect(() => {
@@ -20,21 +23,35 @@ const Create = ({ navigation }) => {
     }
     const createPost = async () => {
         if (title.length === 0 || text.length === 0) return
-        axios.post(`${config.restapi}/createpost`, {
-            author: userId,
-            title: title,
-            text: text,
-        })
-            .then(response => {
-                alert("Post was created!")
-                setTimeout(() => {
-                    navigation.navigate("Home")
-                }, 1000)
+
+        if (editData !== undefined) {
+            if (title + "" === editData.post_title + "" && text + "" === editData.post_content) {
+                Alert.alert("You must edit post before submit!")
+                return
+            }
+            axios.post(`${config.restapi}/editpost`, {
+                postId: editData.post_id,
+                postTitle: title,
+                postContent: text,
+                accountId: editData.post_author_id
+            }).then(response => Alert.alert("Post is updated"))
+        } else {
+            axios.post(`${config.restapi}/createpost`, {
+                author: userId,
+                title: title,
+                text: text,
             })
+                .then(response => {
+                    alert("Post was created!")
+                    setTimeout(() => {
+                        navigation.navigate("Home")
+                    }, 1000)
+                })
+        }
     }
 
     return (
-        <View style={{ backgroundColor: "white", height: "100%" }}>
+        <View style={{ height: "100%" }}>
             <View style={{ height: "100%" }}>
                 <TextInput
                     placeholder="Title"
@@ -54,7 +71,7 @@ const Create = ({ navigation }) => {
                     <Text
                         style={{ textAlign: "center", fontWeight: "bold", fontSize: 15, color: "white" }}
                         onPress={() => createPost()}
-                    >Create Post</Text>
+                    >{buttonText}</Text>
                 </View>
             </View>
 
@@ -67,7 +84,7 @@ const styles = StyleSheet.create({
     forminput: {
         width: "90%",
         left: "5%",
-        backgroundColor: "#F0F0F0",
+        backgroundColor: "white",
         color: "black",
         borderRadius: 9,
         fontSize: 20,
@@ -90,7 +107,7 @@ const styles = StyleSheet.create({
         width: "90%",
         left: "5%",
         height: 200,
-        backgroundColor: "#F0F0F0",
+        backgroundColor: "white",
         color: "black",
         borderRadius: 9,
         fontSize: 20,

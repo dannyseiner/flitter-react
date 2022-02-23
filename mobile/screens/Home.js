@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Text, ScrollView } from 'react-native';
 import axios from 'axios'
 import config from '../config'
 import { Icon } from 'react-native-elements';
@@ -9,24 +9,35 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const HomeScreen = ({ navigation }) => {
 
     const [posts, setPosts] = useState([])
+    const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%" }} />)
     const [userId, setUserId] = useState(0)
     useEffect(() => {
 
         loadPosts()
     }, [])
 
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            loadPosts()
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     const loadPosts = async () => {
-        console.log("aaa")
         const getData = await AsyncStorage.getItem('user')
         setUserId(getData)
         axios.get(`${config.restapi}/postshome/${getData}`)
-            .then(response => setPosts(response.data))
+            .then(response => {
+                setPosts(response.data)
+                setLoadingStatus(<></>)
+            })
     }
 
 
     return (
         <View style={styles.container}>
+            {loadingStatus}
 
             <ScrollView
                 style={styles.scroll}

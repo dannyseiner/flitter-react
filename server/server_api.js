@@ -9,6 +9,7 @@ const config = require("./config.json")
 const http = require('http')
 const chatapp = express()
 const { Server } = require("socket.io")
+const { resourceUsage } = require("process")
 const server = http.createServer()
 chatapp.use(cors())
 
@@ -43,14 +44,12 @@ io.on("connection", (socket) => {
         if (data.location.latitude === 0) return
         if (data.userId === 0 || data.userId === null) return
         if (data === null) return
-        console.log(data)
 
         con.query(`SELECT * FROM location WHERE user_id=${data.userId}`, (err, result) => {
             console.log(result)
             if (result.length === 0) {
                 con.query(`INSERT INTO location (user_id, latitude, longtitude,latitudeDelta,longitudeDelta) VALUES (${data.userId}, ${data.location.latitude}, ${data.location.longitude}, ${data.location.latitudeDelta}, ${data.location.longitudeDelta})`)
             } else {
-                console.log(`UPDATE location SET latitude=${data.location.latitude}, longtitude=${data.location.longitude}, latitudeDelta=${data.location.latitudeDelta}, longitudeDelta=${data.location.longitudeDelta}, last_update='${data.last_update}' WHERE user_id = ${data.userId}`)
                 con.query(`UPDATE location SET latitude=${data.location.latitude}, longtitude=${data.location.longitude}, latitudeDelta=${data.location.latitudeDelta}, longitudeDelta=${data.location.longitudeDelta}, last_update='${data.last_update}' WHERE user_id = ${data.userId}`)
             }
         })
@@ -113,6 +112,16 @@ api.get('/locations', (req, res) => {
     })
 })
 
+api.get('/location/:id', (req, res) => {
+    con.query(`SELECT * FROM location WHERE user_id = ${req.params.id}`, (err, result) => {
+        res.send(result)
+    })
+})
+api.post('/locationstatus', urlencodedParser, (req, res) => {
+    console.log(`UPDATE location SET active = ${req.body.status} WHERE user_id = ${req.body.userId}`)
+    con.query(`UPDATE location SET active = ${req.body.status} WHERE user_id = ${req.body.userId}`)
+    res.send({ status: "ok" })
+})
 api.get("/places", (req, res) => {
     con.query("SELECT * FROM places INNER JOIN accounts ON places.user_id = accounts.account_id", (err, result) => {
         res.send(result)
@@ -125,6 +134,10 @@ api.get("/places/:id", (req, res) => {
     })
 })
 
+api.post("/deleteplace", urlencodedParser, (req, res) => {
+    con.query(`DELETE FROM places WHERE place_id = ${req.body.placeId}`)
+    res.send({ status: "true" })
+})
 api.post('/createplace', urlencodedParser, (req, res) => {
     con.query(`INSERT INTO places (user_id, place_name, latitude, longitude, latitudeDelta, longitudeDelta) VALUES (${req.body.user_id}, '${req.body.place_name}',${req.body.latitude}, ${req.body.longitude}, ${req.body.latitudeDelta}, ${req.body.longitudeDelta})`)
 })
@@ -433,10 +446,7 @@ api.post("/createpost", urlencodedParser, (req, res) => {
 })
 api.get('/post/:id', (req, res) => {
     if (req.params.id === "notfound") return
-    con.query(`SELECT * FROM posts 
-    INNER JOIN accounts ON posts.post_author_id = accounts.account_id 
-    INNER JOIN account_info ON posts.post_author_id = account_info.user_id
-    WHERE post_id = ${req.params.id}`, (err, result) => {
+    con.query(`SELECT * FROM posts INNER JOIN accounts ON posts.post_author_id = accounts.account_id INNER JOIN account_info ON posts.post_author_id = account_info.user_id WHERE post_id = ${req.params.id}`, (err, result) => {
         if (err) throw err
         if (result.length === 0) {
             res.send({ status: 404 })

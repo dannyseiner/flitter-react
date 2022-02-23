@@ -1,27 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Text, Button, TextInput, Image } from 'react-native';
+import { View, StyleSheet, ScrollView, Alert, Text, Button, TextInput, Image } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
 import config from '../config'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationRouteContext } from '@react-navigation/native';
 
 
 const PostScreen = ({ route, navigation }) => {
-    const post = route.params
+    const [post, setPost] = useState({ ...route.params, render_user_image: route.params.profile_image_encoded.replace(/\s/g, '') })
     const [comments, setComments] = useState([])
     const [comment, setComment] = useState("")
     const [userId, setUserId] = useState(0)
-    post.render_user_image = post.profile_image_encoded.replace(/\s/g, '');
+    const [postMenu, setPostMenu] = useState(false)
+
 
     useEffect(() => {
         getUser()
         loadComments()
     }, [])
 
+
+
     const getUser = async () => {
         const id = await AsyncStorage.getItem("user")
         setUserId(id)
+        if (post.post_author_id + "" === id + "") setPostMenu(true)
     }
+
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            // axios.get(`${config.restapi}/post/${post.post_id}`)
+            //     .then(response => setPost({ ...response.data, render_user_image: route.params.profile_image_encoded.replace(/\s/g, '') }))
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
 
 
@@ -42,6 +56,32 @@ const PostScreen = ({ route, navigation }) => {
 
     }
 
+    const editPost = () => {
+        navigation.navigate("Create", post)
+    }
+
+    const deletePost = () => {
+        Alert.alert(
+            "Do you want to delete post?",
+            "This action cannot be returned",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: "Delete", onPress: () => {
+                        axios.post(`${config.restapi}/deletePost`, {
+                            postId: post.post_id
+                        })
+                            .then(response => navigation.navigate("Home"))
+
+                    }
+                }
+            ]
+        );
+    }
+
     const renderComments = comments.map((comm, i) => (
         <CommentBlock key={comm.comment_id} data={comm} navigation={navigation} />
     ))
@@ -51,6 +91,12 @@ const PostScreen = ({ route, navigation }) => {
             <ScrollView>
                 <Text style={styles.postTitle}>{post.post_title}</Text>
                 <Text style={styles.postCreated}>{new Date(post.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
+                {postMenu ?
+                    <View style={styles.pmcontainer}>
+                        <Text style={styles.pmtext} onPress={() => deletePost()}>Delete Post</Text>
+                        <Text style={styles.pmtext2} onPress={() => editPost()}>Edit Post</Text>
+                    </View> :
+                    <></>}
                 <View style={styles.postHeader}>
                     <Image
                         style={styles.profileImagse}
@@ -107,6 +153,27 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: "white",
         borderRadius: 9
+    },
+    pmcontainer: {
+        marginLeft: "5%",
+        padding: 10,
+        width: "90%",
+        flexDirection: 'row',
+        marginTop: 10,
+        backgroundColor: "white",
+        borderRadius: 9
+    },
+    pmtext: {
+        fontSize: 18,
+        marginLeft: "5%",
+        fontWeight: "500",
+        color: "red"
+    },
+    pmtext2: {
+        fontSize: 18,
+        fontWeight: "500",
+        marginLeft: "35%",
+        color: "#00aced"
     },
     c_comment: {
         width: "90%",

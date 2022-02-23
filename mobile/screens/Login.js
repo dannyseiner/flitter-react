@@ -1,16 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, Button, Image, TextInput, Linking } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, Animated, Text, Image, TextInput, Linking } from 'react-native';
 import axios from 'axios'
 import config from '../config'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const Stack = createNativeStackNavigator();
+
 
 const Login = ({ navigation }) => {
-    const [username, setUsername] = useState("dannyseiner")
-    const [password, setPassword] = useState("admin")
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const [registerBlockEvt, setRegisterBlockEvt] = useState(false)
+    const [registerText, setRegisterText] = useState("Create new account")
+
+    // ANIMATED
+    const slideAnim = useRef(new Animated.Value(400)).current;
+
+    const slideIn = () => {
+        Animated.timing(slideAnim, {
+            toValue: -280,
+            duration: 500,
+            useNativeDriver: false
+
+        }).start();
+    };
+
+    const slideOut = () => {
+        Animated.timing(slideAnim, {
+            toValue: 400,
+            duration: 500,
+            useNativeDriver: false
+        }).start();
+    };
+
+
 
     useEffect(() => {
         getMyStringValue()
@@ -19,6 +41,18 @@ const Login = ({ navigation }) => {
     const loadInBrowser = () => {
         Linking.openURL("http://172.20.10.3:3000").catch(err => console.error("Couldn't load page", err));
     };
+
+    const registerBlockEvent = () => {
+        if (!registerBlockEvt) {
+            slideIn()
+            setRegisterBlockEvt(true)
+            setRegisterText("Log into account")
+        } else {
+            slideOut()
+            setRegisterText("Create new account")
+            setRegisterBlockEvt(false)
+        }
+    }
     const login = () => {
         axios.post(`${config.restapi}/login`, {
             email: username,
@@ -81,17 +115,31 @@ const Login = ({ navigation }) => {
                     onChangeText={val => setPassword(val)}
                     value={password}
                 />
-                <Button
-                    title="Log In"
-                    style={styles.loginButton}
-                    onPress={() => login()}
-                />
+                <View style={styles.loginBlock}>
+                    <Text
+                        style={styles.loginButton}
+                        onPress={() => login()}>
+                        Log In
+                    </Text>
+                </View>
+
             </View>
-            <View style={styles.registerBlock}>
+            <Animated.View
+                useNativeDriver={true}
+                style={[
+                    styles.registerBlock,
+                    {
+                        top: slideAnim
+                    }
+                ]}
+            >
                 <Text style={styles.registerText}
-                    onPress={() => loadInBrowser()}>Create new account</Text>
-            </View>
-        </View>
+                    onPress={() => registerBlockEvent()}>{registerText}</Text>
+                <Text style={{ padding: 10, marginTop: 40, fontWeight: "600", color: "lightgrey", fontSize: 18 }}>
+                    You can register new account <Text onPress={() => loadInBrowser()} style={{ color: "white", fontWeight: "bold", fontSize: 19 }}>here</Text>
+                </Text>
+            </Animated.View>
+        </View >
     );
 }
 
@@ -105,7 +153,6 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     backgroundClass: {
-        backgroundColor: "white"
     },
     form: {
         top: 150,
@@ -125,7 +172,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 9,
         color: "black",
-        backgroundColor: "#F0F0F0",
+        backgroundColor: "white",
     },
     input2: {
         width: "80%",
@@ -134,21 +181,28 @@ const styles = StyleSheet.create({
         color: "black",
         fontSize: 23,
         borderRadius: 9,
-        backgroundColor: "#F0F0F0",
+        backgroundColor: "white",
         padding: 10,
     },
-    loginButton: {
-        top: 30,
-        width: "40%",
+    loginBlock: {
+        borderRadius: 9,
         backgroundColor: "#00aced",
-        color: "red"
+        width: "50%",
+        left: "25%",
+    },
+    loginButton: {
+        textAlign: "center",
+        fontSize: 20,
+        padding: 10,
+        color: "white",
+        fontWeight: "700",
     },
     registerBlock: {
         backgroundColor: "#00aced",
-        marginTop: 400,
+        height: 800,
         borderRadius: 30,
-        height: 500,
-        paddingTop: 20,
+        width: "100%",
+        padding: 20,
     },
     registerText: {
         textAlign: "center",

@@ -154,8 +154,7 @@ const Map = ({ route, navigation }) => {
                             user_id: userId,
                             place_name: text,
                             ...tmp_location
-                        })
-                        loadPlaces()
+                        }).then(response => loadPlaces())
                     }
                 }
             ]
