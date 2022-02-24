@@ -72,39 +72,11 @@ const Chat = ({ route, navigation }) => {
                 </View>
                 : <></>}
             {msg.from_id + "" === userId + "" ?
-                <View style={styles.MymessageContainer}>
-                    <Text style={styles.MymessageText}
-                        onPress={() => Alert.alert(msg.created)}
-                        onLongPress={() => {
-                            Alert.alert(
-                                "Do you want to delete this message?",
-                                "This action cannot be returned",
-                                [
-                                    {
-                                        text: "Cancel",
-                                        style: "cancel"
-                                    },
-                                    {
-                                        text: "Delete", onPress: () => {
-                                            axios.post(`${config.restapi}/deletemessage`, {
-                                                messageId: msg.message_id
-                                            }).then(response => {
-                                                socket.emit("delete_message", { roomId: params })
-                                                getMessages()
-                                            })
-                                        }
-                                    }
-                                ])
-                        }}>
-                        {msg.message}
-                    </Text>
-                </View>
+
+                <Message navigation={navigation} roomId={params} id={msg.message_id} fromMe={true} msg={msg.message} />
+
                 :
-                <View style={styles.messageContainer}>
-                    <Text style={styles.messageText}>
-                        {msg.message}
-                    </Text>
-                </View>
+                <Message navigation={navigation} roomId={params} fromMe={false} msg={msg.message} />
             }
         </View>
     )))
@@ -134,6 +106,103 @@ const Chat = ({ route, navigation }) => {
     );
 }
 
+const Message = ({ navigation, msg, id, fromMe, roomId }) => {
+    const [newMessage, setNewMessage] = useState(<Text>{msg}</Text>)
+    const [postdata, setPostdata] = useState({})
+    const [msgClass, setMsgClass] = useState(fromMe === true ? styles.MymessageContainer : styles.messageContainer)
+    const [evt, setEvt] = useState(false)
+
+    useEffect(() => {
+        if (msg.includes("SHAREPOST")) {
+            let msg2 = msg.replace("<SHAREPOST/", "")
+            msg2 = msg2.replace(">", "")
+            axios.get(`${config.restapi}/post/${msg2}`)
+                .then(response => {
+                    setPostdata(response.data[0])
+                    setNewMessage(response.data[0].post_title)
+                    setMsgClass(fromMe === true ? styles.MymessageContainerPost : styles.messageContainerPost)
+                    setEvt(true)
+                })
+        }
+    }, [])
+
+
+
+    return (
+        <>{fromMe === true ?
+            <View style={msgClass}>
+                {evt === true ?
+                    <Text style={styles.MymessageText}
+                        onPress={() => navigation.navigate("Post", postdata)}
+                        onLongPress={() => {
+                            Alert.alert(
+                                "Delete this message",
+                                "cannot be returned",
+                                [
+                                    {
+                                        text: "Cancel",
+                                        style: "cancel"
+                                    },
+                                    {
+                                        text: "Delete", onPress: () => {
+                                            axios.post(`${config.restapi}/deletemessage`, {
+                                                messageId: id
+                                            }).then(response => {
+                                                socket.emit("delete_message", roomId)
+                                            })
+                                        }
+                                    }
+                                ]
+                            );
+                        }}
+                    >
+                        {newMessage}
+                    </Text>
+                    :
+                    <Text style={styles.MymessageText}
+                        onLongPress={() => {
+                            Alert.alert(
+                                "Delete this message",
+                                "cannot be returned",
+                                [
+                                    {
+                                        text: "Cancel",
+                                        style: "cancel"
+                                    },
+                                    {
+                                        text: "Delete", onPress: () => {
+                                            axios.post(`${config.restapi}/deletemessage`, {
+                                                messageId: id
+                                            }).then(response => {
+                                                socket.emit("delete_message", roomId)
+                                            })
+                                        }
+                                    }
+                                ]
+                            );
+                        }}
+                    >
+                        {newMessage}
+                    </Text>
+                }
+            </View>
+            :
+            <View style={msgClass}>
+                {evt === true ?
+                    <Text style={styles.messageText}
+                        onPress={() => navigation.navigate("Post", postdata)}>
+                        {newMessage}
+                    </Text>
+                    :
+                    <Text style={styles.messageText}>
+                        {newMessage}
+                    </Text>
+                }
+            </View>
+        }</>
+    )
+}
+
 const styles = StyleSheet.create({
     container: {
         height: "100%"
@@ -142,6 +211,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#000000',
         alignSelf: 'flex-start',
         borderRadius: 20,
+        borderBottomLeftRadius: 0,
+        left: 10,
+        marginBottom: 20
+    },
+    messageContainerPost: {
+        backgroundColor: '#000000',
+        alignSelf: 'flex-start',
+        borderRadius: 20,
+        padding: 40,
         borderBottomLeftRadius: 0,
         left: 10,
         marginBottom: 20
@@ -165,6 +243,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#00aced',
         alignSelf: 'flex-start',
         borderRadius: 20,
+        borderBottomRightRadius: 0,
+        right: 10,
+        alignSelf: 'flex-end',
+        marginBottom: 20
+    },
+    MymessageContainerPost: {
+        backgroundColor: '#00aced',
+        alignSelf: 'flex-start',
+        borderRadius: 20,
+        padding: 40,
         borderBottomRightRadius: 0,
         right: 10,
         alignSelf: 'flex-end',

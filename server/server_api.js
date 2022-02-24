@@ -364,7 +364,16 @@ api.post('/sentMessage', urlencodedParser, (req, res) => {
         res.send({ status: "OK" })
     })
 })
-
+// SHARE POST
+api.post('/sharePost', urlencodedParser, (req, res) => {
+    con.query(`INSERT INTO messages (friendship_id, from_id, message) VALUES (
+        ${req.body.friendshipId},
+        ${req.body.fromId},
+        '<SHAREPOST/${req.body.postId}>'
+    )`, (err, result) => {
+        res.send({ status: "OK" })
+    })
+})
 
 
 api.get('/posts', (req, res) => {
@@ -395,7 +404,9 @@ api.post('/deletePost', urlencodedParser, (req, res) => {
     con.query(`DELETE FROM posts WHERE post_id = ${req.body.postId}`, (err, result) => {
         con.query(`DELETE FROM post_comments WHERE comment_post_id = ${req.body.postId}`, (err1, result1) => {
             con.query(`DELETE FROM post_likes WHERE like_post_id = ${req.body.postId}`, (err2, result2) => {
-                res.send({ status: "OK" })
+                con.query(`DELETE FROM messages WHERE message='<SHAREPOST/${req.body.postId}>'`, (err3, result3) => {
+                    res.send({ status: "OK" })
+                })
             })
         })
     })

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Alert, Text, Button, TextInput, Image } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, Animated, ScrollView, Alert, Text, Button, TextInput, Image } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
 import config from '../config'
@@ -14,18 +14,47 @@ const PostScreen = ({ route, navigation }) => {
     const [userId, setUserId] = useState(0)
     const [postMenu, setPostMenu] = useState(false)
 
+    const fadeAnim = useRef(new Animated.Value(-1000)).current
+
+    const fadeIn = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 300,
+            useNativeDriver: false
+
+        }).start();
+    };
+
+    const fadeOut = () => {
+        Animated.timing(fadeAnim, {
+            toValue: -1000,
+            duration: 300,
+            useNativeDriver: false
+
+        }).start();
+    };
+
+    const [friends, setFriends] = useState([])
 
     useEffect(() => {
         getUser()
         loadComments()
     }, [])
 
-
+    useEffect(() => {
+        getFriends()
+    }, [userId])
 
     const getUser = async () => {
         const id = await AsyncStorage.getItem("user")
         setUserId(id)
         if (post.post_author_id + "" === id + "") setPostMenu(true)
+    }
+
+    const getFriends = () => {
+        if (userId === 0) return
+        axios.get(`${config.restapi}/getfriendsstrict/${userId}`)
+            .then(response => setFriends(response.data))
     }
 
     React.useEffect(() => {
@@ -37,7 +66,13 @@ const PostScreen = ({ route, navigation }) => {
         return unsubscribe;
     }, [navigation]);
 
-
+    const sharePost = (data) => {
+        axios.post(`${config.restapi}/sharePost`, {
+            friendshipId: data.friendship,
+            fromId: userId,
+            postId: post.post_id
+        }).then(response => fadeOut())
+    }
 
     const loadComments = () => {
         axios.get(`${config.restapi}/post/${post.post_id}/comments`)
@@ -47,12 +82,17 @@ const PostScreen = ({ route, navigation }) => {
     }
 
     const sentComment = () => {
+        if (comment.length === 0) {
+            Alert.alert("Please enter text before sending comment!")
+            return
+        }
         axios.post(`${config.restapi}/addComment`, {
             author_id: userId,
             post_id: post.post_id,
             comment_content: comment
         })
         loadComments()
+        setComment("")
 
     }
 
@@ -82,12 +122,29 @@ const PostScreen = ({ route, navigation }) => {
         );
     }
 
+    const renderFriends = friends.map((friend, i) => (
+        <View key={i} style={{ width: "90%", left: "5%", padding: 10, backgroundColor: "#00aced", borderRadius: 9, }}>
+            <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center", color: "white" }}
+                onPress={() => sharePost({
+                    from: friend.user1_id === userId ? friend.user2_id : friend.user1_id,
+                    friendship: friend.id_friendship
+                })}
+            >
+                {friend.user1_id + "" === userId + "" ? friend.user2_name : friend.user1_name}
+            </Text>
+        </View>
+    ))
+
     const renderComments = comments.map((comm, i) => (
         <CommentBlock key={comm.comment_id} data={comm} navigation={navigation} />
     ))
 
     return (
         <View style={styles.container}>
+            <Animated.View style={{ width: "100%", height: "90%", backgroundColor: "white", position: "absolute", bottom: fadeAnim, zIndex: 10 }}>
+                <Text style={{ position: "absolute", right: 0, margin: 20, fontSize: 30, fontWeight: "bold", color: "black" }} onPress={() => fadeOut()}>X</Text>
+                <ScrollView style={{ marginTop: 80 }}>{renderFriends}</ScrollView>
+            </Animated.View>
             <ScrollView>
                 <Text style={styles.postTitle}>{post.post_title}</Text>
                 <Text style={styles.postCreated}>{new Date(post.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
@@ -123,7 +180,11 @@ const PostScreen = ({ route, navigation }) => {
                         onSubmitEditing={(event) => sentComment()}
                         multiline
                     ></TextInput>
-                    <Button title="Add comment" onPress={() => sentComment()} />
+
+                    <View style={{ width: "90%", left: "5%", borderRadius: 9, backgroundColor: "white", padding: 10, marginTop: 20, }}>
+                        <Text style={{ fontWeight: "500", fontSize: 18, paddingLeft: 10, top: 10, color: "#00aced" }} onPress={() => sentComment()}>Sent</Text>
+                        <Text style={{ fontWeight: "500", fontSize: 18, paddingRight: 10, alignSelf: "flex-end", top: -10, color: "#00aced" }} onPress={() => fadeIn()}>Share</Text>
+                    </View>
                 </View>
                 {renderComments}
                 <View style={{ height: 100 }}></View>
