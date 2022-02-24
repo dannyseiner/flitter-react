@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated, ScrollView, Alert, Text, Button, TextInput, Image } from 'react-native';
+import { View, StyleSheet, Animated, ScrollView, Alert, Text, Button, TextInput, Image, Linking } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
 import config from '../config'
+import { Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationRouteContext } from '@react-navigation/native';
 
@@ -13,13 +14,15 @@ const PostScreen = ({ route, navigation }) => {
     const [comment, setComment] = useState("")
     const [userId, setUserId] = useState(0)
     const [postMenu, setPostMenu] = useState(false)
+    const [covidAlert, setCovidAlert] = useState(false)
+
 
     const fadeAnim = useRef(new Animated.Value(-1000)).current
 
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
             toValue: 0,
-            duration: 300,
+            duration: 500,
             useNativeDriver: false
 
         }).start();
@@ -28,7 +31,7 @@ const PostScreen = ({ route, navigation }) => {
     const fadeOut = () => {
         Animated.timing(fadeAnim, {
             toValue: -1000,
-            duration: 300,
+            duration: 500,
             useNativeDriver: false
 
         }).start();
@@ -39,6 +42,7 @@ const PostScreen = ({ route, navigation }) => {
     useEffect(() => {
         getUser()
         loadComments()
+        check_for_covid_info()
     }, [])
 
     useEffect(() => {
@@ -55,6 +59,22 @@ const PostScreen = ({ route, navigation }) => {
         if (userId === 0) return
         axios.get(`${config.restapi}/getfriendsstrict/${userId}`)
             .then(response => setFriends(response.data))
+    }
+
+    const check_for_covid_info = () => {
+        let title = check_for_covid_in_textt(post.post_title)
+        let content = check_for_covid_in_textt(post.post_content)
+        if (title || content) {
+            setCovidAlert(true)
+        }
+    }
+
+    const check_for_covid_in_textt = (txt) => {
+        let tmp = txt.replace(/[^a-zA-Z ]/g, "")
+        tmp = tmp.toLowerCase()
+        tmp = tmp.replace(/[0-9]/g, "")
+        tmp = tmp.replace(/\s/g, "")
+        return tmp.includes("covid")
     }
 
     React.useEffect(() => {
@@ -142,6 +162,7 @@ const PostScreen = ({ route, navigation }) => {
     return (
         <View style={styles.container}>
             <Animated.View style={{ width: "100%", height: "90%", backgroundColor: "white", position: "absolute", bottom: fadeAnim, zIndex: 10 }}>
+                <Text style={{ left: 30, top: 30, fontSize: 24, fontWeight: "500" }}>Share with friends</Text>
                 <Text style={{ position: "absolute", right: 0, margin: 20, fontSize: 30, fontWeight: "bold", color: "black" }} onPress={() => fadeOut()}>X</Text>
                 <ScrollView style={{ marginTop: 80 }}>{renderFriends}</ScrollView>
             </Animated.View>
@@ -161,6 +182,7 @@ const PostScreen = ({ route, navigation }) => {
                             uri: post.render_user_image,
                         }}
                     />
+
                     <Text
                         title={post.account_name}
                         style={styles.postHeaderName}
@@ -168,6 +190,14 @@ const PostScreen = ({ route, navigation }) => {
                         {post.account_name}
                     </Text>
                 </View>
+
+                {covidAlert ?
+                    <View style={{ width: "90%", left: "5%", padding: 10, backgroundColor: "white", marginTop: 30, borderRadius: 9 }}>
+                        <Text style={{ fontWeight: "500", fontSize: 18 }}>
+                            <Icon type="font-awesome" name="warning" color="orange" style={{ paddingRight: 10, paddingLeft: 5 }} />
+                            <Text style={{ fontSize: 18 }}>This post contains Covid-19 informations. To prevent disinformations please visit <Text onPress={() => Linking.openURL(`http://172.20.10.3:3000/covid`)} style={{ color: "#00aced" }}>trusted source</Text> </Text>
+                        </Text>
+                    </View> : <></>}
                 <View style={styles.postContent}>
                     <Text style={styles.postContentText}>{post.post_content}</Text>
                 </View>

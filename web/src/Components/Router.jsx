@@ -38,7 +38,6 @@ const RouterCom = () => {
                 <PrivateRoute path='/friends' exact component={Friends} />
                 <PrivateRoute path='/createPost' excact component={CreatePost} />
                 <PrivateRoute path='/explore' excact component={Explore} />
-                <PrivateRoute path='/covid' excact component={Covid} />
                 <PrivateRoute path='/settings' excact component={Settings} />
                 {/* PRIVATE ROUTES / EDITS  */}
                 <PrivateRoute path='/editpost/:id' excact component={EditPost} />
@@ -47,6 +46,8 @@ const RouterCom = () => {
                 {/* PUBLIC ROUTES */}
                 <Route path='/login/:id' component={FastLogin} />
                 <Route path='/login' exact component={Login} />
+                <Route path='/covid' excact component={Covid} />
+
                 <Route path='/googleredirect' exact component={() => {
                     window.location.href = 'https://news.google.com/covid19/map?hl=en-US&mid=%2Fm%2F09c7w0&gl=US&ceid=US%3Aen'
                     return null;
