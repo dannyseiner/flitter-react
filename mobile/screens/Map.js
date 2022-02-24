@@ -207,15 +207,26 @@ const Map = ({ route, navigation }) => {
 
                         </>
                         : <>
-                            <Marker
-                                onPress={() => selectPlace({ place_id: 1, latitude: params.latitude, longitude: params.longitude })}
-                                coordinate={{ latitude: params.latitude, longitude: params.longitude }}
-                                description={`Place created by ${params.account_name}`}
-                                title={params.place_name}>
-                                <View style={styles.place_container}>
-                                    <Text style={styles.place_text}>{params.place_name}</Text>
-                                </View>
-                            </Marker>
+                            {params.place_name + "" === params.account_name + "" ?
+                                <Marker
+                                    onPress={() => selectPlace({ place_id: 1, latitude: params.latitude, longitude: params.longitude })}
+                                    coordinate={{ latitude: params.latitude, longitude: params.longitude }}
+                                    title={params.place_name}>
+                                    <View style={styles.place_container}>
+                                        <Text style={styles.place_text}>{params.place_name}</Text>
+                                    </View>
+                                </Marker>
+                                :
+                                <Marker
+                                    onPress={() => selectPlace({ place_id: 1, latitude: params.latitude, longitude: params.longitude })}
+                                    coordinate={{ latitude: params.latitude, longitude: params.longitude }}
+                                    description={`Place created by ${params.account_name}`}
+                                    title={params.place_name}>
+                                    <View style={styles.place_container}>
+                                        <Text style={styles.place_text}>{params.place_name}</Text>
+                                    </View>
+                                </Marker>
+                            }
                         </>}
 
                 </MapView>

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, ActivityIndicator, Image, ScrollView, StyleSheet, Alert, Text, Button } from 'react-native';
-import Footer from '../components/Footer';
-import { Icon } from 'react-native-elements';
+import React, { useState, useEffect } from 'react'
+import { View, ActivityIndicator, Image, ScrollView, StyleSheet, Alert, Text, Button } from 'react-native'
+import Footer from '../components/Footer'
+import { Icon } from 'react-native-elements'
 import axios from "axios"
 import config from "../config"
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import MapView, { Marker } from 'react-native-maps'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const Profile = ({ route, navigation }) => {
@@ -13,6 +14,13 @@ const Profile = ({ route, navigation }) => {
     const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%", marginBottom: 300 }} />)
     const [posts, setPosts] = useState([])
     const [places, setPlaces] = useState([])
+    const [location, setLocation] = useState({
+        "latitude": 0,
+        "latitudeDelta": 0.0922,
+        "longitudeDelta": 0.0421,
+        "longtitude": 0,
+        active: 0,
+    })
 
     const [data, setData] = useState({
         decoded_image: ""
@@ -22,6 +30,7 @@ const Profile = ({ route, navigation }) => {
         const unsubscribe = navigation.addListener('focus', () => {
             getPosts()
             loadPlaces()
+            loadLocation()
             setLoadingStatus(<></>)
         });
 
@@ -35,6 +44,7 @@ const Profile = ({ route, navigation }) => {
             getLoggedUser(params)
         }
         getPosts()
+        loadLocation()
         loadPlaces()
     }, [])
     const getLoggedUser = async (id) => {
@@ -50,6 +60,16 @@ const Profile = ({ route, navigation }) => {
             .then(response => {
                 setPosts(response.data)
                 setLoadingStatus(<></>)
+            })
+    }
+    const loadLocation = () => {
+        axios.get(`${config.restapi}/location/${params}`)
+            .then(response => {
+                if (response.data.length === 0) {
+                    setLocation({ active: 0 })
+                } else {
+                    setLocation(response.data[0])
+                }
             })
     }
 
@@ -113,8 +133,40 @@ const Profile = ({ route, navigation }) => {
                     />}
                 <Text style={styles.name}>{data.account_name}</Text>
                 <Text style={{ textAlign: "center" }}>{data.account_email}</Text>
+                {/* MAP VIEW */}
+
+                {location.active === 1 ?
+                    <MapView initialRegion={{
+                        latitude: location.latitude,
+                        longitude: location.longtitude,
+                        latitudeDelta: 0.0922,
+                        longitudeDelta: 0.0421
+                    }}
+                        onPress={place => navigation.navigate("Maps", { longitude: location.longtitude, latitude: location.latitude, account_name: data.account_name, place_name: data.account_name })}
+
+                        style={{ width: "90%", height: 200, left: "5%", borderRadius: 12, marginTop: 20, }}>
+                        <Marker
+                            coordinate={{ latitude: location.latitude, longitude: location.longtitude }}
+                            description={`Place created by`}
+                            title={"ss"}>
+                            <View style={styles.place_container}>
+                                {/* <Text style={styles.place_text}>ass</Text> */}
+                                <Icon
+                                    type="font-awesome"
+                                    name="map-pin"
+                                    color="white"
+                                    style={{ color: "white" }} />
+
+                            </View>
+                        </Marker>
+                    </MapView>
+                    : <></>}
+
+
+                {/* PLACES */}
                 <Text style={{ fontSize: 18, left: 20, marginTop: 20, marginBottom: 10, fontWeight: "500" }}>Places</Text>
                 {renderPlaces}
+                {/* POSTS */}
                 <Text style={{ fontSize: 18, left: 20, marginTop: 20, marginBottom: 10, fontWeight: "500" }}>Posts</Text>
                 {renderPosts}
                 <View style={{ height: 100 }}></View>
@@ -219,6 +271,15 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 100,
         left: "39%"
+    },
+    place_container: {
+        padding: 5,
+        borderRadius: 9,
+        backgroundColor: "#550bcc"
+    },
+    place_text: {
+        fontWeight: "bold",
+        color: "white"
     },
     container: {
         height: "100%"

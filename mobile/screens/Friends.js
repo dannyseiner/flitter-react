@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, ScrollView, Image, Text } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
 import config from '../config'
@@ -10,6 +10,8 @@ const Friends = ({ navigation }) => {
     const [friends, setFriends] = useState([])
     const [userId, setUserId] = useState(0)
     const [menu, setMenu] = useState("Friends")
+    const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%", marginBottom: 400 }} />)
+
     useEffect(() => {
         loadFriends()
     }, [])
@@ -20,7 +22,25 @@ const Friends = ({ navigation }) => {
         axios.get(`${config.restapi}/getfriends/${userid}`)
             .then(response => {
                 setFriends(response.data)
+                setLoadingStatus(<></>)
             })
+    }
+
+    const deleteFriend = (user1, user2) => {
+        axios.post(`${config.restapi}/removefriend`, {
+            user1: user1,
+            user2: user2
+        })
+            .then(response => loadFriends())
+    }
+
+    const acceptFriend = (user1, user2) => {
+        console.log("s")
+        axios.post(`${config.restapi}/acceptfriend`, {
+            user1: user1,
+            user2: user2
+        })
+            .then(response => loadFriends())
     }
 
     const renderFriends = friends.map((friend, i) => (
@@ -39,22 +59,36 @@ const Friends = ({ navigation }) => {
 
     ))
 
+    // 1 SENDER
     const renderRequests = friends.map((friend, i) => (
         <View key={i}>
             {friend.friendship_status === 0 ?
-                <FriendBlock key={i} navigation={navigation} data={{
-                    userid: friend.user1_id + "" === userId + "" ? friend.user2_id : friend.user1_id,
-                    friendshipId: friend.friendship_id,
-                    image: friend.user1_id + "" === userId + "" ? friend.user2_image_render : friend.user1_image_render,
-                    name: friend.user1_id + "" === userId + "" ? friend.user2_name : friend.user1_name,
-                }}
-                />
+                <View>
+                    <FriendBlock key={i} navigation={navigation} data={{
+                        userid: friend.user1_id + "" === userId + "" ? friend.user2_id : friend.user1_id,
+                        friendshipId: friend.friendship_id,
+                        image: friend.user1_id + "" === userId + "" ? friend.user2_image_render : friend.user1_image_render,
+                        name: friend.user1_id + "" === userId + "" ? friend.user2_name : friend.user1_name,
+                    }}
+                    />
+                    <View style={{ width: "90%", left: "5%", backgroundColor: "white", borderRadius: 9, height: 40, padding: 10, marginTop: 20, }}>
+                        {friend.user1_id + "" === userId + "" ?
+                            <Text style={{ fontSize: 18, textAlign: "center", color: "red" }}>Delete</Text>
+                            :
+                            <View>
+                                <Text style={{ fontSize: 18, paddingLeft: 10, color: "red" }} onPress={() => deleteFriend(friend.user1_id, friend.user2_id)}>Delete</Text>
+                                <Text style={{ fontSize: 18, paddingRight: 10, alignSelf: "flex-end", top: -20, color: "#00aced" }} onPress={() => acceptFriend(friend.user1_id, friend.user2_id)}>Accept</Text>
+                            </View>
+                        }
+                    </View>
+                </View>
                 : <></>}
         </View>
     ))
 
     return (
         <View style={styles.container}>
+            {loadingStatus}
             <View style={styles.spacer}></View>
             <Text
                 style={styles.header}
@@ -94,6 +128,7 @@ const FriendBlock = ({ navigation, data }) => {
                 </Text>
                 <Text
                     style={styles.friendName}
+                    onLongPress={() => navigation.navigate("Profile", data.userid)}
                     onPress={data.redirect}>{data.name}</Text>
             </View>
         </View>

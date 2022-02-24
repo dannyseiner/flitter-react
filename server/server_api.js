@@ -104,7 +104,7 @@ api.post('/deletemessage', urlencodedParser, (req, res) => {
 
 // MAPVIEW
 api.get('/locations', (req, res) => {
-    con.query("SELECT * FROM location INNER JOIN accounts ON location.user_id = accounts.account_id INNER JOIN account_info ON location.user_id = account_info.user_id", (err, result) => {
+    con.query("SELECT * FROM location INNER JOIN accounts ON location.user_id = accounts.account_id INNER JOIN account_info ON location.user_id = account_info.user_id WHERE active=1", (err, result) => {
         for (s of result) {
             s["render_image"] = decodeImage(s["account_image"])
         }
@@ -247,7 +247,7 @@ api.get('/searchUser/:name', (req, res) => {
 
 // DELETE FRIEND SHIP 
 api.post('/removefriend', urlencodedParser, (req, res) => {
-    con.query(`DELETE FROM account_friends WHERE id_user1=${req.body.user1} AND id_user2=${req.body.user2}`, (err, result) => {
+    con.query(`DELETE FROM account_friends WHERE id_user1=${req.body.user1} AND id_user2=${req.body.user2} OR id_user1=${req.body.user2} AND id_user2 = ${req.body.user1}`, (err, result) => {
         res.send({ status: "done" })
     })
     console.log(req.body)
@@ -315,7 +315,7 @@ api.post('/getuserfriendship', urlencodedParser, (req, res) => {
 
 // ACCEPT FRIEND REQUEST
 api.post('/acceptfriend', urlencodedParser, (req, res) => {
-    con.query(`UPDATE account_friends SET friendship_status = 1 WHERE id_user1 = ${req.body.user1} AND id_user2 = ${req.body.user2}`, (err, result) => {
+    con.query(`UPDATE account_friends SET friendship_status = 1 WHERE id_user1 = ${req.body.user1} AND id_user2 = ${req.body.user2} OR id_user2=${req.body.user2} AND id_user1=${req.body.user1}`, (err, result) => {
         res.send({ status: "OK" })
     })
 })
