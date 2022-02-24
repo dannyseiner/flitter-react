@@ -165,10 +165,10 @@ const Profile = ({ route, navigation }) => {
 
                 {/* PLACES */}
                 <Text style={{ fontSize: 18, left: 20, marginTop: 20, marginBottom: 10, fontWeight: "500" }}>Places</Text>
-                {renderPlaces}
+                {places.length === 0 ? <Text style={{ textAlign: "center", fontWeight: "500", fontSize: 18 }}>No places yet</Text> : renderPlaces}
                 {/* POSTS */}
                 <Text style={{ fontSize: 18, left: 20, marginTop: 20, marginBottom: 10, fontWeight: "500" }}>Posts</Text>
-                {renderPosts}
+                {posts.length === 0 ? <Text style={{ textAlign: "center", fontWeight: "500", fontSize: 18 }}>No places yet</Text> : renderPosts}
                 <View style={{ height: 100 }}></View>
             </ScrollView>
             {params === undefined ? <Footer navigation={navigation} active={"Profile"} /> : <Footer navigation={navigation} active={"Profile"} />}

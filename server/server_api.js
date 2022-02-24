@@ -349,7 +349,7 @@ api.post('/getsettings', urlencodedParser, (req, res) => {
 
 // GET MESSAGES
 api.get('/getMessages/:id', (req, res) => {
-    con.query(`SELECT * FROM messages WHERE friendship_id = ${req.params.id}`, (err, result) => {
+    con.query(`SELECT * FROM messages WHERE friendship_id = ${req.params.id} ORDER BY message_id ASC`, (err, result) => {
         res.send(result)
     })
 })
