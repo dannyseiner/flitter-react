@@ -36,7 +36,6 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     },
 })
-const users = []
 io.on("connection", (socket) => {
 
     //  MAP
@@ -527,7 +526,10 @@ api.post('/createPost', urlencodedParser, (req, res) => {
 // POST COMMENT
 api.post('/addComment', urlencodedParser, (req, res) => {
     log("ADD COMMENT", req.body)
-    con.query(`INSERT INTO post_comments(comment_post_id, comment_author_id, comment_content) VALUES ( ${req.body.post_id}, ${req.body.author_id}, '${req.body.comment_content}')`)
+    con.query(`INSERT INTO post_comments(comment_post_id, comment_author_id, comment_content) VALUES ( ${req.body.post_id}, ${req.body.author_id}, '${req.body.comment_content}')`, (err, result) => {
+        res.send({ status: "ok" })
+    })
+
 })
 
 api.get('/table/:table', (res, req) => {

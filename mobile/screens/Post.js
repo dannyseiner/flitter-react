@@ -110,9 +110,11 @@ const PostScreen = ({ route, navigation }) => {
             author_id: userId,
             post_id: post.post_id,
             comment_content: comment
+        }).then(response => {
+            loadComments()
+            setComment("")
         })
-        loadComments()
-        setComment("")
+
 
     }
 
@@ -142,6 +144,28 @@ const PostScreen = ({ route, navigation }) => {
         );
     }
 
+    const deleteComment = (id) => {
+        Alert.alert(
+            "Do you want to delete this comment?",
+            "This action cannot be returned",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: "Delete", onPress: () => {
+                        axios.post(`${config.restapi}/deletecomment`, {
+                            commentId: id
+                        })
+                            .then(response => loadComments())
+
+                    }
+                }
+            ]
+        );
+    }
+
     const renderFriends = friends.map((friend, i) => (
         <View key={i} style={{ width: "90%", left: "5%", padding: 10, backgroundColor: "#00aced", borderRadius: 9, }}>
             <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center", color: "white" }}
@@ -156,7 +180,26 @@ const PostScreen = ({ route, navigation }) => {
     ))
 
     const renderComments = comments.map((comm, i) => (
-        <CommentBlock key={comm.comment_id} data={comm} navigation={navigation} />
+        <View key={comm.comment_id}>
+            {comm.comment_author_id + "" === userId + "" ?
+                <View style={styles.c_container}>
+                    <Text style={styles.c_author}
+                        onPress={() => navigation.navigate('Profile', comm.account_id)}>
+                        {comm.account_name}</Text>
+                    <Text style={styles.c_created}>{new Date(comm.comment_created).toLocaleDateString("en-US", config.date_format)}</Text>
+                    <Text style={styles.c_text} onLongPress={() => deleteComment(comm.comment_id)}>{comm.comment_content}</Text>
+                </View>
+                :
+                <View style={styles.c_container}>
+                    <Text style={styles.c_author}
+                        onPress={() => navigation.navigate('Profile', comm.account_id)}>
+                        {comm.account_name}</Text>
+                    <Text style={styles.c_created}>{new Date(comm.comment_created).toLocaleDateString("en-US", config.date_format)}</Text>
+                    <Text style={styles.c_text}>{comm.comment_content}</Text>
+                </View>
+            }
+        </View>
+
     ))
 
     return (

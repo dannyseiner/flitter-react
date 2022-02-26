@@ -1,7 +1,7 @@
 // In App.js in a new project
 
 import React, { useState, useEffect } from 'react';
-import { View, Text, SafeAreaView, Button, Settings } from 'react-native';
+import { View, LogBox, Text, SafeAreaView, Button, Settings } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -15,6 +15,12 @@ import SettingsScreen from './screens/Settings'
 import ChatScreen from './screens/Chat';
 import CreateScreen from './screens/Create';
 import MapScreen from './screens/Map'
+import EditprofileScreen from './screens/EditProfile';
+
+// WARNINGS
+LogBox.ignoreLogs(['Warning: ...']);
+LogBox.ignoreAllLogs();
+
 const Stack = createNativeStackNavigator();
 
 function App() {
@@ -59,6 +65,7 @@ function App() {
         <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
         <Stack.Screen name="Create" component={CreateScreen} options={headerTitleStyle} />
         <Stack.Screen name="Maps" component={MapScreen} options={headerTitleStyle} />
+        <Stack.Screen name="EditProfile" component={EditprofileScreen} options={headerTitleStyle} />
         <Stack.Screen name="Chat" component={ChatScreen} options={headerTitleStyle} />
       </Stack.Navigator>
     </NavigationContainer>

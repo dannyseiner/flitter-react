@@ -70,11 +70,13 @@ const Settings = ({ navigation }) => {
                     />
                 </View>
 
+                <View style={{ width: "90%", left: "5%", backgroundColor: "white", padding: 18, borderRadius: 10, marginBottom: 20, borderRadius: 9 }}>
+                    <Text style={{ fontSize: 17, fontWeight: "600", textAlign: "center", color: "black" }} onPress={() => navigation.navigate("EditProfile")}>Edit Profile</Text>
+                </View>
 
-                <Button
-                    title="Sign out"
-                    onPress={() => singOut()}
-                />
+                <View style={{ width: "90%", left: "5%", backgroundColor: "white", padding: 18, borderRadius: 10, marginBottom: 20, borderRadius: 9 }}>
+                    <Text style={{ fontSize: 17, fontWeight: "600", textAlign: "center", color: "red" }} onPress={() => singOut()}>Sign out</Text>
+                </View>
             </ScrollView>
             <Footer active="Settings" navigation={navigation} />
         </View>
