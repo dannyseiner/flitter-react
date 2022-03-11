@@ -101,7 +101,7 @@ const Map = ({ route, navigation }) => {
     const selectPlace = (place) => {
         console.log(location)
         if (selectedPlace.place_id === place.place_id) {
-            openMap({ latitude: place.latitude, longitude: place.longitude, zoom: 20, provider: "google", travelType: "drive", navigate: true });
+            openMap({ latitude: place.latitude, longitude: place.longitude, zoom: 20, provider: "apple", travelType: "drive", navigate: true });
             // Linking.openURL(`https://www.google.com/maps/@${place.latitude},${place.longitude},14z`)
 
         } else {
@@ -245,7 +245,7 @@ const PeopleBlock = ({ data, userId, navigation }) => {
     })
     const selectPlace = (place) => {
         if (selectedPlace.place_id === place.place_id) {
-            openMap({ latitude: place.latitude, longitude: place.longitude, zoom: 20, provider: "google" });
+            openMap({ latitude: place.latitude, longitude: place.longitude, zoom: 20, provider: "apple" });
             // Linking.openURL(`https://www.google.com/maps/@${place.latitude},${place.longitude},14z`)
 
         } else {

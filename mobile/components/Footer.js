@@ -25,9 +25,14 @@ const Footer = ({ navigation, active }) => {
     return (
         <View style={footer.footerContainer}>
             <Block navigation={navigation} active={active} map={userLocation.active} options={{
-                name: "archive",
+                name: "book",
                 type: "font-awesome",
                 text: "Home"
+            }} />
+            <Block navigation={navigation} active={active} map={userLocation.active} options={{
+                name: "bell",
+                type: "font-awesome",
+                text: "Notifications"
             }} />
             <Block navigation={navigation} active={active} map={userLocation.active} options={{
                 name: "user",
@@ -35,14 +40,14 @@ const Footer = ({ navigation, active }) => {
                 text: "Profile"
             }} />
             <Block navigation={navigation} active={active} map={userLocation.active} options={{
-                name: "map",
-                type: "font-awesome",
-                text: "Maps"
-            }} />
-            <Block navigation={navigation} active={active} map={userLocation.active} options={{
                 name: "users",
                 type: "font-awesome",
                 text: "Friends"
+            }} />
+            <Block navigation={navigation} active={active} map={userLocation.active} options={{
+                name: "map",
+                type: "font-awesome",
+                text: "Maps"
             }} />
             <Block navigation={navigation} active={active} map={userLocation.active} options={{
                 name: "cog",
@@ -70,22 +75,27 @@ const Block = ({ navigation, active, options }) => {
             {active === options.text ? <View style={blockStyleActive}>
                 <Icon
                     name={options.name}
+                    style={{ marginTop: 10 }}
                     type={options.type}
                     onPress={() => navigation.navigate(options.text)}
                     color='white' />
-                <Text style={footer.activeText}>{options.text}</Text>
+                <Text style={footer.activeText}>
+                    {/* {options.text} */}
+                </Text>
             </View> :
                 <View style={blockStyle}>
                     {options.text === "Profile" ?
                         <Icon
                             name={options.name}
                             type={options.type}
+                            style={{ marginTop: 10 }}
                             onPress={() => navigation.navigate("Profile", userId)}
                             color='#00aced' />
                         :
                         <Icon
                             name={options.name}
                             type={options.type}
+                            style={{ marginTop: 10 }}
                             onPress={() => navigation.navigate(options.text)}
                             color='#00aced' />
                     }
@@ -108,7 +118,7 @@ const footer = StyleSheet.create({
 
     },
     footerBlock: {
-        width: "20%",
+        width: "16.67%",
         height: 80,
         paddingTop: 15,
         backgroundColor: "white",
@@ -130,7 +140,7 @@ const footer = StyleSheet.create({
         fontWeight: "bold"
     },
     active: {
-        width: "20%",
+        width: "16.67%",
         height: 80,
         paddingTop: 15,
         color: "white",

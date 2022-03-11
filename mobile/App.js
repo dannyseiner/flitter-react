@@ -16,7 +16,7 @@ import ChatScreen from './screens/Chat';
 import CreateScreen from './screens/Create';
 import MapScreen from './screens/Map'
 import EditprofileScreen from './screens/EditProfile';
-
+import NotificationsScreen from "./screens/Notifications"
 // WARNINGS
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
@@ -65,6 +65,7 @@ function App() {
         <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
         <Stack.Screen name="Create" component={CreateScreen} options={headerTitleStyle} />
         <Stack.Screen name="Maps" component={MapScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Notifications" component={NotificationsScreen} options={headerTitleStyle} />
         <Stack.Screen name="EditProfile" component={EditprofileScreen} options={headerTitleStyle} />
         <Stack.Screen name="Chat" component={ChatScreen} options={headerTitleStyle} />
       </Stack.Navigator>

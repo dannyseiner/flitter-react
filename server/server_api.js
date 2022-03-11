@@ -13,11 +13,14 @@ const { resourceUsage } = require("process")
 const server = http.createServer()
 chatapp.use(cors())
 
-api.use(bodyParser.json())
+api.use(bodyParser.json({ limit: '50mb', extended: true }))
 api.use(cors())
 api.set('json spaces', 2)
+api.use(bodyParser({ limit: '1000mb' }));
+api.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var urlencodedParser = bodyParser.urlencoded({ extended: true, limit: '50mb' })
+
 
 const log = (txt, data) => {
     console.clear()
@@ -155,6 +158,15 @@ api.get("/user/:id", (req, res) => {
         result[0]["decoded_image"] = decodeImage(result[0].account_image)
         res.send(result)
     })
+})
+
+api.post("/edituser", urlencodedParser, (req, res) => {
+    con.query(`UPDATE accounts SET account_name = '${req.body.username}' WHERE account_id = ${req.body.userId}`, (err, result) => {
+        con.query(`UPDATE account_info SET account_image = '${req.body.image}' WHERE user_id = ${req.body.userId}`, (err, result) => {
+            res.send({ status: true })
+        })
+    })
+    console.log(req.body)
 })
 
 api.get('/postStats/:id', (req, res) => {

@@ -97,32 +97,34 @@ const PostBlock = ({ navigation, userId, data }) => {
         getPostStats()
     }
     return (
-        <View style={styles.postContainer}>
-            <Text style={styles.postDate}>{new Date(data.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
-            <Text onPress={() => navigation.navigate("Post", data)} style={styles.postHeader}>{data.post_title}</Text>
-            <Text style={styles.postText}>{data.post_content}</Text>
-            <Text style={styles.postAuthor} onPress={() => navigation.navigate("Profile", data.post_author_id)}>{data.account_name}</Text>
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignSelf: "flex-end", paddingBottom: 15 }}>
-                {postStats.comments === "" ? <></> :
-                    <>
-                        <Icon
-                            name="comments"
-                            type="font-awesome"
-                            color="black"
-                            style={{ padding: 5, marginRight: 20, top: -5 }}
-                        />
-                        <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -70 }}>{postStats.comments}</Text>
-                    </>
-                }
-                <Icon
-                    name="thumbs-up"
-                    type="font-awesome"
-                    color={like}
-                    onPress={() => likePost(data.post_id)}
-                />
-                <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -40 }}>{postStats.likes}</Text>
+        <>
+            <View style={styles.postContainer}>
+                <Text style={styles.postDate}>{new Date(data.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
+                <Text onPress={() => navigation.navigate("Post", data)} style={styles.postHeader}>{data.post_title}</Text>
+                <Text style={styles.postText}>{data.post_content}</Text>
+                <Text style={styles.postAuthor} onPress={() => navigation.navigate("Profile", data.post_author_id)}>{data.account_name}</Text>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignSelf: "flex-end", paddingBottom: 15 }}>
+                    {postStats.comments === "" ? <></> :
+                        <>
+                            <Icon
+                                name="comments"
+                                type="font-awesome"
+                                color="black"
+                                style={{ padding: 5, marginRight: 20, top: -5 }}
+                            />
+                            <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -70 }}>{postStats.comments}</Text>
+                        </>
+                    }
+                    <Icon
+                        name="thumbs-up"
+                        type="font-awesome"
+                        color={like}
+                        onPress={() => likePost(data.post_id)}
+                    />
+                    <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -40 }}>{postStats.likes}</Text>
+                </View>
             </View>
-        </View>
+        </>
     )
 }
 
@@ -131,14 +133,12 @@ const styles = StyleSheet.create({
         height: "100%"
     },
     postContainer: {
-        width: "90%",
-        left: "5%%",
-        marginTop: 15,
+        width: "100%",
+        marginTop: 5,
         padding: 15,
         borderRadius: 12,
         backgroundColor: "white",
         color: "black",
-        paddingBottom: -10
     },
     postHeader: {
         top: -10,

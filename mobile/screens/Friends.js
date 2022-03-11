@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Animated, ActivityIndicator, StyleSheet, ScrollView, Image, Text } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
 import config from '../config'
@@ -9,8 +9,28 @@ import { Icon } from 'react-native-elements';
 const Friends = ({ navigation }) => {
     const [friends, setFriends] = useState([])
     const [userId, setUserId] = useState(0)
-    const [menu, setMenu] = useState("Friends")
+    const [menu, setMenu] = useState(false)
     const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%", marginBottom: 400 }} />)
+
+
+    // ANIMATION
+    const fadeAnim = useRef(new Animated.Value(1000)).current;
+
+    const fadeIn = () => {
+        // Will change fadeAnim value to 1 in 5 seconds
+        Animated.timing(fadeAnim, {
+            toValue: 80,
+            duration: 400
+        }).start();
+    };
+
+    const fadeOut = () => {
+        // Will change fadeAnim value to 0 in 3 seconds
+        Animated.timing(fadeAnim, {
+            toValue: 1000,
+            duration: 400
+        }).start();
+    };
 
     useEffect(() => {
         loadFriends()
@@ -89,26 +109,42 @@ const Friends = ({ navigation }) => {
     return (
         <View style={styles.container}>
             {loadingStatus}
-            <View style={styles.spacer}></View>
+            <Animated.View style={[
+                styles.popup,
+                {
+                    top: fadeAnim,
+                }]
+            }>
+                <ScrollView>
+                    {renderRequests}
+                </ScrollView>
+            </Animated.View>
+
+            <View style={{ width: "90%", left: "5%", top: 10, marginBottom: 30, backgroundColor: menu === true ? "#00aced" : "white", padding: 15, borderRadius: 10 }}>
+                <Text
+                    style={{ textAlign: "center", fontWeight: "600", fontSize: 18 }}
+                    onPress={() => {
+                        if (menu === false) {
+                            setMenu(true)
+                            fadeIn()
+                        } else {
+                            setMenu(false)
+                            fadeOut()
+                        }
+                    }}>
+                    Requests
+                </Text>
+            </View>
             <Text
                 style={styles.header}
-            >{menu}
-
-                <Icon
-                    name="align-justify"
-                    type="font-awesome"
-                    style={{ marginLeft: 16 }}
-                    onPress={() => setMenu(menu === "Friends" ? "Requests" : "Friends")}
-
-                    color='#00aced' />
+            >
+                Friends
             </Text>
             <ScrollView>
-                {menu === "Friends" ? renderFriends : renderRequests}
+                {renderFriends}
             </ScrollView>
-            <Text style={styles.headerText}>Requests</Text>
-
             <Footer navigation={navigation} active={"Friends"} />
-        </View>
+        </View >
     );
 }
 
@@ -139,15 +175,25 @@ const styles = StyleSheet.create({
     container: {
         height: "100%",
     },
+    popup: {
+        position: "absolute",
+        zIndex: 900,
+        width: "100%",
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        backgroundColor: "#00aced",
+        height: "100%",
+        padding: 20,
+    },
     menubutton: {
         position: "absolute",
         left: 300,
         top: 10,
     },
     header: {
+        width: "100%",
         fontSize: 25,
         left: 35,
-        top: -15,
     },
     spacer: {
         height: 30,

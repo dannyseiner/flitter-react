@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const Profile = ({ route, navigation }) => {
     const params = route.params
     const [userId, setUserId] = useState(0)
+    const [friendStatus, setFriendStatus] = useState({})
     const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%", marginBottom: 300 }} />)
     const [posts, setPosts] = useState([])
     const [places, setPlaces] = useState([])
@@ -46,6 +47,7 @@ const Profile = ({ route, navigation }) => {
         getPosts()
         loadLocation()
         loadPlaces()
+        getFriendShipStatus()
     }, [])
     const getLoggedUser = async (id) => {
         const getData = await AsyncStorage.getItem('user')
@@ -73,9 +75,26 @@ const Profile = ({ route, navigation }) => {
             })
     }
 
+    const getFriendShipStatus = () => {
+        axios.post(`${config.restapi}/getuserfriendship`, {
+            user1: userId,
+            user2: params
+        })
+            .then(response => {
+                console.log(response.data)
+                if (response.data.length === 0) {
+                    setFriendStatus(false)
+                } else {
+                    setFriendStatus(response.data[0])
+                }
+            })
+    }
+
     const loadPlaces = () => {
         axios.get(`${config.restapi}/places/${params}`)
-            .then(response => setPlaces(response.data))
+            .then(response => {
+                setPlaces(response.data)
+            })
     }
     const deletePlace = id => {
         Alert.alert(
@@ -133,6 +152,11 @@ const Profile = ({ route, navigation }) => {
                     />}
                 <Text style={styles.name}>{data.account_name}</Text>
                 <Text style={{ textAlign: "center" }}>{data.account_email}</Text>
+                {/* FRIEND EVENTS */}
+                {friendStatus === false ?
+                    <Text>failed</Text>
+                    : <></>
+                }
                 {/* MAP VIEW */}
 
                 {location.active === 1 ?
