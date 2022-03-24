@@ -73,10 +73,10 @@ const Chat = ({ route, navigation }) => {
                 : <></>}
             {msg.from_id + "" === userId + "" ?
 
-                <Message navigation={navigation} roomId={params} id={msg.message_id} fromMe={true} msg={msg.message} />
+                <Message navigation={navigation} roomId={params} id={msg.message_id} date={new Date(msg.created).toLocaleDateString("en-US", config.date_format)} fromMe={true} msg={msg.message} />
 
                 :
-                <Message navigation={navigation} roomId={params} fromMe={false} msg={msg.message} />
+                <Message navigation={navigation} roomId={params} fromMe={false} date={new Date(msg.created).toLocaleDateString("en-US", config.date_format)} msg={msg.message} />
             }
         </View>
     )))
@@ -106,7 +106,7 @@ const Chat = ({ route, navigation }) => {
     );
 }
 
-const Message = ({ navigation, msg, id, fromMe, roomId }) => {
+const Message = ({ navigation, msg, id, fromMe, date, roomId }) => {
     const [newMessage, setNewMessage] = useState(<Text>{msg}</Text>)
     const [postdata, setPostdata] = useState({})
     const [msgClass, setMsgClass] = useState(fromMe === true ? styles.MymessageContainer : styles.messageContainer)
@@ -130,7 +130,7 @@ const Message = ({ navigation, msg, id, fromMe, roomId }) => {
 
     return (
         <>{fromMe === true ?
-            <View style={msgClass}>
+            <View style={[msgClass, evt ? { borderRadius: 40 } : {}]}>
                 {evt === true ?
                     <Text style={styles.MymessageText}
                         onPress={() => navigation.navigate("Post", postdata)}
@@ -160,6 +160,7 @@ const Message = ({ navigation, msg, id, fromMe, roomId }) => {
                     </Text>
                     :
                     <Text style={styles.MymessageText}
+                        onPress={() => { Alert.alert(date) }}
                         onLongPress={() => {
                             Alert.alert(
                                 "Delete this message",
@@ -187,14 +188,16 @@ const Message = ({ navigation, msg, id, fromMe, roomId }) => {
                 }
             </View>
             :
-            <View style={msgClass}>
+            <View style={[msgClass, evt ? { borderRadius: 40 } : {}]}>
                 {evt === true ?
                     <Text style={styles.messageText}
                         onPress={() => navigation.navigate("Post", postdata)}>
                         {newMessage}
                     </Text>
                     :
-                    <Text style={styles.messageText}>
+                    <Text style={styles.messageText}
+                        onPress={() => { Alert.alert(date) }}
+                    >
                         {newMessage}
                     </Text>
                 }
@@ -205,7 +208,8 @@ const Message = ({ navigation, msg, id, fromMe, roomId }) => {
 
 const styles = StyleSheet.create({
     container: {
-        height: "100%"
+        height: "100%",
+        width: "100%"
     },
     messageContainer: {
         backgroundColor: '#000000',

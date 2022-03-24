@@ -154,7 +154,7 @@ const Profile = ({ route, navigation }) => {
                 <Text style={{ textAlign: "center" }}>{data.account_email}</Text>
                 {/* FRIEND EVENTS */}
                 {friendStatus === false ?
-                    <Text>failed</Text>
+                    <Text>d</Text>
                     : <></>
                 }
                 {/* MAP VIEW */}
@@ -168,7 +168,7 @@ const Profile = ({ route, navigation }) => {
                     }}
                         onPress={place => navigation.navigate("Maps", { longitude: location.longtitude, latitude: location.latitude, account_name: data.account_name, place_name: data.account_name })}
 
-                        style={{ width: "90%", height: 200, left: "5%", borderRadius: 12, marginTop: 20, }}>
+                        style={{ width: "95%", height: 200, left: "2.5%", borderRadius: 12, marginTop: 20, }}>
                         <Marker
                             coordinate={{ latitude: location.latitude, longitude: location.longtitude }}
                             description={`Place created by`}
@@ -272,9 +272,9 @@ const PostBlock = ({ navigation, userId, data, deleteFce }) => {
 
 const styles = StyleSheet.create({
     placecontainer: {
-        width: "90%",
+        width: "95%",
         padding: 10,
-        left: "5%",
+        left: "2.5%",
         backgroundColor: "white",
         marginBottom: 20,
         borderRadius: 9
@@ -309,8 +309,8 @@ const styles = StyleSheet.create({
         height: "100%"
     },
     postContainer: {
-        width: "90%",
-        left: "5%%",
+        width: "95%",
+        left: "2.5%",
         marginTop: 15,
         padding: 15,
         borderRadius: 12,

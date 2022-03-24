@@ -8,30 +8,35 @@ const Notifications = ({ navigation }) => {
     const [userId, setUserId] = useState(0)
     const [notifications, setNotifications] = useState([])
     useEffect(() => {
-        (async () => {
-            const getuserid = await AsyncStorage.getItem("user")
-            setUserId(getuserid)
-        })
+        getUser()
     }, [])
 
+    useEffect(() => {
+        getNotifications()
+    }, [userId])
+
+    const getUser = async () => {
+        const getuserid = await AsyncStorage.getItem("user")
+        setUserId(getuserid)
+    }
 
     const getNotifications = () => {
         axios.post(`${config.restapi}/userNotifications`, {
             accountId: userId
-        }).then(response => console.log(response.data))
+        }).then(response => setNotifications(response.data))
     }
 
-    const renderNotifications = notifications.map(() => (
-        <Text>ass</Text>
+    const renderNotifications = notifications.map((not) => (
+        <View style={styles.notificationblock}>
+            <Text style={styles.notificationcreated}>{not.not_created}</Text>
+            <Text style={styles.notificationtext}>{not.not_header}</Text>
+        </View>
     ))
 
     return (
         <View>
             <ScrollView style={{ height: "100%" }}>
-                <View style={styles.notificationblock}>
-                    <Text style={styles.notificationcreated}>10.10.2002</Text>
-                    <Text style={styles.notificationtext}>Randon Text</Text>
-                </View>
+                {renderNotifications}
             </ScrollView>
             <Footer active="Notifications" navigation={navigation} />
         </View>

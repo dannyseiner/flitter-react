@@ -3,6 +3,7 @@ import { View, StyleSheet, Animated, Text, Image, TextInput, Linking } from 'rea
 import axios from 'axios'
 import config from '../config'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 
 
@@ -14,6 +15,41 @@ const Login = ({ navigation }) => {
 
     // ANIMATED
     const slideAnim = useRef(new Animated.Value(400)).current;
+
+    const onFaceId = async () => {
+        try {
+            // Checking if device is compatible
+            const isCompatible = await LocalAuthentication.hasHardwareAsync();
+
+            if (!isCompatible) {
+                throw new Error('Your device isn\'t compatible.')
+            }
+
+            // Checking if device has biometrics records
+            const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+
+            if (!isEnrolled) {
+                navigation.navigate('Home')
+                return
+            }
+
+            // Authenticate user
+            const auth = await LocalAuthentication.authenticateAsync({
+                promptMessage: "Log into Flitter"
+            });
+            console.log('Authenticated', 'Welcome back !')
+            if (auth.success) {
+                navigation.navigate('Home')
+            } else {
+                navigator.navigate("Login")
+            }
+
+        } catch (error) {
+            console.log('An error as occured', error?.message);
+        }
+    };
+
+
 
     const slideIn = () => {
         Animated.timing(slideAnim, {
@@ -36,7 +72,7 @@ const Login = ({ navigation }) => {
 
     useEffect(() => {
         getMyStringValue()
-    })
+    }, [])
 
     const loadInBrowser = () => {
         Linking.openURL("http://172.20.10.3:3000").catch(err => console.error("Couldn't load page", err));
@@ -85,7 +121,7 @@ const Login = ({ navigation }) => {
         try {
             const getData = await AsyncStorage.getItem('user')
             if (getData !== null) {
-                navigation.navigate('Home')
+                onFaceId()
             }
         } catch (e) {
             console.log(e)

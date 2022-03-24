@@ -17,6 +17,16 @@ import CreateScreen from './screens/Create';
 import MapScreen from './screens/Map'
 import EditprofileScreen from './screens/EditProfile';
 import NotificationsScreen from "./screens/Notifications"
+import CalendarScreen from "./screens/Calendar"
+import MenuScreen from "./screens/Menu"
+import EventsScreen from './screens/Events'
+// STATIC
+import SupportScreen from './screens/Support'
+import MarketPlaceScreen from "./screens/MarketPlace"
+import PrivacyScreen from "./screens/Privacy"
+import ApiScreen from "./screens/Api"
+import PagesScreen from "./screens/Pages"
+
 // WARNINGS
 LogBox.ignoreLogs(['Warning: ...']);
 LogBox.ignoreAllLogs();
@@ -62,12 +72,20 @@ function App() {
         <Stack.Screen name="Friends" component={FriendsScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
         <Stack.Screen name="Post" component={PostScreen} options={headerTitleStyle} />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
-        <Stack.Screen name="Settings" component={SettingsScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
+        <Stack.Screen name="Settings" component={SettingsScreen} options={headerTitleStyle} />
         <Stack.Screen name="Create" component={CreateScreen} options={headerTitleStyle} />
         <Stack.Screen name="Maps" component={MapScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Events" component={EventsScreen} options={headerTitleStyle} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} options={headerTitleStyle} />
         <Stack.Screen name="EditProfile" component={EditprofileScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Menu" component={MenuScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Calendar" component={CalendarScreen} options={headerTitleStyle} />
         <Stack.Screen name="Chat" component={ChatScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Privacy" component={PrivacyScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Pages" component={PagesScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Api" component={ApiScreen} options={headerTitleStyle} />
+        <Stack.Screen name="MarketPlace" component={MarketPlaceScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Support" component={SupportScreen} options={headerTitleStyle} />
       </Stack.Navigator>
     </NavigationContainer>
   );

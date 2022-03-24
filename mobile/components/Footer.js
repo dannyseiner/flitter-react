@@ -30,11 +30,6 @@ const Footer = ({ navigation, active }) => {
                 text: "Home"
             }} />
             <Block navigation={navigation} active={active} map={userLocation.active} options={{
-                name: "bell",
-                type: "font-awesome",
-                text: "Notifications"
-            }} />
-            <Block navigation={navigation} active={active} map={userLocation.active} options={{
                 name: "user",
                 type: "font-awesome",
                 text: "Profile"
@@ -45,17 +40,17 @@ const Footer = ({ navigation, active }) => {
                 text: "Friends"
             }} />
             <Block navigation={navigation} active={active} map={userLocation.active} options={{
-                name: "map",
+                name: "bell",
                 type: "font-awesome",
-                text: "Maps"
+                text: "Notifications"
             }} />
             <Block navigation={navigation} active={active} map={userLocation.active} options={{
-                name: "cog",
+                name: "bars",
                 type: "font-awesome",
-                text: "Settings"
+                text: "Menu"
             }} />
         </View>
-    );
+    )
 }
 
 const Block = ({ navigation, active, options }) => {
@@ -118,7 +113,7 @@ const footer = StyleSheet.create({
 
     },
     footerBlock: {
-        width: "16.67%",
+        width: "20%",
         height: 80,
         paddingTop: 15,
         backgroundColor: "white",
@@ -126,7 +121,7 @@ const footer = StyleSheet.create({
         textAlign: "center"
     },
     footerBlockWithoutMap: {
-        width: "25%",
+        width: "20%",
         left: 0,
         height: 80,
         paddingTop: 15,
@@ -140,7 +135,7 @@ const footer = StyleSheet.create({
         fontWeight: "bold"
     },
     active: {
-        width: "16.67%",
+        width: "20%",
         height: 80,
         paddingTop: 15,
         color: "white",
@@ -156,6 +151,7 @@ const footer = StyleSheet.create({
         backgroundColor: "#00aced",
     },
     activeText: {
+        fontSize: 10,
         color: "white",
         textAlign: "center",
         fontWeight: "bold"

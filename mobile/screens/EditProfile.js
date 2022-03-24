@@ -80,7 +80,6 @@ const Editprofile = ({ navigation }) => {
 
     return (
         <View style={{ height: "100%" }}>
-
             <ScrollView>
                 <View style={styles.editsettings}>
                     <Text style={styles.edittext}>Username</Text>
@@ -111,11 +110,11 @@ const Editprofile = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     editsettings: {
-        width: "90%",
+        width: "95%",
         backgroundColor: "white",
         padding: 10,
         marginTop: 10,
-        left: "5%",
+        left: "2.5%",
         borderRadius: 10,
     },
     editinput: {
@@ -132,8 +131,8 @@ const styles = StyleSheet.create({
         padding: 10,
         top: 20,
         borderRadius: 10,
-        width: "90%",
-        left: "5%",
+        width: "95%",
+        left: "2.5%",
         backgroundColor: "#00aced"
     },
     savesettingstext: {

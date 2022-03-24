@@ -10,6 +10,7 @@ const http = require('http')
 const chatapp = express()
 const { Server } = require("socket.io")
 const { resourceUsage } = require("process")
+const { get } = require("jquery")
 const server = http.createServer()
 chatapp.use(cors())
 
@@ -102,6 +103,13 @@ api.post('/deletemessage', urlencodedParser, (req, res) => {
     con.query(`DELETE FROM messages WHERE message_id = ${req.body.messageId}`)
     res.send({ status: "ok" })
 
+})
+
+// EVENST
+api.get('/events', (req, res) => {
+    con.query("SELECT * FROM events", (err, result) => {
+        res.send(result)
+    })
 })
 
 // MAPVIEW
@@ -221,7 +229,6 @@ api.post('/likePost', urlencodedParser, (req, res) => {
 
 // DELETE NOTIFICAITON 
 api.post('/deleteNotification', urlencodedParser, (req, res) => {
-
     con.query(`DELETE FROM notifications WHERE not_id = ${req.body.notificationId} AND account_id = ${req.body.accountId}`, (err, result) => {
         res.send(result)
     })

@@ -91,7 +91,7 @@ const Friends = ({ navigation }) => {
                         name: friend.user1_id + "" === userId + "" ? friend.user2_name : friend.user1_name,
                     }}
                     />
-                    <View style={{ width: "90%", left: "5%", backgroundColor: "white", borderRadius: 9, height: 40, padding: 10, marginTop: 20, }}>
+                    <View style={{ width: "95%", left: "2.5%", backgroundColor: "white", borderRadius: 9, height: 40, padding: 10, marginTop: 20, }}>
                         {friend.user1_id + "" === userId + "" ?
                             <Text style={{ fontSize: 18, textAlign: "center", color: "red" }}>Delete</Text>
                             :
@@ -120,7 +120,7 @@ const Friends = ({ navigation }) => {
                 </ScrollView>
             </Animated.View>
 
-            <View style={{ width: "90%", left: "5%", top: 10, marginBottom: 30, backgroundColor: menu === true ? "#00aced" : "white", padding: 15, borderRadius: 10 }}>
+            <View style={{ width: "95%", left: "2.5%", top: 10, marginBottom: 30, backgroundColor: menu === true ? "#00aced" : "white", padding: 15, borderRadius: 10 }}>
                 <Text
                     style={{ textAlign: "center", fontWeight: "600", fontSize: 18 }}
                     onPress={() => {
@@ -199,10 +199,10 @@ const styles = StyleSheet.create({
         height: 30,
     },
     friendBlock: {
-        left: "5%",
+        left: "2.5%",
         top: 10,
         backgroundColor: "white",
-        width: "90%",
+        width: "95%",
         paddingLeft: 10,
         paddingRight: 10,
         borderRadius: 10,
