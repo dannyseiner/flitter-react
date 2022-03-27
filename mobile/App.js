@@ -20,6 +20,7 @@ import NotificationsScreen from "./screens/Notifications"
 import CalendarScreen from "./screens/Calendar"
 import MenuScreen from "./screens/Menu"
 import EventsScreen from './screens/Events'
+import EventScreen from "./screens/Event"
 // STATIC
 import SupportScreen from './screens/Support'
 import MarketPlaceScreen from "./screens/MarketPlace"
@@ -72,6 +73,7 @@ function App() {
         <Stack.Screen name="Friends" component={FriendsScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
         <Stack.Screen name="Post" component={PostScreen} options={headerTitleStyle} />
         <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
+        <Stack.Screen name="ProfileBar" component={ProfileScreen} options={headerTitleStyle} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={headerTitleStyle} />
         <Stack.Screen name="Create" component={CreateScreen} options={headerTitleStyle} />
         <Stack.Screen name="Maps" component={MapScreen} options={headerTitleStyle} />
@@ -80,6 +82,7 @@ function App() {
         <Stack.Screen name="EditProfile" component={EditprofileScreen} options={headerTitleStyle} />
         <Stack.Screen name="Menu" component={MenuScreen} options={headerTitleStyle} />
         <Stack.Screen name="Calendar" component={CalendarScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Event" component={EventScreen} options={headerTitleStyle} />
         <Stack.Screen name="Chat" component={ChatScreen} options={headerTitleStyle} />
         <Stack.Screen name="Privacy" component={PrivacyScreen} options={headerTitleStyle} />
         <Stack.Screen name="Pages" component={PagesScreen} options={headerTitleStyle} />

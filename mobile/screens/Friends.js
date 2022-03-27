@@ -4,28 +4,26 @@ import Footer from '../components/Footer';
 import axios from "axios"
 import config from '../config'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Icon } from 'react-native-elements';
 
 const Friends = ({ navigation }) => {
     const [friends, setFriends] = useState([])
     const [userId, setUserId] = useState(0)
     const [menu, setMenu] = useState(false)
+    const [menu2, setMenu2] = useState(false)
     const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%", marginBottom: 400 }} />)
 
 
     // ANIMATION
     const fadeAnim = useRef(new Animated.Value(1000)).current;
 
-    const fadeIn = () => {
-        // Will change fadeAnim value to 1 in 5 seconds
+    const fadeIn1 = () => {
         Animated.timing(fadeAnim, {
             toValue: 80,
             duration: 400
         }).start();
     };
 
-    const fadeOut = () => {
-        // Will change fadeAnim value to 0 in 3 seconds
+    const fadeOut1 = () => {
         Animated.timing(fadeAnim, {
             toValue: 1000,
             duration: 400
@@ -119,21 +117,39 @@ const Friends = ({ navigation }) => {
                     {renderRequests}
                 </ScrollView>
             </Animated.View>
-
-            <View style={{ width: "95%", left: "2.5%", top: 10, marginBottom: 30, backgroundColor: menu === true ? "#00aced" : "white", padding: 15, borderRadius: 10 }}>
-                <Text
-                    style={{ textAlign: "center", fontWeight: "600", fontSize: 18 }}
-                    onPress={() => {
-                        if (menu === false) {
-                            setMenu(true)
-                            fadeIn()
-                        } else {
-                            setMenu(false)
-                            fadeOut()
-                        }
-                    }}>
-                    Requests
-                </Text>
+            <View style={{ width: "95%", left: "1%", flexDirection: "row", }}>
+                <View style={{ width: "50%", top: 10, marginBottom: 30, backgroundColor: menu2 === true ? "#00aced" : "white", padding: 15, borderRadius: 10 }}>
+                    <Text
+                        style={{ textAlign: "center", fontWeight: "600", fontSize: 18 }}
+                        onPress={() => {
+                            if (menu2 === false) {
+                                setMenu(false)
+                                setMenu2(true)
+                                fadeIn1()
+                            } else {
+                                setMenu2(false)
+                                fadeOut1()
+                            }
+                        }}>
+                        Add Friend
+                    </Text>
+                </View>
+                <View style={{ width: "50%", left: "3%", top: 10, marginBottom: 30, backgroundColor: menu === true ? "#00aced" : "white", padding: 15, borderRadius: 10 }}>
+                    <Text
+                        style={{ textAlign: "center", fontWeight: "600", fontSize: 18 }}
+                        onPress={() => {
+                            if (menu === false) {
+                                setMenu(true)
+                                setMenu2(false)
+                                fadeIn1()
+                            } else {
+                                setMenu(false)
+                                fadeOut1()
+                            }
+                        }}>
+                        Requests
+                    </Text>
+                </View>
             </View>
             <Text
                 style={styles.header}

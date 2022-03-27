@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import config from "../config"
 import axios from "axios"
 import { CalendarList, Agenda, LocaleConfig } from 'react-native-calendars';
@@ -10,6 +10,7 @@ const Calendar = ({ navigation }) => {
     const [markedDays, setMarkedDays] = useState({})
     const [events, setEvents] = useState({})
     const [calendar, setCalendar] = useState(<></>)
+    const [getDate, setGetDate] = useState("")
     useEffect(() => {
         loadEventsFromDB()
     }, [])
@@ -46,10 +47,14 @@ const Calendar = ({ navigation }) => {
             if (!days[s.event_date.split("T")[0]]) {
                 days[s.event_date.split("T")[0]] = []
             }
-            days[s.event_date.split("T")[0]].push({ name: s.event_title })
+            days[s.event_date.split("T")[0]].push({
+                event_id: s.event_id,
+                name: s.event_title,
+                data: s,
+                username: s.account_name,
+                date: s.event_date.split("T")[0]
+            })
         }
-        console.log(days)
-
         setEvents(days)
     }
 
@@ -66,18 +71,15 @@ const Calendar = ({ navigation }) => {
             }}
             // Callback that fires when the calendar is opened or closed
             onCalendarToggled={calendarOpened => {
-                console.log(calendarOpened);
+                getEventByMarkedDays()
+                getMarkedDays()
             }}
             // Callback that gets called on day press
             onDayPress={day => {
-                console.log('day pressed');
+                setGetDate(day.dateString);
+                console.log(day.dateString);
             }}
-            // Callback that gets called when day changes while scrolling agenda list
-            onDayChange={day => {
-                console.log('day changed');
-            }}
-            // Initially selected day
-            selected={'2022-03-21'}
+            selected={new Date().toISOString().split("T")[0]}
             // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
             // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
             pastScrollRange={1}
@@ -85,15 +87,17 @@ const Calendar = ({ navigation }) => {
             futureScrollRange={3}
             // Specify how each item should be rendered in agenda
             renderItem={(item, firstItemInDay) => {
-                return <View>
-                    <Text>{item.name}</Text>
-                </View>;
+                return <View />
             }}
             // Specify how each date should be rendered. day can be undefined if the item is not first in that day
             renderDay={(day, item) => {
-                return <View style={styles.eventContainer}>
-                    <Text style={styles.eventTitle}>{JSON.stringify(day)}</Text>
-                </View>
+                return <>
+                    {getDate === item.date ?
+                        <TouchableOpacity onPress={() => navigation.navigate("Event", item)} style={styles.eventContainer}>
+                            <Text style={styles.eventTitle}>{item.name}</Text>
+                            <Text style={styles.eventAuthor}>{item.username}</Text>
+                        </TouchableOpacity> : <></>}
+                </>
             }}
             // Specify how empty date content with no items should be rendered
             renderEmptyDate={() => {
@@ -105,7 +109,9 @@ const Calendar = ({ navigation }) => {
             }}
             // Specify what should be rendered instead of ActivityIndicator
             renderEmptyData={() => {
-                return <View />;
+                return <View style={styles.eventContainer}>
+                    <Text style={styles.eventTitle}>No events</Text>
+                </View>
             }}
             // Specify your item comparison function for increased performance
             rowHasChanged={(r1, r2) => {
@@ -118,9 +124,12 @@ const Calendar = ({ navigation }) => {
             // By default, agenda dates are marked if they have at least one item, but you can override this if needed
             markedDates={markedDays}
             // If disabledByDefault={true} dates flagged as not disabled will be enabled. Default = false
-            disabledByDefault={true}
+            disabledByDefault={false}
             // If provided, a standard RefreshControl will be added for "Pull to Refresh" functionality. Make sure to also set the refreshing prop correctly
-            onRefresh={() => console.log('refreshing...')}
+            onRefresh={() => {
+                getEventByMarkedDays()
+                getMarkedDays()
+            }}
             // Set this true while waiting for new data from a refresh
             refreshing={false}
             // Add a custom RefreshControl component, used to provide pull-to-refresh functionality for the ScrollView
@@ -148,6 +157,11 @@ const styles = StyleSheet.create({
     eventTitle: {
         fontSize: 18,
         fontWeight: "500"
+    },
+    eventAuthor: {
+        textAlign: "right",
+        fontSize: 18,
+        color: "lightgrey"
     }
 })
 

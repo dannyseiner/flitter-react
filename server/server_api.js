@@ -11,6 +11,7 @@ const chatapp = express()
 const { Server } = require("socket.io")
 const { resourceUsage } = require("process")
 const { get } = require("jquery")
+const eventHandler = require("./Components/event")
 const server = http.createServer()
 chatapp.use(cors())
 
@@ -107,7 +108,7 @@ api.post('/deletemessage', urlencodedParser, (req, res) => {
 
 // EVENST
 api.get('/events', (req, res) => {
-    con.query("SELECT * FROM events", (err, result) => {
+    con.query("SELECT * FROM events INNER JOIN accounts ON events.author_id = accounts.account_id", (err, result) => {
         res.send(result)
     })
 })
