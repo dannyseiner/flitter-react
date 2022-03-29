@@ -2,7 +2,17 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity, Text, StyleSheet, Linking } from 'react-native';
 import { Icon } from 'react-native-elements';
 import config from "../config"
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Menu = ({ navigation }) => {
+
+    const singOut = async () => {
+        try {
+            await AsyncStorage.removeItem('user')
+            navigation.navigate("Login")
+        } catch (e) {
+        }
+    }
+
     return (
         <View>
             <View style={{
@@ -28,6 +38,15 @@ const Menu = ({ navigation }) => {
                     <Text
 
                         style={styles.blocktext}>Calendar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.blockcontainer} onPress={() => navigation.navigate("Calendar")}>
+                    <Icon
+                        type="font-awesome"
+                        name="bookmark"
+                    />
+                    <Text
+
+                        style={styles.blocktext}>Saved</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => navigation.navigate("Maps")}
@@ -75,6 +94,15 @@ const Menu = ({ navigation }) => {
                         style={styles.blocktext}
                     >Privacy</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.blockcontainer} onPress={() => navigation.navigate("Api")}>
+                    <Icon
+                        type="font-awesome"
+                        name="server"
+                    />
+                    <Text
+                        style={styles.blocktext}
+                    >API</Text>
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.blockcontainer} onPress={() => navigation.navigate("Settings")}>
                     <Icon
                         type="font-awesome"
@@ -95,14 +123,15 @@ const Menu = ({ navigation }) => {
                             style={styles.blocktext}
                         >Pages</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.blockcontainer} onPress={() => navigation.navigate("Api")}>
+                    <TouchableOpacity style={styles.blockcontainer} onPress={() => singOut()}>
                         <Icon
                             type="font-awesome"
-                            name="server"
+                            name="sign-out"
+                            color="red"
                         />
                         <Text
                             style={styles.blocktext}
-                        >API</Text>
+                        >Sign Out</Text>
                     </TouchableOpacity>
 
                 </View>
