@@ -42,6 +42,12 @@ const io = new Server(server, {
 })
 io.on("connection", (socket) => {
 
+    // ONLINE STATUS
+    socket.on("login", (data) => {
+        console.log('new login');
+        console.log(data)
+    })
+
     //  MAP
     socket.on("join_map", (data) => {
         if (data.location.latitude === 0) return
@@ -462,7 +468,18 @@ api.get('/postshome/:id', (req, res) => {
         })
     })
 })
-
+// GET POSTS BY TITLE 
+api.get('/postbyname/:name', (req, res) => {
+    con.query(`SELECT * FROM posts 
+        INNER JOIN accounts ON posts.post_author_id = accounts.account_id
+        INNER JOIN account_info ON posts.post_author_id = account_info.user_id
+        WHERE posts.post_title LIKE '%${req.params.name}%' OR posts.post_content LIKE '%${req.params.name}%' ORDER BY post_created DESC`, (error, response) => {
+        for (let i = 0; i < response.length; i++) {
+            response[i]["profile_image_encoded"] = decodeImage(response[i].account_image)
+        }
+        res.send(response)
+    })
+})
 // CREATE POST
 api.post("/createpost", urlencodedParser, (req, res) => {
     con.query(`INSERT INTO posts(post_author_id, post_title, post_content) VALUES(

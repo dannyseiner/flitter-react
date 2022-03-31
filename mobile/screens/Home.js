@@ -1,18 +1,87 @@
-import React, { useState, useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet, Text, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, ActivityIndicator, TextInput, Animated, TouchableOpacity, StyleSheet, Text, ScrollView } from 'react-native';
 import axios from 'axios'
 import config from '../config'
 import { Icon } from 'react-native-elements';
 import Footer from '../components/Footer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const HomeScreen = ({ navigation }) => {
 
     const [posts, setPosts] = useState([])
     const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%" }} />)
     const [userId, setUserId] = useState(0)
-    useEffect(() => {
+    const [search, setSearch] = useState("")
 
+    // ANIMATED 
+    const fadeAnim = useRef(new Animated.Value(0)).current
+    const indexAnim = useRef(new Animated.Value(0)).current
+    const rotateAnim = useRef(new Animated.Value(0)).current
+    const [isOpen, setIsOpen] = useState(false)
+
+
+    const animationhandler = () => {
+        if (isOpen) {
+            fadeOut()
+            setIsOpen(false)
+        } else {
+            fadeIn()
+            setIsOpen(true)
+        }
+    }
+    const fadeIn = () => {
+        Animated.timing(rotateAnim, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true
+        }).start(() => {
+            rotateAnim.setValue(0);
+        });
+        Animated.timing(fadeAnim, {
+            toValue: 0.8,
+            duration: 800,
+            useNativeDriver: true
+        }).start()
+        Animated.timing(indexAnim, {
+            toValue: 40,
+            duration: 800,
+            useNativeDriver: true,
+        }).start()
+
+
+    };
+
+    const fadeOut = () => {
+        Animated.timing(rotateAnim, {
+            toValue: 1,
+            duration: 400,
+            useNativeDriver: true,
+        }).start(() => {
+            rotateAnim.setValue(0);
+        });
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 800,
+            useNativeDriver: true,
+        }).start()
+        Animated.timing(indexAnim, {
+            toValue: 0,
+            duration: 800,
+            useNativeDriver: true
+        }).start()
+
+    }
+
+
+    const xInterpolate = rotateAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["0deg", "360deg"],
+    });
+
+    const animatedStyles = {
+        transform: [{ rotate: xInterpolate }],
+    };
+
+    useEffect(() => {
         loadPosts()
     }, [])
 
@@ -38,9 +107,18 @@ const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             {loadingStatus}
+            <Animated.View style={isOpen === false ? { opacity: 0 } : { opacity: 1, backgroundColor: "white", top: 20, borderRadius: 10, position: "absolute", zIndex: 150, width: "95%", left: "2.5%", height: 60, }}>
+                <TextInput
+                    onSubmitEditing={e => search === "" ? animationhandler() : navigation.navigate("Search", search)}
+                    onChangeText={e => setSearch(e)}
+                    style={{ fontSize: 20, padding: 5, top: 15, width: "95%", left: "2.5%", position: "absolute" }}
+                    placeholder="Search posts and people" />
+            </Animated.View>
+            <Animated.View style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0, backgroundColor: "black", opacity: fadeAnim, zIndex: indexAnim }}>
 
+            </Animated.View>
             <ScrollView
-                style={styles.scroll}
+                style={{ top: 0 }}
                 onScrollToTop={() => loadPosts()}>
 
                 {posts.map((post, i) => (
@@ -49,11 +127,28 @@ const HomeScreen = ({ navigation }) => {
 
                 <View style={{ height: 100 }}></View>
             </ScrollView>
-            <View style={{ position: "absolute", fontSize: 20, top: "80%", right: 30, backgroundColor: "#00aced", width: 50, height: 50, borderRadius: "100%" }}>
-                <Text onPress={() => navigation.navigate("Create")} style={{ fontSize: 25, color: "white", fontWeight: "bold", textAlign: "center", padding: 10 }}>+</Text>
-            </View>
+            <TouchableOpacity style={{ position: "absolute", fontSize: 20, top: "83%", right: 30, backgroundColor: "#00aced", width: 50, height: 50, borderRadius: "100%" }}
+                onPress={() => navigation.navigate("Create")} >
+                <Icon
+                    style={{ fontSize: 25, top: 5, color: "white", fontWeight: "bold", textAlign: "center", padding: 10 }}
+                    type="font-awesome"
+                    color="white"
+                    name="plus"
+                />
+            </TouchableOpacity>
+            <Animated.View style={[animatedStyles, { position: "absolute", fontSize: 20, top: "83%", right: "37.5%", backgroundColor: "#00aced", width: "25%", height: 120, zIndex: 50, borderRadius: "100%" }]}>
+                <TouchableOpacity
+                    onPress={() => animationhandler()} >
+                    <Icon
+                        style={[{ fontSize: 25, top: 10, color: "white", fontWeight: "bold", textAlign: "center", padding: 10 }]}
+                        type="font-awesome"
+                        color="white"
+                        name={isOpen ? "times" : "search"}
+                    />
+                </TouchableOpacity>
+            </Animated.View>
             <Footer navigation={navigation} active="Home" />
-        </View>
+        </View >
     );
 }
 

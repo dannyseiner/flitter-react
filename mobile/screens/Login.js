@@ -4,7 +4,17 @@ import axios from 'axios'
 import config from '../config'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as LocalAuthentication from 'expo-local-authentication';
+import io from 'socket.io-client';
 
+
+const connectionConfig = {
+    jsonp: false,
+    reconnection: true,
+    reconnectionDelay: 100,
+    reconnectionAttempts: 5000,
+    transports: ['websocket']
+};
+const socket = io.connect(`http://${config.socket}`, connectionConfig)
 
 
 const Login = ({ navigation }) => {
@@ -56,7 +66,7 @@ const Login = ({ navigation }) => {
     };
 
 
-    const onFaceId = async () => {
+    const onFaceId = async (id) => {
         try {
             // Checking if device is compatible
             const isCompatible = await LocalAuthentication.hasHardwareAsync();
@@ -77,9 +87,9 @@ const Login = ({ navigation }) => {
             const auth = await LocalAuthentication.authenticateAsync({
                 promptMessage: "Log into Flitter"
             });
-            console.log('Authenticated', 'Welcome back !')
             if (auth.success) {
                 navigation.navigate('Home')
+                // socket.emit("login", id)
             } else {
                 navigator.navigate("Login")
             }
@@ -113,18 +123,20 @@ const Login = ({ navigation }) => {
         }
     }
     const login = () => {
+        if (username.length === 0 || password === 0) {
+            fadeIn()
+        }
         axios.post(`${config.restapi}/login`, {
             email: username,
             password: password
         })
             .then(response => {
                 if (response.data.status === false) {
-                    console.log("failed");
                     fadeIn()
                     return
                 }
-                console.log(response.data[0].account_id)
                 setStringValue(`${response.data[0].account_id}`)
+                // socket.emit("login", id)
                 navigation.navigate('Home')
 
             })
@@ -145,7 +157,7 @@ const Login = ({ navigation }) => {
         try {
             const getData = await AsyncStorage.getItem('user')
             if (getData !== null) {
-                onFaceId()
+                onFaceId(getData)
             }
         } catch (e) {
             console.log(e)

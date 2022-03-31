@@ -21,6 +21,7 @@ import CalendarScreen from "./screens/Calendar"
 import MenuScreen from "./screens/Menu"
 import EventsScreen from './screens/Events'
 import EventScreen from "./screens/Event"
+import SearchScreen from "./screens/Search"
 import SavedScreen from "./screens/Saved"
 // STATIC
 import SupportScreen from './screens/Support'
@@ -80,6 +81,7 @@ function App() {
         <Stack.Screen name="Maps" component={MapScreen} options={headerTitleStyle} />
         <Stack.Screen name="Events" component={EventsScreen} options={headerTitleStyle} />
         <Stack.Screen name="Saved" component={SavedScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Search" component={SearchScreen} options={headerTitleStyle} />
         <Stack.Screen name="Notifications" component={NotificationsScreen} options={headerTitleStyle} />
         <Stack.Screen name="EditProfile" component={EditprofileScreen} options={headerTitleStyle} />
         <Stack.Screen name="Menu" component={MenuScreen} options={headerTitleStyle} />

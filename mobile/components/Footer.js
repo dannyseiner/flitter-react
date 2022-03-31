@@ -109,6 +109,7 @@ const footer = StyleSheet.create({
         width: "100%",
         height: 80,
         backgroundColor: "cyan",
+        zIndex: 200,
         flexDirection: "row"
 
     },
