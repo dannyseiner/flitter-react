@@ -1,20 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated, Text, Image, TextInput, Linking } from 'react-native';
+import { View, StyleSheet, Animated, Text, Alert, Image, TextInput, Linking } from 'react-native';
 import axios from 'axios'
 import config from '../config'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as LocalAuthentication from 'expo-local-authentication';
-import io from 'socket.io-client';
 
-
-const connectionConfig = {
-    jsonp: false,
-    reconnection: true,
-    reconnectionDelay: 100,
-    reconnectionAttempts: 5000,
-    transports: ['websocket']
-};
-const socket = io.connect(`http://${config.socket}`, connectionConfig)
 
 
 const Login = ({ navigation }) => {
@@ -24,9 +14,49 @@ const Login = ({ navigation }) => {
     const [registerText, setRegisterText] = useState("Create new account")
 
     // ANIMATED
-    const slideAnim = useRef(new Animated.Value(400)).current;
+    const slideAnim = useRef(new Animated.Value(330)).current;
+    const fadeAnim = useRef(new Animated.Value(0)).current;
 
-    const onFaceId = async (id) => {
+    const fadeIn = () => {
+        // Will change fadeAnim value to 1 in 5 seconds
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: false
+        }).start(() => {
+            fadeOut()
+        });
+    };
+
+    const fadeOut = () => {
+        // Will change fadeAnim value to 0 in 3 seconds
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 1000,
+            delay: 3000,
+            useNativeDriver: false
+        }).start();
+    };
+
+    const slideIn = () => {
+        Animated.timing(slideAnim, {
+            toValue: -280,
+            duration: 500,
+            useNativeDriver: false
+
+        }).start();
+    };
+
+    const slideOut = () => {
+        Animated.timing(slideAnim, {
+            toValue: 330,
+            duration: 500,
+            useNativeDriver: false
+        }).start();
+    };
+
+
+    const onFaceId = async () => {
         try {
             // Checking if device is compatible
             const isCompatible = await LocalAuthentication.hasHardwareAsync();
@@ -47,9 +77,9 @@ const Login = ({ navigation }) => {
             const auth = await LocalAuthentication.authenticateAsync({
                 promptMessage: "Log into Flitter"
             });
+            console.log('Authenticated', 'Welcome back !')
             if (auth.success) {
                 navigation.navigate('Home')
-                // socket.emit("login", id)
             } else {
                 navigator.navigate("Login")
             }
@@ -60,23 +90,6 @@ const Login = ({ navigation }) => {
     };
 
 
-
-    const slideIn = () => {
-        Animated.timing(slideAnim, {
-            toValue: -280,
-            duration: 500,
-            useNativeDriver: false
-
-        }).start();
-    };
-
-    const slideOut = () => {
-        Animated.timing(slideAnim, {
-            toValue: 400,
-            duration: 500,
-            useNativeDriver: false
-        }).start();
-    };
 
 
 
@@ -100,25 +113,21 @@ const Login = ({ navigation }) => {
         }
     }
     const login = () => {
-        if (username.length === 0 || password === 0) {
-            fadeIn()
-        }
         axios.post(`${config.restapi}/login`, {
             email: username,
             password: password
         })
             .then(response => {
                 if (response.data.status === false) {
+                    console.log("failed");
                     fadeIn()
-                    if (response.data.length === 0) {
-                        alert("Wrong username password! Please try again")
-                        return
-                    }
-                    setStringValue(`${response.data[0].account_id}`)
-                    // socket.emit("login", id)
-                    navigation.navigate('Home')
+                    return
+                }
+                console.log(response.data[0].account_id)
+                setStringValue(`${response.data[0].account_id}`)
+                navigation.navigate('Home')
 
-                })
+            })
     }
 
 
@@ -136,7 +145,7 @@ const Login = ({ navigation }) => {
         try {
             const getData = await AsyncStorage.getItem('user')
             if (getData !== null) {
-                onFaceId(getData)
+                onFaceId()
             }
         } catch (e) {
             console.log(e)
@@ -146,13 +155,15 @@ const Login = ({ navigation }) => {
 
     return (
         <View style={styles.backgroundClass}>
-            <Image
+
+            {/* <Image
                 style={styles.image}
-                source={{
-                    uri: "https://us.123rf.com/450wm/konstantinks/konstantinks1503/konstantinks150300237/37926587-letter-f-in-orange-circle-on-white-background-vector-illustration-%C5%93.jpg?ver=6"
-                }}
-            />
+                source={require("../logo-nobg.png")}
+            /> */}
             <View style={styles.form}>
+                <Animated.View style={{ width: "80%", backgroundColor: "red", top: -20, padding: 10, height: 50, left: "10%", borderRadius: 10, opacity: fadeAnim }}>
+                    <Text style={{ fontSize: 20, textAlign: "center", color: "white", fontWeight: "bold", padding: 3 }}>Wrong username or password!</Text>
+                </Animated.View>
                 <TextInput
                     style={styles.input}
                     placeholder="Username or Email"
@@ -206,18 +217,18 @@ const styles = StyleSheet.create({
     backgroundClass: {
     },
     form: {
-        top: 150,
+        top: 130,
     },
     image: {
         top: 80,
-        height: 140,
-        width: 140,
-        left: 130,
+        height: 170,
+        width: "50%",
+        left: "25%",
     },
     input: {
         width: "80%",
         marginBottom: 20,
-        left: 35,
+        left: "10%",
         fontSize: 23,
         margin: "auto",
         padding: 10,
@@ -227,7 +238,7 @@ const styles = StyleSheet.create({
     },
     input2: {
         width: "80%",
-        left: 35,
+        left: "10%",
         marginBottom: 20,
         color: "black",
         fontSize: 23,
