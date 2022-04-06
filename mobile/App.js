@@ -93,8 +93,8 @@ function App() {
         <Stack.Screen name="Api" component={ApiScreen} options={headerTitleStyle} />
         <Stack.Screen name="MarketPlace" component={MarketPlaceScreen} options={headerTitleStyle} />
         <Stack.Screen name="Support" component={SupportScreen} options={headerTitleStyle} />
-      </Stack.Navigator>
-    </NavigationContainer>
+      </Stack.Navigator >
+    </NavigationContainer >
   );
 }
 

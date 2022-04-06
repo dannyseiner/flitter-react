@@ -27,7 +27,7 @@ const Notifications = ({ navigation }) => {
     }
 
     const renderNotifications = notifications.map((not) => (
-        <View style={styles.notificationblock} key={not.not_id}>
+        <View style={styles.notificationblock}>
             <Text style={styles.notificationcreated}>{not.not_created}</Text>
             <Text style={styles.notificationtext}>{not.not_header}</Text>
         </View>

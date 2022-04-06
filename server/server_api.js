@@ -11,6 +11,7 @@ const chatapp = express()
 const { Server } = require("socket.io")
 const { resourceUsage } = require("process")
 const { get } = require("jquery")
+const eventHandler = require("./Components/event")
 const server = http.createServer()
 chatapp.use(cors())
 
