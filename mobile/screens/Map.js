@@ -6,15 +6,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios"
 import config from '../config';
 import openMap from 'react-native-open-maps';
-
-
-
-const GOOGLE_MAPS_APIKEY = "AIzaSyChfA223jwm8F4SB2_TgIiBzikdLRPpyOc"
-const origin = { latitude: 37.3318456, longitude: -122.0296002 };
-const destination = { latitude: 37.771707, longitude: -122.4053769 };
-
 import io from "socket.io-client"
 let global_date
+
 const connectionConfig = {
     jsonp: false,
     reconnection: true,

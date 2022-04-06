@@ -1,17 +1,45 @@
-import React from 'react';
-import { View, ScrollView, TouchableOpacity, Text, StyleSheet, Linking } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Share, View, ScrollView, TouchableOpacity, Text, StyleSheet, Linking } from 'react-native';
 import { Icon } from 'react-native-elements';
 import config from "../config"
+import axios from "axios"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Menu = ({ navigation }) => {
+    const [userId, setUserId] = useState(0)
+    const [location, setLocation] = useState(false)
+
+    useEffect(() => {
+        getUser()
+    }, [])
+
+    const getUser = async () => {
+        const id = await AsyncStorage.removeItem('user')
+        setUserId(id)
+    }
 
     const singOut = async () => {
-        try {
-            await AsyncStorage.removeItem('user')
-            navigation.navigate("Login")
-        } catch (e) {
-        }
+
     }
+
+    const onShare = async () => {
+        try {
+            const result = await Share.share({
+                message:
+                    'Share your account with friends!',
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    };
 
     return (
         <View>
@@ -22,6 +50,33 @@ const Menu = ({ navigation }) => {
                 width: "95%",
                 left: "1.5%"
             }}>
+                {/* TOP MNEU  */}
+                <View style={{ width: "95%", left: "2.5%", marginTop: 10, flexDirection: "row" }}>
+                    <TouchableOpacity onPress={() => onShare()} style={styles.topMenuBlock}>
+                        <Icon
+                            type="font-awesome"
+                            name="location-arrow"
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.topMenuBlock}>
+                        <Icon
+                            type="font-awesome"
+                            name="cog"
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.topMenuBlock}>
+                        <Icon
+                            type="font-awesome"
+                            name="apple"
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.topMenuBlock}>
+                        <Icon
+                            type="font-awesome"
+                            name="sign-out"
+                        />
+                    </TouchableOpacity>
+                </View>
                 <TouchableOpacity style={styles.blockcontainer} onPress={() => navigation.navigate("Events")}>
                     <Icon
                         type="font-awesome"
@@ -152,6 +207,7 @@ const Menu = ({ navigation }) => {
     );
 }
 
+
 const styles = StyleSheet.create({
     blockcontainer: {
         width: "48%",
@@ -178,6 +234,13 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         fontSize: 15,
         padding: 2,
+    },
+    topMenuBlock: {
+        padding: 4,
+        backgroundColor: "white",
+        marginRight: "2.5%",
+        width: "23.5%",
+        borderRadius: 10
     },
 })
 
