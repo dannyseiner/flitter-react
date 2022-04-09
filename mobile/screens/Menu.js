@@ -3,6 +3,7 @@ import { View, ScrollView, TouchableOpacity, Text, StyleSheet, Linking } from 'r
 import { Icon } from 'react-native-elements';
 import config from "../config"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios"
 const Menu = ({ navigation }) => {
 
     const singOut = async () => {

@@ -127,7 +127,7 @@ const HomeScreen = ({ navigation }) => {
 
                 <View style={{ height: 100 }}></View>
             </ScrollView>
-            <TouchableOpacity style={{ position: "absolute", fontSize: 20, top: "83%", right: 30, backgroundColor: "#00aced", width: 50, height: 50, borderRadius: "100%" }}
+            <TouchableOpacity style={{ position: "absolute", fontSize: 20, top: "81%", right: 30, backgroundColor: "#00aced", width: 50, height: 50, borderRadius: "100%" }}
                 onPress={() => navigation.navigate("Create")} >
                 <Icon
                     style={{ fontSize: 25, top: 5, color: "white", fontWeight: "bold", textAlign: "center", padding: 10 }}
@@ -136,7 +136,7 @@ const HomeScreen = ({ navigation }) => {
                     name="plus"
                 />
             </TouchableOpacity>
-            <Animated.View style={[animatedStyles, { position: "absolute", fontSize: 20, top: "83%", right: "37.5%", backgroundColor: "#00aced", width: "25%", height: 120, zIndex: 50, borderRadius: "100%" }]}>
+            <Animated.View style={[animatedStyles, { position: "absolute", fontSize: 20, top: "81%", right: "37.5%", backgroundColor: "#00aced", width: "25%", height: 120, zIndex: 50, borderRadius: "100%" }]}>
                 <TouchableOpacity
                     onPress={() => animationhandler()} >
                     <Icon

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Animated, ActivityIndicator, StyleSheet, ScrollView, Image, Text } from 'react-native';
+import { View, Animated, ActivityIndicator, TouchableOpacity, StyleSheet, ScrollView, Image, Text, TextInput } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
+import { Icon } from "react-native-elements"
 import config from '../config'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -9,7 +10,7 @@ const Friends = ({ navigation }) => {
     const [friends, setFriends] = useState([])
     const [userId, setUserId] = useState(0)
     const [menu, setMenu] = useState(false)
-    const [menu2, setMenu2] = useState(false)
+    const [searchInput, setSearchInput] = useState("")
     const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%", marginBottom: 400 }} />)
 
 
@@ -113,43 +114,54 @@ const Friends = ({ navigation }) => {
                     top: fadeAnim,
                 }]
             }>
+                <TouchableOpacity
+                    onPress={() => fadeOut1()}
+                    style={{ width: 50, position: "absolute", right: 10, top: 10, zIndex: 200, }}
+                >
+                    <Icon
+                        type="font-awesome"
+                        name="close"
+                        color="red"
+                    />
+                </TouchableOpacity>
                 <ScrollView>
-                    {renderRequests}
+                    {menu ?
+
+                        <View>
+                            <TextInput
+                                onChangeText={e => setSearchInput(e)}
+                                value={searchInput}
+                                placeholder="Search people"
+                                style={{ fontSize: 20, backgroundColor: "white", marginTop: 40, padding: 14, borderRadius: 13, }} />
+                            <TouchableOpacity style={{ width: "40%", left: "30%", backgroundColor: "white", borderRadius: 10, padding: 15, marginTop: 20, }}>
+                                <Text style={{ textAlign: "center", fontWeight: "500", fontSize: 16 }}>Send request</Text>
+                            </TouchableOpacity>
+                        </View>
+
+
+
+                        : renderRequests}
                 </ScrollView>
             </Animated.View>
             <View style={{ width: "95%", left: "1%", flexDirection: "row", }}>
-                <View style={{ width: "50%", top: 10, marginBottom: 30, backgroundColor: menu2 === true ? "#00aced" : "white", padding: 15, borderRadius: 10 }}>
+                <TouchableOpacity onPress={() => {
+                    setMenu(true)
+                    fadeIn1()
+                }} style={{ width: "50%", top: 10, marginBottom: 30, backgroundColor: "#00aced", padding: 15, borderRadius: 10 }}>
                     <Text
-                        style={{ textAlign: "center", fontWeight: "600", fontSize: 18 }}
-                        onPress={() => {
-                            if (menu2 === false) {
-                                setMenu(false)
-                                setMenu2(true)
-                                fadeIn1()
-                            } else {
-                                setMenu2(false)
-                                fadeOut1()
-                            }
-                        }}>
+                        style={{ textAlign: "center", fontWeight: "600", fontSize: 18, color: "white" }}>
                         Add Friend
                     </Text>
-                </View>
-                <View style={{ width: "50%", left: "3%", top: 10, marginBottom: 30, backgroundColor: menu === true ? "#00aced" : "white", padding: 15, borderRadius: 10 }}>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                    setMenu(false)
+                    fadeIn1()
+                }} style={{ width: "50%", left: "3%", top: 10, marginBottom: 30, backgroundColor: "#00aced", padding: 15, borderRadius: 10 }}>
                     <Text
-                        style={{ textAlign: "center", fontWeight: "600", fontSize: 18 }}
-                        onPress={() => {
-                            if (menu === false) {
-                                setMenu(true)
-                                setMenu2(false)
-                                fadeIn1()
-                            } else {
-                                setMenu(false)
-                                fadeOut1()
-                            }
-                        }}>
+                        style={{ textAlign: "center", fontWeight: "600", fontSize: 18, color: "white" }}>
                         Requests
                     </Text>
-                </View>
+                </TouchableOpacity>
             </View>
             <Text
                 style={styles.header}

@@ -9,7 +9,7 @@ const config = {
     socket: "172.20.10.3:3003",
     date_format: { hour: 'numeric', minute: "numeric", month: 'short', day: 'numeric' },
     ipaddress: "172.20.10.3",
-
+    web_url: "http://172.20.10.3:3002",
     default_device: {
         name: "iPhone 11",
         resolution: "1792 x 828",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, Text, Alert, Linking } from 'react-native';
+import { View, StyleSheet, Image, Text, Alert, Vibration, Linking } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -43,6 +43,15 @@ const Map = ({ route, navigation }) => {
         longitudeDelta: 0,
     });
 
+
+    const ONE_SECOND_IN_MS = 1000;
+
+    const PATTERN = [
+        1 * ONE_SECOND_IN_MS,
+        2 * ONE_SECOND_IN_MS,
+        3 * ONE_SECOND_IN_MS
+    ];
+
     useEffect(() => {
         console.log("map update")
         global_date = new Date()
@@ -53,6 +62,7 @@ const Map = ({ route, navigation }) => {
             last_update: global_date.toISOString().slice(0, 19).replace('T', ' ')
         })
         loadLocations()
+        Vibration.vibrate(PATTERN)
     }, [location])
 
 
@@ -273,10 +283,10 @@ const PeopleBlock = ({ data, userId, navigation }) => {
         <View >
             {data.account_id + "" === userId + "" ?
                 <Marker
-                    onPress={() => selectPlace({ place_id: data.user_id, latitude: data.latitude, longitude: data.longtitude, show: false })}
+                    // onPress={() => selectPlace({ place_id: data.user_id, latitude: data.latitude, longitude: data.longtitude, show: false })}
                     coordinate={{ latitude: data.latitude, longitude: data.longtitude }}
                     title={`${data.account_name}`}
-                    description={lastActive}>
+                    description={"Active now"}>
                     <View style={styles.mapmarkerUser}>
                         <Image
                             onLongPress={() => navigation.navigate("Profile", data.account_id)}
@@ -291,7 +301,7 @@ const PeopleBlock = ({ data, userId, navigation }) => {
 
                 </Marker> :
                 <Marker
-                    onPress={() => selectPlace({ place_id: data.user_id, latitude: data.latitude, longitude: data.longtitude, show: false })}
+                    // onPress={() => selectPlace({ place_id: data.user_id, latitude: data.latitude, longitude: data.longtitude, show: false })}
                     coordinate={{ latitude: data.latitude, longitude: data.longtitude }}
                     title={`${data.account_name}`}
                     description={lastActive}>
