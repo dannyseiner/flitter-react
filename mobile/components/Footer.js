@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Image, Animated, TouchableOpacity, Text, TouchableOpacityBase } from 'react-native';
+import { View, StyleSheet, Image, Animated, TouchableOpacity, Text, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Icon } from 'react-native-elements';
 import axios from "axios"
@@ -77,7 +77,7 @@ const Footer = ({ navigation, active }) => {
             <Animated.View style={{ position: "absolute", right: slideAnim, zIndex: 300, width: "100%", height: "100%", top: 0, }}>
                 <View style={styles.container}>
                     <View style={styles.leftmenu}>
-                        <View style={{ height: "30%" }}></View>
+                        <View style={{ height: "27%" }}></View>
                         <TouchableOpacity style={styles.leftmenublock} onPress={() => navigation.navigate("Profile", userId)}>
                             <Icon
                                 type="font-awesome"
@@ -92,6 +92,15 @@ const Footer = ({ navigation, active }) => {
                                 type="font-awesome"
                                 name="map"
                                 color="#e9bf33"
+                                size={40}
+                                style={styles.leftmenuicon}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.leftmenublock} onPress={() => navigation.navigate("Maps")}>
+                            <Icon
+                                type="font-awesome"
+                                name="warning"
+                                color="#ed666f"
                                 size={40}
                                 style={styles.leftmenuicon}
                             />
@@ -122,89 +131,172 @@ const Footer = ({ navigation, active }) => {
                                 style={styles.closeicon}
                             />
                         </TouchableOpacity>
+                        <ScrollView style={{ marginLeft: 5, flexDirection: "column", height: "92%", marginTop: -20, }}>
+                            <View style={{ flexDirection: "row" }}>
+                                <TouchableOpacity style={[styles.rightmenubox]} onPress={() => navigation.navigate("Friends")}>
+                                    <Icon
+                                        type="font-awesome"
+                                        color="white"
+                                        name="users"
+                                        style={styles.rightmenuiconbox}
+                                    />
+                                    <Text style={[styles.rightmenutext]}>Friends</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.rightmenubox,]} onPress={() => navigation.navigate("MarketPlace")}>
+                                    <Icon
+                                        type="font-awesome"
+                                        color="white"
+                                        name="shopping-cart"
+                                        style={styles.rightmenuiconbox}
+                                    />
+                                    <Text style={[styles.rightmenutext]}>Market</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: "row" }}>
+                                <TouchableOpacity style={[styles.rightmenubox,]} onPress={() => navigation.navigate("Calendar")}>
+                                    <Icon
+                                        type="font-awesome"
+                                        color="white"
+                                        name="calendar"
+                                        style={styles.rightmenuiconbox}
+                                    />
+                                    <Text style={[styles.rightmenutext]}>Calendar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.rightmenubox,]} onPress={() => navigation.navigate("Events")}>
+                                    <Icon
+                                        type="font-awesome"
+                                        color="white"
+                                        name="list"
+                                        style={styles.rightmenuiconbox}
+                                    />
+                                    <Text style={[styles.rightmenutext]}>Events</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: "row" }}>
+                                <TouchableOpacity style={[styles.rightmenubox,]} onPress={() => navigation.navigate("Support")}>
+                                    <Icon
+                                        type="font-awesome"
+                                        color="white"
+                                        name="support"
+                                        style={styles.rightmenuiconbox}
+                                    />
+                                    <Text style={[styles.rightmenutext]}>Support</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.rightmenubox,]} onPress={() => navigation.navigate("Privacy")}>
+                                    <Icon
+                                        type="font-awesome"
+                                        color="white"
+                                        name="lock"
+                                        style={styles.rightmenuiconbox}
+                                    />
+                                    <Text style={[styles.rightmenutext]}>Privacy</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{ flexDirection: "row" }}>
+                                <TouchableOpacity style={[styles.rightmenubox,]} onPress={() => navigation.navigate("Pages")}>
+                                    <Icon
+                                        type="font-awesome"
+                                        color="white"
+                                        name="archive"
+                                        style={styles.rightmenuiconbox}
+                                    />
+                                    <Text style={[styles.rightmenutext]}>Pages</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={[styles.rightmenubox,]} onPress={() => navigation.navigate("Saved")}>
+                                    <Icon
+                                        type="font-awesome"
+                                        color="white"
+                                        name="bookmark"
+                                        style={styles.rightmenuiconbox}
+                                    />
+                                    <Text style={[styles.rightmenutext]}>Saved</Text>
+                                </TouchableOpacity>
+                            </View>
 
-                        <TouchableOpacity style={[styles.rightmenublock, { marginTop: -30 }]} onPress={() => navigation.navigate("Friends")}>
-                            <Icon
-                                type="font-awesome"
-                                color="#00aced"
-                                name="users"
-                                style={styles.rightmenuicon}
-                            />
-                            <Text style={[styles.rightmenutext]}>Friends</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("MarketPlace")}>
-                            <Icon
-                                color="#00aced"
-                                type="font-awesome"
-                                name="shopping-cart"
-                                style={styles.rightmenuicon}
-                            />
-                            <Text style={styles.rightmenutext}>MarketPlace</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Privacy")}>
-                            <Icon
-                                color="#00aced"
-                                type="font-awesome"
-                                name="lock"
-                                style={[styles.rightmenuicon, { paddingLeft: 0 }]}
-                            />
-                            <Text style={styles.rightmenutext}>Privacy</Text>
-                        </TouchableOpacity>
+                            {/* 
+                            <TouchableOpacity style={[styles.rightmenublock, { marginTop: -30 }]} onPress={() => navigation.navigate("Friends")}>
+                                <Icon
+                                    type="font-awesome"
+                                    color="#00aced"
+                                    name="users"
+                                    style={styles.rightmenuicon}
+                                />
+                                <Text style={[styles.rightmenutext]}>Friends</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("MarketPlace")}>
+                                <Icon
+                                    color="#00aced"
+                                    type="font-awesome"
+                                    name="shopping-cart"
+                                    style={styles.rightmenuicon}
+                                />
+                                <Text style={styles.rightmenutext}>MarketPlace</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Privacy")}>
+                                <Icon
+                                    color="#00aced"
+                                    type="font-awesome"
+                                    name="lock"
+                                    style={[styles.rightmenuicon, { paddingLeft: 0 }]}
+                                />
+                                <Text style={styles.rightmenutext}>Privacy</Text>
+                            </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Privacy")}>
-                            <Icon
-                                color="#00aced"
-                                type="font-awesome"
-                                name="warning"
-                                style={styles.rightmenuicon}
-                            />
-                            <Text style={styles.rightmenutext}>Covid-21</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Calendar")}>
-                            <Icon
-                                color="#00aced"
-                                type="font-awesome"
-                                name="calendar"
-                                style={styles.rightmenuicon}
-                            />
-                            <Text style={styles.rightmenutext}>Calendar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Events")}>
-                            <Icon
-                                color="#00aced"
-                                type="font-awesome"
-                                name="list"
-                                style={styles.rightmenuicon}
-                            />
-                            <Text style={styles.rightmenutext}>Events</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Api")}>
-                            <Icon
-                                color="#00aced"
-                                type="font-awesome"
-                                name="server"
-                                style={styles.rightmenuicon}
-                            />
-                            <Text style={styles.rightmenutext}>Api</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Pages")}>
-                            <Icon
-                                color="#00aced"
-                                type="font-awesome"
-                                name="archive"
-                                style={styles.rightmenuicon}
-                            />
-                            <Text style={styles.rightmenutext}>Pages</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Saved")}>
-                            <Icon
-                                color="#00aced"
-                                type="font-awesome"
-                                name="bookmark"
-                                style={styles.rightmenuicon}
-                            />
-                            <Text style={styles.rightmenutext}>Bookmarks</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Privacy")}>
+                                <Icon
+                                    color="#00aced"
+                                    type="font-awesome"
+                                    name="warning"
+                                    style={styles.rightmenuicon}
+                                />
+                                <Text style={styles.rightmenutext}>Covid-21</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Calendar")}>
+                                <Icon
+                                    color="#00aced"
+                                    type="font-awesome"
+                                    name="calendar"
+                                    style={styles.rightmenuicon}
+                                />
+                                <Text style={styles.rightmenutext}>Calendar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Events")}>
+                                <Icon
+                                    color="#00aced"
+                                    type="font-awesome"
+                                    name="list"
+                                    style={styles.rightmenuicon}
+                                />
+                                <Text style={styles.rightmenutext}>Events</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Api")}>
+                                <Icon
+                                    color="#00aced"
+                                    type="font-awesome"
+                                    name="server"
+                                    style={styles.rightmenuicon}
+                                />
+                                <Text style={styles.rightmenutext}>Api</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Pages")}>
+                                <Icon
+                                    color="#00aced"
+                                    type="font-awesome"
+                                    name="archive"
+                                    style={styles.rightmenuicon}
+                                />
+                                <Text style={styles.rightmenutext}>Pages</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.rightmenublock} onPress={() => navigation.navigate("Saved")}>
+                                <Icon
+                                    color="#00aced"
+                                    type="font-awesome"
+                                    name="bookmark"
+                                    style={styles.rightmenuicon}
+                                />
+                                <Text style={styles.rightmenutext}>Bookmarks</Text>
+                            </TouchableOpacity> */}
+                        </ScrollView>
                         <TouchableOpacity style={styles.profilebar} >
                             <Image
                                 style={styles.image}
@@ -222,50 +314,62 @@ const Footer = ({ navigation, active }) => {
                     </View>
                 </View>
             </Animated.View>
+
+
             <View style={footer.footerContainer}>
-                <Block navigation={navigation} active={active} style={{ borderTopLeftRadius: 15, borderBottomLeftRadius: 15 }} options={{
+                <Block navigation={navigation} active={active} rotate={[
+                    { rotateX: "30deg" },
+                    { rotateZ: "20deg" }
+                ]} style={{ borderTopLeftRadius: 15, borderBottomLeftRadius: 15 }} options={{
                     name: "book",
                     type: "font-awesome",
                     text: "Home"
                 }} />
-                <Block navigation={navigation} active={active} options={{
+                <Block navigation={navigation} rotate={[
+                    { rotateX: "40deg" },
+                    { rotateZ: "-30deg" }
+                ]} active={active} options={{
                     name: "user",
                     type: "font-awesome",
                     text: "Profile"
                 }} />
-                <Block navigation={navigation} active={active} options={{
+                <Block navigation={navigation} rotate={[
+                    { rotateX: "50deg" },
+                    { rotateZ: "20deg" }
+                ]} active={active} options={{
                     name: "users",
                     type: "font-awesome",
                     text: "Friends"
                 }} />
-                <Block navigation={navigation} active={active} options={{
+                <Block navigation={navigation} rotate={[
+                    { rotateX: "-50deg" },
+                    { rotateZ: "-40deg" }
+                ]} active={active} options={{
                     name: "bell",
                     type: "font-awesome",
                     text: "Notifications"
                 }} />
 
 
-                <TouchableOpacity style={[footer.footerBlock, { borderTopRightRadius: 15, borderBottomRightRadius: 15 }]} onPress={() => fadeIn()}>
+                <TouchableOpacity style={[footer.footerBlock, { borderTopRightRadius: 15, borderBottomRightRadius: 15 }]} rotate={[
+                    { rotateX: "30deg" },
+                    { rotateZ: "20deg" }
+                ]} onPress={() => fadeIn()}>
                     <Icon
                         name="bars"
                         style={{ marginTop: 10 }}
                         type="font-awesome"
                         color='#00aced' />
-                    <Text style={footer.activeText}>
-                        Menu
-                    </Text>
                 </TouchableOpacity>
             </View>
-            <View style={{ width: "10%", backgroundColor: "cyan", borderTopRightRadius: 100, top: -30, right: "100%", }}></View>
+            <View style={{ width: "10%", backgroundColor: "#00aced", borderTopRightRadius: 100, top: -30, right: "100%", }}></View>
         </>
 
     )
 }
 
-const Block = ({ navigation, menu, active, options, style }) => {
+const Block = ({ navigation, menu, active, options, style, rotate }) => {
     const [userId, setUserId] = useState(0)
-    const [blockStyle, setBlocKStyle] = useState(footer.footerBlock)
-    const [blockStyleActive, setBlocKStyleActive] = useState(footer.active)
     const loadUser = async () => {
         const data = await AsyncStorage.getItem("user")
         setUserId(data)
@@ -277,18 +381,23 @@ const Block = ({ navigation, menu, active, options, style }) => {
     return (
         <>
             {active === options.text ?
-                <View style={[blockStyleActive, style ? style : ""]}>
-                    <Icon
-                        name={options.name}
-                        style={{ marginTop: 10 }}
-                        type={options.type}
-                        onPress={() => navigation.navigate(options.text)}
-                        color='white' />
-                    <Text style={footer.activeText}>
-                        {options.text === "Notifications" ? "News" : options.text}
-                    </Text>
-                </View> :
-                <View style={[blockStyle, style ? style : ""]}>
+                <>
+                    <View style={[footer.active, style ? style : "",]}>
+                        <View style={[{ width: "65%", left: "17.5%", height: 55, backgroundColor: "#00aced", borderStyle: "solid", borderWidth: 5, borderColor: "#f2f2f2", borderRadius: 20, position: "absolute", zIndex: 40000, top: -25 }, {
+                            transform: rotate
+                        }]}>
+                            <Icon
+                                name={options.name}
+                                type={options.type}
+                                style={{ marginTop: 10, left: 1, }}
+                                color='white' />
+                        </View>
+                        <Text style={[footer.activeText, { marginTop: 30, }]}>
+                            {options.text === "Notifications" ? "News" : options.text}
+                        </Text>
+                    </View>
+                </> :
+                <View style={[footer.footerBlock, style ? style : ""]}>
                     {options.text === "Profile" ?
                         <Icon
                             name={options.name}
@@ -348,6 +457,13 @@ const styles = StyleSheet.create({
         width: "20%",
         flexDirection: "column"
     },
+    rightmenubox: {
+        width: "45%",
+        margin: 5,
+        padding: 5,
+        borderRadius: 15,
+        flexDirection: "column",
+    },
     closemenu: {
         width: "80%",
         left: "10%",
@@ -378,6 +494,13 @@ const styles = StyleSheet.create({
         borderRadius: 100,
         height: 50,
     },
+    subleftmenublock: {
+        marginTop: 25,
+        width: "70%",
+        left: "15%",
+        borderRadius: 100,
+        height: 50,
+    },
     leftmenuicon: {
         marginTop: 13,
         color: "black",
@@ -390,14 +513,33 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 5,
     },
+    subrightmenublock: {
+        flexDirection: "row",
+        width: "80%",
+        left: "3%",
+        padding: 10,
+        marginBottom: 5,
+    },
     rightmenuicon: {
         color: "black",
         width: 30,
         left: 0,
     },
+    rightmenuiconbox: {
+        padding: 16,
+        left: "25%",
+        width: "50%",
+        borderRadius: 100,
+        backgroundColor: "#242445",
+        marginTop: 11,
+        marginBottom: 5,
+    },
     rightmenutext: {
-        fontSize: 20,
-        left: 25,
+        fontSize: 16,
+        color: "black",
+        fontWeight: "600",
+        textAlign: "center",
+        marginBottom: 5
     },
     footerblock: {
         position: 'absolute',
@@ -419,11 +561,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     profilebar: {
+        position: "absolute",
+        bottom: 65,
         width: "80%",
-        left: "5%",
-        top: 220,
-        marginTop: 20,
-        marginBottom: 170,
+        left: "15%",
         borderRadius: 10,
         flexDirection: "row"
     },
@@ -437,13 +578,13 @@ const styles = StyleSheet.create({
 const footer = StyleSheet.create({
     footerContainer: {
         position: "absolute",
-        bottom: 40,
-        borderRadius: 20,
+        bottom: 0,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
         left: 0,
-        width: "90%",
-        left: "5%",
-        height: 60,
-        backgroundColor: "white",
+        width: "100%",
+        height: 80,
+        backgroundColor: "#242445",
         zIndex: 200,
         flexDirection: "row"
 
@@ -452,7 +593,7 @@ const footer = StyleSheet.create({
         width: "20%",
         height: 80,
         paddingTop: 15,
-        backgroundColor: "white",
+        backgroundColor: "#242445",
         color: "white",
         textAlign: "center",
     },
@@ -476,7 +617,7 @@ const footer = StyleSheet.create({
         paddingTop: 15,
         color: "white",
         textAlign: "center",
-        backgroundColor: "#00aced",
+        backgroundColor: "#242445",
     },
     activeText: {
         fontSize: 14,

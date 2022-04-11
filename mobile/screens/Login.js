@@ -156,10 +156,10 @@ const Login = ({ navigation }) => {
     return (
         <View style={styles.backgroundClass}>
 
-            {/* <Image
+            <Image
                 style={styles.image}
                 source={require("../logo-nobg.png")}
-            /> */}
+            />
             <View style={styles.form}>
                 <Animated.View style={{ width: "80%", backgroundColor: "red", top: -20, padding: 10, height: 50, left: "10%", borderRadius: 10, opacity: fadeAnim }}>
                     <Text style={{ fontSize: 20, textAlign: "center", color: "white", fontWeight: "bold", padding: 3 }}>Wrong username or password!</Text>
