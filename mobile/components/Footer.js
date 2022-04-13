@@ -297,13 +297,11 @@ const Footer = ({ navigation, active }) => {
                                 <Text style={styles.rightmenutext}>Bookmarks</Text>
                             </TouchableOpacity> */}
                         </ScrollView>
-                        <TouchableOpacity style={styles.profilebar} >
+                        <TouchableOpacity style={styles.profilebar} onPress={() => navigation.navigate("EditProfile")} >
                             <Image
                                 style={styles.image}
                                 source={
-                                    {
-                                        uri: user.decoded_image.replace(/\s/g, ''),
-                                    }}
+                                    user.decoded_image != "" ? { uri: user.decoded_image.replace(/\s/g, '') } : {}}
                             />
                             <Text style={styles.username}>{user.account_name}</Text>
                         </TouchableOpacity>
@@ -359,10 +357,10 @@ const Footer = ({ navigation, active }) => {
                         name="bars"
                         style={{ marginTop: 10 }}
                         type="font-awesome"
-                        color='#00aced' />
+                        color='white' />
                 </TouchableOpacity>
             </View>
-            <View style={{ width: "10%", backgroundColor: "#00aced", borderTopRightRadius: 100, top: -30, right: "100%", }}></View>
+            <View style={{ width: "10%", backgroundColor: "white", borderTopRightRadius: 100, top: -30, right: "100%", }}></View>
         </>
 
     )
@@ -383,7 +381,7 @@ const Block = ({ navigation, menu, active, options, style, rotate }) => {
             {active === options.text ?
                 <>
                     <View style={[footer.active, style ? style : "",]}>
-                        <View style={[{ width: "65%", left: "17.5%", height: 55, backgroundColor: "#00aced", borderStyle: "solid", borderWidth: 5, borderColor: "#f2f2f2", borderRadius: 20, position: "absolute", zIndex: 40000, top: -25 }, {
+                        <View style={[{ width: "65%", left: "17.5%", height: 55, backgroundColor: "#242445", borderStyle: "solid", borderWidth: 5, borderColor: "#f2f2f2", borderRadius: 20, position: "absolute", zIndex: 40000, top: -25 }, {
                             transform: rotate
                         }]}>
                             <Icon
@@ -404,14 +402,14 @@ const Block = ({ navigation, menu, active, options, style, rotate }) => {
                             type={options.type}
                             style={{ marginTop: 10 }}
                             onPress={() => menu === true ? "" : navigation.navigate("Profile", userId)}
-                            color='#00aced' />
+                            color='white' />
                         :
                         <Icon
                             name={options.name}
                             type={options.type}
                             style={{ marginTop: 10 }}
                             onPress={() => menu === true ? "" : navigation.navigate(options.text)}
-                            color='#00aced' />
+                            color='white' />
                     }
                     {/* <Text style={footer.footerText}>{options.text}</Text> */}
 
@@ -449,7 +447,8 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     leftmenu: {
-        backgroundColor: "#372c38",
+        // backgroundColor: "#372c38"
+        backgroundColor: "#242445",
         height: "100%",
         borderStyle: "solid",
         borderColor: "black",

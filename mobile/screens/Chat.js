@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     messageContainer: {
-        backgroundColor: '#000000',
+        backgroundColor: '#242445',
         alignSelf: 'flex-start',
         borderRadius: 20,
         borderBottomLeftRadius: 0,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     messageContainerPost: {
-        backgroundColor: '#000000',
+        backgroundColor: '#242445',
         alignSelf: 'flex-start',
         borderRadius: 20,
         padding: 40,

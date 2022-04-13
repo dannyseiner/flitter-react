@@ -105,7 +105,7 @@ const Calendar = ({ navigation }) => {
             }}
             // Specify how agenda knob should look like
             renderKnob={() => {
-                return <View style={{ width: 20, height: 20, backgroundColor: "#00aced", borderRadius: 100 }}></View>
+                return <View style={{ width: 20, height: 20, backgroundColor: "#242445", borderRadius: 100 }}></View>
             }}
             // Specify what should be rendered instead of ActivityIndicator
             renderEmptyData={() => {
@@ -139,7 +139,7 @@ const Calendar = ({ navigation }) => {
                 agendaDayTextColor: 'yellow',
                 agendaDayNumColor: 'green',
                 agendaTodayColor: 'red',
-                agendaKnobColor: 'blue'
+                agendaKnobColor: '#242445'
             }}
             // Agenda container style
             style={{}}

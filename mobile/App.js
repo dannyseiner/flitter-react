@@ -52,7 +52,7 @@ function App() {
 
   const headerTitleStyle = {
     headerStyle: {
-      backgroundColor: "#00aced",
+      backgroundColor: "#242445",
     },
     headerTintColor: "white",
     headerTitleStyle: {
@@ -69,11 +69,13 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} options={headerTitleStyle} />
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
-        <Stack.Screen name="Friends" component={FriendsScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
+        {/* NONRETURNABLEW */}
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#242445" }, headerTintColor: "white" }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#242445" }, headerTintColor: "white" }} />
+        <Stack.Screen name="Friends" component={FriendsScreen} options={headerTitleStyle} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={headerTitleStyle} />
+        {/* RETURNABLE */}
         <Stack.Screen name="Post" component={PostScreen} options={headerTitleStyle} />
-        <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerBackVisible: false, headerStyle: { backgroundColor: "#00aced" }, headerTintColor: "white" }} />
         <Stack.Screen name="ProfileBar" component={ProfileScreen} options={headerTitleStyle} />
         <Stack.Screen name="Settings" component={SettingsScreen} options={headerTitleStyle} />
         <Stack.Screen name="Create" component={CreateScreen} options={headerTitleStyle} />

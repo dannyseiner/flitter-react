@@ -27,7 +27,7 @@ const Notifications = ({ navigation }) => {
     }
 
     const renderNotifications = notifications.map((not) => (
-        <View style={styles.notificationblock}>
+        <View style={styles.notificationblock} key={not.not_id}>
             <Text style={styles.notificationcreated}>{not.not_created}</Text>
             <Text style={styles.notificationtext}>{not.not_header}</Text>
         </View>
@@ -51,16 +51,18 @@ const styles = StyleSheet.create({
         borderRadius: 11,
         width: "95%",
         left: "2.5%",
-        backgroundColor: "white"
+        backgroundColor: "#242445"
     },
     notificationtext: {
         fontSize: 18,
         fontWeight: "600",
+        color: "white",
         width: "50%",
         top: -10,
     },
     notificationcreated: {
-        textAlign: "right"
+        textAlign: "right",
+        color: "lightgrey"
     }
 })
 

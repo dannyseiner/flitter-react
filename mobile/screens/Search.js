@@ -30,7 +30,7 @@ const Search = ({ route, navigation }) => {
         <View>
             <ScrollView style={styles.container}>
                 {posts.length === 0 ? <View style={{ top: 20, width: "95%", left: "2.5%", backgroundColor: "white", borderRadius: 10, padding: 10 }}>
-                    <Text style={{ fontSize: 20, fontWeight: "500%", textAlign: "center" }}>No posts we're found!</Text>
+                    <Text style={{ fontSize: 20, fontWeight: "500", textAlign: "center" }}>No posts we're found!</Text>
                 </View> : renderPosts}
             </ScrollView>
         </View>

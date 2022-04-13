@@ -61,7 +61,7 @@ const Settings = ({ navigation }) => {
                 <View style={styles.containerBlock}>
                     <Text style={styles.textBlock}>Fliter Maps</Text>
                     <Switch
-                        trackColor={{ false: "#767577", true: "#00aced" }}
+                        trackColor={{ false: "#f2f2f2", true: "#242445" }}
                         style={{ alignSelf: 'flex-end', top: -10 }}
                         value={location}
                         onValueChange={e => {
@@ -92,7 +92,7 @@ const SetingsBlock = ({ data, checked = false }) => {
         <View style={styles.containerBlock}>
             <Text style={styles.textBlock}>{data.name}</Text>
             <Switch
-                trackColor={{ false: "#767577", true: "#00aced" }}
+                trackColor={{ false: "#f2f2f2", true: "#242445" }}
                 style={{ alignSelf: 'flex-end', top: -10 }}
                 onValueChange={e => setState(e)}
                 value={state}

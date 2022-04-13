@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     },
     loginBlock: {
         borderRadius: 9,
-        backgroundColor: "#00aced",
+        backgroundColor: "#242445",
         width: "50%",
         left: "25%",
     },
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
         fontWeight: "700",
     },
     registerBlock: {
-        backgroundColor: "#00aced",
+        backgroundColor: "#242445",
         height: 800,
         borderRadius: 30,
         width: "100%",

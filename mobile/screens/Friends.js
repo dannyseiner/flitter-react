@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Animated, ActivityIndicator, TouchableOpacity, StyleSheet, ScrollView, Image, Text, TextInput } from 'react-native';
+import { View, Animated, ActivityIndicator, TouchableOpacity, StyleSheet, ScrollView, Image, Text, TextInput, Alert } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
 import { Icon } from "react-native-elements"
@@ -11,6 +11,7 @@ const Friends = ({ navigation }) => {
     const [userId, setUserId] = useState(0)
     const [menu, setMenu] = useState(false)
     const [searchInput, setSearchInput] = useState("")
+    const [searchResult, setSearchResult] = useState([])
     const [loadingStatus, setLoadingStatus] = useState(<ActivityIndicator size="large" style={{ marginTop: "40%", height: "50%", marginBottom: 400 }} />)
 
 
@@ -20,20 +21,30 @@ const Friends = ({ navigation }) => {
     const fadeIn1 = () => {
         Animated.timing(fadeAnim, {
             toValue: 80,
-            duration: 400
+            duration: 400,
+            useNativeDriver: false,
         }).start();
     };
 
     const fadeOut1 = () => {
         Animated.timing(fadeAnim, {
             toValue: 1000,
-            duration: 400
+            duration: 400,
+            useNativeDriver: false
         }).start();
     };
 
     useEffect(() => {
         loadFriends()
     }, [])
+
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            loadFriends()
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     const loadFriends = async () => {
         const userid = await AsyncStorage.getItem('user')
@@ -54,7 +65,6 @@ const Friends = ({ navigation }) => {
     }
 
     const acceptFriend = (user1, user2) => {
-        console.log("s")
         axios.post(`${config.restapi}/acceptfriend`, {
             user1: user1,
             user2: user2
@@ -62,10 +72,46 @@ const Friends = ({ navigation }) => {
             .then(response => loadFriends())
     }
 
+    const searchPeople = () => {
+        axios.post(`${config.restapi}/searchUser`, {
+            user: searchInput,
+            userId: userId
+        })
+            .then(response => setSearchResult(response.data))
+    }
+
+    useEffect(() => {
+        if (searchInput === "" || searchInput.length < 3) return
+        searchPeople()
+    }, [searchInput])
+    const sendRequest = (target) => {
+        if (target === 0) return
+        if (target + "" === userId + "") return
+        axios.post(`${config.restapi}/getuserfriendship`, {
+            user1: userId,
+            user2: target
+        })
+            .then(response => {
+                if (response.data.length === 0) { // not found  
+                    axios.post(`${config.restapi}/sentfriendrequest`, {
+                        user1: userId,
+                        user2: target
+                    })
+                    Alert.alert("Request send")
+
+                } else if (response.data[0].friendship_status === 0) { // not accepted yet
+                    Alert.alert("Request is pending!")
+                } else { // friends
+                    Alert.alert("This user is already your friend")
+                }
+                loadFriends()
+            })
+    }
+
     const renderFriends = friends.map((friend, i) => (
         <View key={i}>
             {friend.friendship_status === 1 ?
-                <FriendBlock key={i} navigation={navigation} data={{
+                <FriendBlock key={i} navigation={navigation} container={styles.friendBlock2} text={styles.friendName2} data={{
                     userid: friend.user1_id + "" === userId + "" ? friend.user2_id : friend.user1_id,
                     friendshipId: friend.friendship_id,
                     image: friend.user1_id + "" === userId + "" ? friend.user2_image_render : friend.user1_image_render,
@@ -83,26 +129,40 @@ const Friends = ({ navigation }) => {
         <View key={i}>
             {friend.friendship_status === 0 ?
                 <View>
-                    <FriendBlock key={i} navigation={navigation} data={{
+                    <FriendBlock key={i} container={styles.friendBlock} text={styles.friendName} navigation={navigation} data={{
                         userid: friend.user1_id + "" === userId + "" ? friend.user2_id : friend.user1_id,
                         friendshipId: friend.friendship_id,
                         image: friend.user1_id + "" === userId + "" ? friend.user2_image_render : friend.user1_image_render,
                         name: friend.user1_id + "" === userId + "" ? friend.user2_name : friend.user1_name,
                     }}
                     />
-                    <View style={{ width: "95%", left: "2.5%", backgroundColor: "white", borderRadius: 9, height: 40, padding: 10, marginTop: 20, }}>
+                    <View style={{ width: "100%", backgroundColor: "#242445", borderRadius: 9, padding: 10, marginTop: 20, }}>
                         {friend.user1_id + "" === userId + "" ?
-                            <Text style={{ fontSize: 18, textAlign: "center", color: "red" }}>Delete</Text>
+                            <TouchableOpacity style={{ width: "100%", backgroundColor: "white", borderRadius: 10, padding: 8 }} onPress={() => deleteFriend(friend.user1_id, friend.user2_id)}>
+                                <Icon type="font-awesome" name="trash" size={30} color="#242445" />
+                            </TouchableOpacity>
                             :
-                            <View>
-                                <Text style={{ fontSize: 18, paddingLeft: 10, color: "red" }} onPress={() => deleteFriend(friend.user1_id, friend.user2_id)}>Delete</Text>
-                                <Text style={{ fontSize: 18, paddingRight: 10, alignSelf: "flex-end", top: -20, color: "#00aced" }} onPress={() => acceptFriend(friend.user1_id, friend.user2_id)}>Accept</Text>
+                            <View style={{ flexDirection: "row" }}>
+                                <TouchableOpacity style={{ width: "45%", backgroundColor: "white", padding: 8, borderRadius: 10, }}
+                                    onPress={() => acceptFriend(friend.user1_id, friend.user2_id)}>
+                                    <Icon type="font-awesome" name="check" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ width: "45%", marginLeft: "10%", backgroundColor: "white", padding: 8, borderRadius: 10, }} onPress={() => deleteFriend(friend.user1_id, friend.user2_id)}>
+                                    <Icon type="font-awesome" name="trash" />
+                                </TouchableOpacity>
                             </View>
+
                         }
                     </View>
                 </View>
                 : <></>}
-        </View>
+        </View >
+    ))
+
+    const renderUsers = searchResult.map(usr => (
+        <TouchableOpacity key={usr.account_id} style={{ width: "97%", left: "1.5%", backgroundColor: "white", padding: 8, borderRadius: 10, marginTop: 10, }} onPress={() => sendRequest(usr.account_id)}>
+            <Text style={{ color: "black", fontWeight: "500", padding: 5, fontSize: 20, }}>{usr.account_name}</Text>
+        </TouchableOpacity>
     ))
 
     return (
@@ -121,7 +181,7 @@ const Friends = ({ navigation }) => {
                     <Icon
                         type="font-awesome"
                         name="close"
-                        color="red"
+                        color="white"
                     />
                 </TouchableOpacity>
                 <ScrollView>
@@ -129,13 +189,14 @@ const Friends = ({ navigation }) => {
 
                         <View>
                             <TextInput
-                                onChangeText={e => setSearchInput(e)}
+                                onChangeText={e => { setSearchInput(e), searchPeople(searchInput) }}
                                 value={searchInput}
                                 placeholder="Search people"
-                                style={{ fontSize: 20, backgroundColor: "white", marginTop: 40, padding: 14, borderRadius: 13, }} />
-                            <TouchableOpacity style={{ width: "40%", left: "30%", backgroundColor: "white", borderRadius: 10, padding: 15, marginTop: 20, }}>
-                                <Text style={{ textAlign: "center", fontWeight: "500", fontSize: 16 }}>Send request</Text>
-                            </TouchableOpacity>
+                                placeholderTextColor="grey"
+                                style={{ fontSize: 22, backgroundColor: "white", width: "97%", left: "1.5%", marginTop: 40, padding: 20, borderRadius: 13, }} />
+                            <ScrollView>
+                                {renderUsers}
+                            </ScrollView>
                         </View>
 
 
@@ -147,7 +208,7 @@ const Friends = ({ navigation }) => {
                 <TouchableOpacity onPress={() => {
                     setMenu(true)
                     fadeIn1()
-                }} style={{ width: "50%", top: 10, marginBottom: 30, backgroundColor: "#00aced", padding: 15, borderRadius: 10 }}>
+                }} style={{ width: "50%", top: 10, marginBottom: 30, backgroundColor: "#242445", padding: 15, borderRadius: 10 }}>
                     <Text
                         style={{ textAlign: "center", fontWeight: "600", fontSize: 18, color: "white" }}>
                         Add Friend
@@ -156,7 +217,7 @@ const Friends = ({ navigation }) => {
                 <TouchableOpacity onPress={() => {
                     setMenu(false)
                     fadeIn1()
-                }} style={{ width: "50%", left: "3%", top: 10, marginBottom: 30, backgroundColor: "#00aced", padding: 15, borderRadius: 10 }}>
+                }} style={{ width: "50%", left: "3%", top: 10, marginBottom: 30, backgroundColor: "#242445", padding: 15, borderRadius: 10 }}>
                     <Text
                         style={{ textAlign: "center", fontWeight: "600", fontSize: 18, color: "white" }}>
                         Requests
@@ -177,9 +238,9 @@ const Friends = ({ navigation }) => {
 }
 
 
-const FriendBlock = ({ navigation, data }) => {
+const FriendBlock = ({ navigation, data, container, text }) => {
     return (
-        <View style={styles.friendBlock}>
+        <TouchableOpacity style={container} onPress={(() => navigation.navigate("Profile", data.userid))}>
             <View style={{ top: 15 }}>
                 <Text
                     onPress={data.redirect}>
@@ -191,11 +252,11 @@ const FriendBlock = ({ navigation, data }) => {
                     />
                 </Text>
                 <Text
-                    style={styles.friendName}
+                    style={text}
                     onLongPress={() => navigation.navigate("Profile", data.userid)}
                     onPress={data.redirect}>{data.name}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -207,9 +268,9 @@ const styles = StyleSheet.create({
         position: "absolute",
         zIndex: 900,
         width: "100%",
-        borderTopLeftRadius: 40,
-        borderTopRightRadius: 40,
-        backgroundColor: "#00aced",
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        backgroundColor: "#242445",
         height: "100%",
         padding: 20,
     },
@@ -236,6 +297,16 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginTop: 10,
     },
+    friendBlock2: {
+        left: "2.5%",
+        top: 10,
+        backgroundColor: "#242445",
+        width: "95%",
+        paddingLeft: 10,
+        paddingRight: 10,
+        borderRadius: 10,
+        marginTop: 10,
+    },
     friendImage: {
         width: 60,
         height: 60,
@@ -243,7 +314,17 @@ const styles = StyleSheet.create({
     },
     friendName: {
         fontSize: 20,
-        color: "black",
+        color: "#242445",
+        fontWeight: "bold",
+        fontSize: 20,
+        left: 80,
+        top: -43
+    },
+    friendName2: {
+        fontSize: 20,
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20,
         left: 80,
         top: -43
     }

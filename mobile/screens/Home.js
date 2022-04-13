@@ -127,17 +127,17 @@ const HomeScreen = ({ navigation }) => {
 
                 <View style={{ height: 100 }}></View>
             </ScrollView>
-            <TouchableOpacity style={{ position: "absolute", fontSize: 20, top: -30, right: -30, backgroundColor: "#00aced", width: 80, height: 80, borderRadius: "100%" }}
+            <TouchableOpacity style={{ position: "absolute", fontSize: 20, top: -30, right: -30, backgroundColor: "#242445", width: 80, height: 80, borderRadius: "100%" }}
                 onPress={() => navigation.navigate("Create")} >
                 <Icon
-                    style={{ fontSize: 25, marginTop: 30, marginLeft: -20, color: "white", fontWeight: "bold", textAlign: "center", padding: 10 }}
+                    style={{ fontSize: 25, marginTop: 25, marginLeft: -15, color: "white", fontWeight: "bold", textAlign: "center", padding: 10 }}
                     type="font-awesome"
                     size={30}
                     color="white"
                     name="plus"
                 />
             </TouchableOpacity>
-            <Animated.View style={[animatedStyles, { position: "absolute", fontSize: 20, top: "83%", right: "37.5%", backgroundColor: "#00aced", width: "25%", height: 120, zIndex: 50, borderRadius: "100%" }]}>
+            <Animated.View style={[animatedStyles, { position: "absolute", fontSize: 20, top: "84%", right: "37.5%", backgroundColor: "#242445", width: "25%", height: 120, zIndex: 50, borderRadius: "100%" }]}>
                 <TouchableOpacity
                     onPress={() => animationhandler()} >
                     <Icon
@@ -173,7 +173,7 @@ const PostBlock = ({ navigation, userId, data }) => {
             postId: data.post_id,
             accId: userId
         }).then(response => {
-            if (response.data.isliked) setLike("#00aced")
+            if (response.data.isliked) setLike("#372c38")
         })
     }
 
@@ -189,7 +189,7 @@ const PostBlock = ({ navigation, userId, data }) => {
             postId: id,
             accId: userId
         })
-            .then(setLike(like === "grey" ? "#00aced" : "grey"))
+            .then(setLike(like === "grey" ? "#372c38" : "grey"))
         getPostStats()
     }
     return (
@@ -205,7 +205,7 @@ const PostBlock = ({ navigation, userId, data }) => {
                             <Icon
                                 name="comments"
                                 type="font-awesome"
-                                color="black"
+                                color="grey"
                                 style={{ padding: 5, marginRight: 20, top: -5 }}
                             />
                             <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -70 }}>{postStats.comments}</Text>

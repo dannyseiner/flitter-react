@@ -10,6 +10,9 @@ const config = {
     date_format: { hour: 'numeric', minute: "numeric", month: 'short', day: 'numeric' },
     ipaddress: "172.20.10.3",
     web_url: "http://172.20.10.3:3002",
+    colors:{
+	main_color : "#ff",
+    },
     default_device: {
         name: "iPhone 11",
         resolution: "1792 x 828",

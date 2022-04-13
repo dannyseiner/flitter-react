@@ -177,11 +177,10 @@ api.get("/user/:id", (req, res) => {
 
 api.post("/edituser", urlencodedParser, (req, res) => {
     con.query(`UPDATE accounts SET account_name = '${req.body.username}' WHERE account_id = ${req.body.userId}`, (err, result) => {
-        con.query(`UPDATE account_info SET account_image = '${req.body.image}' WHERE user_id = ${req.body.userId}`, (err, result) => {
+        con.query(`UPDATE account_info SET account_image = '${req.body.image}' WHERE user_id = ${req.body.userId}`, (err, result2) => {
             res.send({ status: true })
         })
     })
-    console.log(req.body)
 })
 
 api.get('/postStats/:id', (req, res) => {
@@ -264,8 +263,8 @@ api.get('/userstats/:id', (req, res) => {
     })
 })
 // LOAD USERS BY EXACT NAME OR EMAIL
-api.get('/searchUser/:name', (req, res) => {
-    con.query(`SELECT * FROM accounts WHERE account_name = '${req.params.name}' OR account_email='${req.params.name}'`, (err, result) => {
+api.post('/searchUser', urlencodedParser, (req, res) => {
+    con.query(`SELECT * FROM accounts WHERE account_name like '%${req.body.user}%' AND account_id != ${req.body.userId}  LIMIT 5`, (err, result) => {
         res.send(result)
     })
 })
@@ -331,6 +330,7 @@ api.get('/getfriendsstrict/:id', (req, res) => {
 
 // GET USER FRIENDSHIP 
 api.post('/getuserfriendship', urlencodedParser, (req, res) => {
+    console.log(req.body)
     con.query(`SELECT * FROM account_friends WHERE
     id_user1 = ${req.body.user1} AND id_user2 = ${req.body.user2} 
     OR id_user1 = ${req.body.user2} AND id_user2 = ${req.body.user1}`, (err, result) => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated, ScrollView, Alert, Text, Button, TextInput, Image, Linking } from 'react-native';
+import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Alert, Text, Button, TextInput, Image, Linking, TouchableOpacityBase } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
 import config from '../config'
@@ -167,8 +167,8 @@ const PostScreen = ({ route, navigation }) => {
     }
 
     const renderFriends = friends.map((friend, i) => (
-        <View key={i} style={{ width: "90%", left: "5%", padding: 10, backgroundColor: "#00aced", borderRadius: 9, }}>
-            <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center", color: "white" }}
+        <View key={i} style={{ width: "90%", left: "5%", padding: 10, backgroundColor: "white", borderRadius: 9, }}>
+            <Text style={{ fontWeight: "bold", fontSize: 20, textAlign: "center", color: "#242445" }}
                 onPress={() => sharePost({
                     from: friend.user1_id === userId ? friend.user2_id : friend.user1_id,
                     friendship: friend.id_friendship
@@ -204,18 +204,30 @@ const PostScreen = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Animated.View style={{ width: "100%", height: "90%", backgroundColor: "white", position: "absolute", bottom: fadeAnim, zIndex: 10 }}>
-                <Text style={{ left: 30, top: 30, fontSize: 24, fontWeight: "500" }}>Share with friends</Text>
-                <Text style={{ position: "absolute", right: 0, margin: 20, fontSize: 30, fontWeight: "bold", color: "black" }} onPress={() => fadeOut()}>X</Text>
-                <ScrollView style={{ marginTop: 80 }}>{renderFriends}</ScrollView>
+            <Animated.View style={{ width: "100%", height: "90%", backgroundColor: "#242445", position: "absolute", bottom: fadeAnim, zIndex: 10, borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
+                <Text style={{ left: 30, top: 30, fontSize: 24, fontWeight: "500", color: "white" }}>Share with friends</Text>
+                <Text style={{ position: "absolute", right: 0, margin: 20, fontSize: 30, fontWeight: "bold", color: "grey" }} onPress={() => fadeOut()}>X</Text>
+                <ScrollView style={{ marginTop: 45 }}>{renderFriends}</ScrollView>
             </Animated.View>
             <ScrollView>
                 <Text style={styles.postTitle}>{post.post_title}</Text>
                 <Text style={styles.postCreated}>{new Date(post.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
                 {postMenu ?
                     <View style={styles.pmcontainer}>
-                        <Text style={styles.pmtext} onPress={() => deletePost()}>Delete Post</Text>
-                        <Text style={styles.pmtext2} onPress={() => editPost()}>Edit Post</Text>
+                        <TouchableOpacity style={{ width: "50%" }} onPress={() => deletePost()}>
+                            <Icon
+                                type="font-awesome"
+                                name="trash"
+                                color="white"
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ width: "50%" }} onPress={() => editPost()}>
+                            <Icon
+                                type="font-awesone"
+                                name="edit"
+                                color="white"
+                            />
+                        </TouchableOpacity>
                     </View> :
                     <></>}
                 <View style={styles.postHeader}>
@@ -235,8 +247,8 @@ const PostScreen = ({ route, navigation }) => {
                 </View>
 
                 {covidAlert ?
-                    <View style={{ width: "90%", left: "5%", padding: 10, backgroundColor: "white", marginTop: 30, borderRadius: 9 }}>
-                        <Text style={{ fontWeight: "500", fontSize: 18 }}>
+                    <View style={{ width: "90%", left: "5%", padding: 10, backgroundColor: "#242445", marginTop: 30, borderRadius: 9 }}>
+                        <Text style={{ fontWeight: "500", fontSize: 18, color: "white" }}>
                             <Icon type="font-awesome" name="warning" color="orange" style={{ paddingRight: 10, paddingLeft: 5 }} />
                             <Text style={{ fontSize: 18 }}>This post contains Covid-19 informations. To prevent disinformations please visit <Text onPress={() => Linking.openURL(`http://172.20.10.3:3000/covid`)} style={{ color: "#00aced" }}>trusted source</Text> </Text>
                         </Text>
@@ -251,10 +263,11 @@ const PostScreen = ({ route, navigation }) => {
                         placeholder="Enter comment"
                         style={styles.c_comment}
                         onSubmitEditing={(event) => sentComment()}
+                        placeholderTextColor="lightgrey"
                         multiline
                     ></TextInput>
 
-                    <View style={{ width: "90%", left: "5%", borderRadius: 9, backgroundColor: "white", padding: 10, marginTop: 20, }}>
+                    <View style={{ width: "90%", left: "5%", borderRadius: 9, backgroundColor: "#242445", padding: 10, marginTop: 20, }}>
                         <Text style={{ fontWeight: "500", fontSize: 18, paddingLeft: 10, top: 10, color: "#00aced" }} onPress={() => sentComment()}>Sent</Text>
                         <Text style={{ fontWeight: "500", fontSize: 18, paddingRight: 10, alignSelf: "flex-end", top: -10, color: "#00aced" }} onPress={() => fadeIn()}>Share</Text>
                     </View>
@@ -285,7 +298,7 @@ const styles = StyleSheet.create({
         marginLeft: "5%",
         marginTop: 10,
         padding: 10,
-        backgroundColor: "white",
+        backgroundColor: "#242445",
         borderRadius: 9
     },
     pmcontainer: {
@@ -294,7 +307,7 @@ const styles = StyleSheet.create({
         width: "90%",
         flexDirection: 'row',
         marginTop: 10,
-        backgroundColor: "white",
+        backgroundColor: "#242445",
         borderRadius: 9
     },
     pmtext: {
@@ -314,20 +327,24 @@ const styles = StyleSheet.create({
         padding: 20,
         left: "5%",
         height: 100,
-        backgroundColor: "white",
+        backgroundColor: "#242445",
         borderRadius: 9,
+        color: "white",
         fontSize: 16
     },
     c_author: {
         fontSize: 18,
+        color: "white",
         fontWeight: "600",
     },
     c_created: {
         top: -20,
-        alignSelf: "flex-end"
+        alignSelf: "flex-end",
+        color: "lightgrey"
     },
     c_text: {
         left: 10,
+        color: "white",
         fontSize: 15,
     },
     container: {
@@ -337,6 +354,7 @@ const styles = StyleSheet.create({
         fontSize: 30,
         textAlign: "center",
         marginTop: 20,
+        color: "#242445",
         fontWeight: "bold"
     },
     profileImagse: {
@@ -348,33 +366,37 @@ const styles = StyleSheet.create({
     },
     postHeaderName: {
         textAlign: "center",
-        right: -30,
+        fontWeight: "500",
+        color: "white",
         top: -37,
+        textAlign: "center",
         fontSize: 30
     },
     postCreated: {
         textAlign: "center"
     },
     postHeader: {
-        marginTop: 30,
+        marginTop: 20,
         width: "90%",
-        backgroundColor: "white",
+        backgroundColor: "#242445",
         marginLeft: "5%",
         padding: 10,
         paddingBottom: 0,
         borderRadius: 9
     },
     postContent: {
-        marginTop: 30,
+        marginTop: 20,
         width: "90%",
-        backgroundColor: "white",
+        backgroundColor: "#242445",
         marginLeft: "5%",
         padding: 10,
         borderRadius: 9,
         marginBottom: 20,
     },
     postContentText: {
-        fontSize: 20
+        fontSize: 20,
+        padding: 4,
+        color: "white",
     },
 
 })
