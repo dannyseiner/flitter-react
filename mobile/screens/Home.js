@@ -195,6 +195,7 @@ const PostBlock = ({ navigation, userId, data }) => {
     return (
         <>
             <View style={styles.postContainer}>
+            <View style={{width:6, height:165,borderBottomLeftRadius:20,borderTopLeftRadius:20, backgroundColor:"#242445", position:"absolute", top:0}}></View>
                 <Text style={styles.postDate}>{new Date(data.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
                 <Text onPress={() => navigation.navigate("Post", data)} style={styles.postHeader}>{data.post_title}</Text>
                 <Text style={styles.postText}>{data.post_content}</Text>
@@ -229,9 +230,10 @@ const styles = StyleSheet.create({
         height: "100%"
     },
     postContainer: {
-        width: "100%",
-        marginTop: 5,
+        width: "95%",
+        marginTop: 10,
         padding: 15,
+        left:"2.5%",
         borderRadius: 12,
         backgroundColor: "white",
         color: "black",

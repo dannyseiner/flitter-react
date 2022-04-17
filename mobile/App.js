@@ -91,7 +91,7 @@ function App() {
         <Stack.Screen name="Privacy" component={PrivacyScreen} options={headerTitleStyle} />
         <Stack.Screen name="Pages" component={PagesScreen} options={headerTitleStyle} />
         <Stack.Screen name="Api" component={ApiScreen} options={headerTitleStyle} />
-        <Stack.Screen name="MarketPlace" component={MarketPlaceScreen} options={headerTitleStyle} />
+        <Stack.Screen name="MarketPlace" component={MarketPlaceScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Support" component={SupportScreen} options={headerTitleStyle} />
       </Stack.Navigator >
     </NavigationContainer >

@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Alert, Text, Button, TextInput, Image, Linking, TouchableOpacityBase } from 'react-native';
+import { View, StyleSheet, Animated, ScrollView, TouchableOpacity, Alert, Share, Text, TextInput, Image, Linking } from 'react-native';
 import Footer from '../components/Footer';
 import axios from "axios"
 import config from '../config'
 import { Icon } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationRouteContext } from '@react-navigation/native';
+import QRCode from 'react-native-qrcode-svg';
 
 
 const PostScreen = ({ route, navigation }) => {
-    const [post, setPost] = useState({ ...route.params, render_user_image: route.params.profile_image_encoded.replace(/\s/g, '') })
+    const [post] = useState({ ...route.params, render_user_image: route.params.profile_image_encoded.replace(/\s/g, '') })
     const [comments, setComments] = useState([])
     const [comment, setComment] = useState("")
     const [userId, setUserId] = useState(0)
@@ -17,8 +17,9 @@ const PostScreen = ({ route, navigation }) => {
     const [covidAlert, setCovidAlert] = useState(false)
 
 
-    const fadeAnim = useRef(new Animated.Value(-1000)).current
 
+    const fadeAnim = useRef(new Animated.Value(-1000)).current
+    const SlideValue = new Animated.Value(-1000)
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
             toValue: 0,
@@ -30,6 +31,24 @@ const PostScreen = ({ route, navigation }) => {
 
     const fadeOut = () => {
         Animated.timing(fadeAnim, {
+            toValue: -1000,
+            duration: 500,
+            useNativeDriver: false
+
+        }).start();
+    };
+
+    const slideIn = () => {
+        Animated.timing(SlideValue, {
+            toValue: 0,
+            duration: 500,
+            useNativeDriver: false
+
+        }).start();
+    };
+
+    const slideOut = () => {
+        Animated.timing(SlideValue, {
             toValue: -1000,
             duration: 500,
             useNativeDriver: false
@@ -201,9 +220,42 @@ const PostScreen = ({ route, navigation }) => {
         </View>
 
     ))
+    const onShare = async () => {
+        try {
+            const result = await Share.share({
+                message:
+                    `${config.web_url}/publicpost/${post.post_id}`,
+            });
+            if (result.action === Share.sharedAction) {
+                if (result.activityType) {
+                    // shared with activity type of result.activityType
+                } else {
+                    // shared
+                }
+            } else if (result.action === Share.dismissedAction) {
+                // dismissed
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    }
 
     return (
         <View style={styles.container}>
+            <Animated.View style={{ position: "absolute", top: SlideValue, left: 0, padding: 20, width: "100%", height: "100%", backgroundColor: "black", zIndex: 300 }}>
+                <View style={{ position: "absolute", top: "30%", left: "16%", padding: 20, width: 150, height: 150, backgroundColor: "black", zIndex: 300 }}>
+                    <QRCode
+                        value={`${config.web_url}/publicpost/${post.post_id}`}
+                        logoSize={40}
+                        size={250}
+                        logoBackgroundColor='transparent'
+                        logo={require("../logo-nobg.png")}
+                    />
+                </View>
+                <TouchableOpacity style={{ width: "70%", left: "15%", top: "70%", backgroundColor: "white", padding: 10, borderRadius: 100 }} onPress={() => slideOut()}>
+                    <Text style={{ fontSize: 20, textAlign: "center" }}>Close</Text>
+                </TouchableOpacity>
+            </Animated.View>
             <Animated.View style={{ width: "100%", height: "90%", backgroundColor: "#242445", position: "absolute", bottom: fadeAnim, zIndex: 10, borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
                 <Text style={{ left: 30, top: 30, fontSize: 24, fontWeight: "500", color: "white" }}>Share with friends</Text>
                 <Text style={{ position: "absolute", right: 0, margin: 20, fontSize: 30, fontWeight: "bold", color: "grey" }} onPress={() => fadeOut()}>X</Text>
@@ -267,9 +319,18 @@ const PostScreen = ({ route, navigation }) => {
                         multiline
                     ></TextInput>
 
-                    <View style={{ width: "90%", left: "5%", borderRadius: 9, backgroundColor: "#242445", padding: 10, marginTop: 20, }}>
-                        <Text style={{ fontWeight: "500", fontSize: 18, paddingLeft: 10, top: 10, color: "#00aced" }} onPress={() => sentComment()}>Sent</Text>
-                        <Text style={{ fontWeight: "500", fontSize: 18, paddingRight: 10, alignSelf: "flex-end", top: -10, color: "#00aced" }} onPress={() => fadeIn()}>Share</Text>
+                    <View style={{ width: "90%", left: "12.5%", borderRadius: 9, backgroundColor: "#242445", padding: 10, marginTop: 20, flexDirection: "row" }}>
+                        <TouchableOpacity style={{ width: "33.3%" }} onPress={() => sentComment()}>
+                            <Icon type="font-awesome" name="paper-plane" color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ width: "33.3%" }}>
+                            <Icon type="font-awesome" name="qrcode" color="white" onPress={() => slideIn()} onLongPress={() => onShare()} />
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ width: "33.3%" }} onPress={() => fadeIn()}>
+                            <Icon type="font-awesome" name="share" color="white" />
+                        </TouchableOpacity>
+                        {/* <Text style={{ fontWeight: "500", fontSize: 18, paddingLeft: 10, top: 10, color: "#00aced" }} onPress={() => sentComment()}>Sent</Text> */}
+                        {/* <Text style={{ fontWeight: "500", fontSize: 18, paddingRight: 10, alignSelf: "flex-end", top: -10, color: "#00aced" }} onPress={() => fadeIn()}>Share</Text> */}
                     </View>
                 </View>
                 {renderComments}

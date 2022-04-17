@@ -21,7 +21,7 @@ import StickyFooter from './StickyFooter'
 import Explore from '../Sites/Explore'
 import Settings from '../Sites/Settings'
 import Covid from '../Sites/Covid'
-
+import PublicPost from "../Sites/PublicPost"
 const RouterCom = () => {
     const user = JSON.parse(sessionStorage.getItem('user'))
 
@@ -38,16 +38,16 @@ const RouterCom = () => {
                 <PrivateRoute path='/friends' exact component={Friends} />
                 <PrivateRoute path='/createPost' excact component={CreatePost} />
                 <PrivateRoute path='/explore' excact component={Explore} />
-                <PrivateRoute path='/settings' excact component={Settings} />
+                <PrivateRoute path='/settings' exact component={Settings} />
                 {/* PRIVATE ROUTES / EDITS  */}
-                <PrivateRoute path='/editpost/:id' excact component={EditPost} />
+                <PrivateRoute path='/editpost/:id' exact component={EditPost} />
                 {/* ADMIN ROUTES */}
                 <AdminRoute path='/apiTest' component={Apitest} />
                 {/* PUBLIC ROUTES */}
                 <Route path='/login/:id' component={FastLogin} />
                 <Route path='/login' exact component={Login} />
                 <Route path='/covid' excact component={Covid} />
-
+                <Route path="/publicpost/:id" exact component={PublicPost} />
                 <Route path='/googleredirect' exact component={() => {
                     window.location.href = 'https://news.google.com/covid19/map?hl=en-US&mid=%2Fm%2F09c7w0&gl=US&ceid=US%3Aen'
                     return null;

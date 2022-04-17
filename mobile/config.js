@@ -9,7 +9,7 @@ const config = {
     socket: "172.20.10.3:3003",
     date_format: { hour: 'numeric', minute: "numeric", month: 'short', day: 'numeric' },
     ipaddress: "172.20.10.3",
-    web_url: "http://172.20.10.3:3002",
+    web_url: "http://172.20.10.3:3000",
     colors:{
 	main_color : "#ff",
     },

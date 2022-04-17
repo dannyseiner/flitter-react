@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Image, Animated, TouchableOpacity, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, Animated, Linking, TouchableOpacity, Text, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Icon } from 'react-native-elements';
 import axios from "axios"
@@ -96,7 +96,7 @@ const Footer = ({ navigation, active }) => {
                                 style={styles.leftmenuicon}
                             />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.leftmenublock} onPress={() => navigation.navigate("Maps")}>
+                        <TouchableOpacity style={styles.leftmenublock} onPress={() => { Linking.openURL(`${config.web_url}/covid`) }}>
                             <Icon
                                 type="font-awesome"
                                 name="warning"
@@ -381,7 +381,8 @@ const Block = ({ navigation, menu, active, options, style, rotate }) => {
             {active === options.text ?
                 <>
                     <View style={[footer.active, style ? style : "",]}>
-                        <View style={[{ width: "65%", left: "17.5%", height: 55, backgroundColor: "#242445", borderStyle: "solid", borderWidth: 5, borderColor: "#f2f2f2", borderRadius: 20, position: "absolute", zIndex: 40000, top: -25 }, {
+                        <View style={[{ width: "65%", left: "17.5%", height: 55, backgroundColor: "#242445", borderStyle: "solid", borderWidth: 5, borderColor: "#f2f2f2", borderRadius: 20, position: "absolute", zIndex: 40000, top: -25 },
+                        {
                             transform: rotate
                         }]}>
                             <Icon

@@ -9,6 +9,10 @@ const Settings = ({ navigation }) => {
     const [userId, setUserId] = useState(0)
     const [location, setLocation] = useState(true)
 
+
+
+
+
     useEffect(() => {
         getUser()
     }, [])

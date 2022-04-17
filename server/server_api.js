@@ -10,7 +10,7 @@ const http = require('http')
 const chatapp = express()
 const { Server } = require("socket.io")
 const { resourceUsage } = require("process")
-const { get } = require("jquery")
+const { get, cssNumber } = require("jquery")
 const eventHandler = require("./Components/event")
 const server = http.createServer()
 chatapp.use(cors())
@@ -176,11 +176,20 @@ api.get("/user/:id", (req, res) => {
 })
 
 api.post("/edituser", urlencodedParser, (req, res) => {
-    con.query(`UPDATE accounts SET account_name = '${req.body.username}' WHERE account_id = ${req.body.userId}`, (err, result) => {
-        con.query(`UPDATE account_info SET account_image = '${req.body.image}' WHERE user_id = ${req.body.userId}`, (err, result2) => {
-            res.send({ status: true })
+    con.query(`SELECT * FROM accounts WHERE account_name = '${req.body.username}'`, (err, result) => {
+        if(result.length === 0 ){
+            con.query(`UPDATE accounts SET account_name = '${req.body.username}' WHERE account_id = ${req.body.userId}`, (err, result) => {
+                res.send({status: true})
+                return 
+            })
+        }else{
+            res.send({status: false})
+        }
+         
+            // con.query(`UPDATE account_info SET account_image = '${req.body.image}' WHERE user_id = ${req.body.userId}`, (err, result2) => {
+            // res.send({ status: true })
+            // })
         })
-    })
 })
 
 api.get('/postStats/:id', (req, res) => {

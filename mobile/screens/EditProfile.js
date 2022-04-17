@@ -9,8 +9,8 @@ import { Icon } from 'react-native-elements';
 
 const Editprofile = ({ navigation }) => {
     const [userId, setUserId] = useState(0)
-
-    const [userData, setUserData] = useState({
+    const [alert, setAlert] = useState({ name:"" , color:""})
+     const [userData, setUserData] = useState({
         username: "",
         email: "dannyseiner@gmail.com",
         image: ""
@@ -38,9 +38,9 @@ const Editprofile = ({ navigation }) => {
         getProfile()
     }, [userId])
 
-    const fadeAnim = new Animated.Value(0)
-    const spinValue = new Animated.Value(0);
 
+    const fadeAnim = new Animated.Value(0)
+    const spinValue = new Animated.Value(0)
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
             toValue: 1000,
@@ -64,7 +64,6 @@ const Editprofile = ({ navigation }) => {
             useNativeDriver: false,
         })).start();
     }
-
 
     // Next, interpolate beginning and end values (in this case 0 and 1)
     const spin = spinValue.interpolate({
@@ -112,12 +111,21 @@ const Editprofile = ({ navigation }) => {
     const saveSettings = () => {
         fadeIn()
         spinAnim()
-        console.log("pressed")
         axios.post(`${config.restapi}/edituser`, {
             userId: userId,
             ...userData
         })
-            .then(response => setTimeout(() => fadeOut(), 800))
+            .then(response => {
+                setTimeout(() => {
+                    fadeOut()
+                    if(response.data.status+"" === "true") { 
+                        Alert.alert("Profile was updated")
+                    }else{
+                        Alert.alert("Unavaible username")
+                    } 
+
+                }, 700)
+            })
     }
 
     return (
@@ -132,7 +140,6 @@ const Editprofile = ({ navigation }) => {
                         size={40}
                     />
                 </Animated.View>
-
             </Animated.View>
             <ScrollView>
                 <View style={styles.editsettings}>
