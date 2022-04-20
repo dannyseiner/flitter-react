@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Footer from "../components/Footer"
 import axios from "axios"
 import config from "../config"
@@ -16,14 +16,20 @@ const Events = ({ navigation }) => {
     }
 
     const renderEvents = events.map(evt => (
-        <View style={styles.eventStyle}>
+        <TouchableOpacity onPress={() => navigation.navigate("Event", {
+            event_id: evt.event_id,
+            name: evt.event_title,
+            data: evt,
+            username: evt.account_name,
+            date: evt.event_date.split("T")[0]
+        })} style={styles.eventStyle}>
             <Text style={styles.eventTitle}>{evt.event_title}</Text>
             <Text style={styles.eventText}>{evt.event_description}</Text>
             <View style={{ marginTop: 5 }}>
                 <Text style={styles.eventauthor}>{evt.author_id}</Text>
                 <Text style={styles.eventdate}>{evt.event_date.split("T")[0]}</Text>
             </View>
-        </View>
+        </TouchableOpacity>
     ))
 
     return (

@@ -239,6 +239,7 @@ const Friends = ({ navigation }) => {
 
 
 const FriendBlock = ({ navigation, data, container, text }) => {
+    console.log(data.userid)
     return (
         <TouchableOpacity style={container} onPress={(() => navigation.navigate("Profile", data.userid))}>
             <View style={{ top: 15 }}>

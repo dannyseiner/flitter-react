@@ -28,21 +28,24 @@ const Event = ({ route, navigation }) => {
             </View>
             <View style={styles.footer}>
                 <TouchableOpacity style={styles.button1}>
-                    <Icon
-                        name="check"
-                        type="font-awesome"
-                        color="white"
-                        style={{ flexDirection: "row", left: "110%", top: 2, }}
-                    />
-                    <Text style={styles.buttonText}>Going</Text>
+                    <View style={{ width: "70%", left: "20%", flexDirection: "column" }}>
+                        <Icon
+                            name="check"
+                            type="font-awesome"
+                            color="white"
+                            style={{ marginLeft: -80 }}
+                        />
+                        <Text style={styles.buttonText}>Going</Text>
+                    </View>
+
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button2}>
-                    <View>
+                    <View style={{ width: "70%", left: "20%", flexDirection: "column" }}>
                         <Icon
                             name="bookmark"
                             type="font-awesome"
                             color="white"
-                            style={{ flexDirection: "row", left: "150%", top: 2, }}
+                            style={{ marginLeft: -80 }}
                         />
                         <Text style={styles.buttonText}>Save</Text>
                     </View>

@@ -27,8 +27,11 @@ const Profile = ({ route, navigation }) => {
         decoded_image: ""
     })
 
+
+
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
+            getLoggedUser(params)
             getPosts()
             loadPlaces()
             loadLocation()
