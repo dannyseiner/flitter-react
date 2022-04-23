@@ -195,30 +195,32 @@ const PostBlock = ({ navigation, userId, data }) => {
     return (
         <>
             <View style={styles.postContainer}>
-            <View style={{width:6, height:165,borderBottomLeftRadius:20,borderTopLeftRadius:20, backgroundColor:"#242445", position:"absolute", top:0}}></View>
-                <Text style={styles.postDate}>{new Date(data.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
-                <Text onPress={() => navigation.navigate("Post", data)} style={styles.postHeader}>{data.post_title}</Text>
-                <Text style={styles.postText}>{data.post_content}</Text>
-                <Text style={styles.postAuthor} onPress={() => navigation.navigate("Profile", data.post_author_id)}>{data.account_name}</Text>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignSelf: "flex-end", paddingBottom: 15 }}>
-                    {postStats.comments === "" ? <></> :
-                        <>
-                            <Icon
-                                name="comments"
-                                type="font-awesome"
-                                color="grey"
-                                style={{ padding: 5, marginRight: 20, top: -5 }}
-                            />
-                            <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -70 }}>{postStats.comments}</Text>
-                        </>
-                    }
-                    <Icon
-                        name="thumbs-up"
-                        type="font-awesome"
-                        color={like}
-                        onPress={() => likePost(data.post_id)}
-                    />
-                    <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -40 }}>{postStats.likes}</Text>
+                <View style={{ width: 6, height: "100%", borderBottomLeftRadius: 20, borderTopLeftRadius: 20, backgroundColor: "#242445", position: "absolute", top: 0 }}></View>
+                <View style={{ padding: 15 }}>
+                    <Text style={styles.postDate}>{new Date(data.post_created).toLocaleDateString("en-US", config.date_format)}</Text>
+                    <Text onPress={() => navigation.navigate("Post", data)} style={styles.postHeader}>{data.post_title}</Text>
+                    <Text style={styles.postText}>{data.post_content}</Text>
+                    <Text style={styles.postAuthor} onPress={() => navigation.navigate("Profile", data.post_author_id)}>{data.account_name}</Text>
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignSelf: "flex-end", paddingBottom: 15 }}>
+                        {postStats.comments === "" ? <></> :
+                            <>
+                                <Icon
+                                    name="comments"
+                                    type="font-awesome"
+                                    color="grey"
+                                    style={{ padding: 5, marginRight: 20, top: -5 }}
+                                />
+                                <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -70 }}>{postStats.comments}</Text>
+                            </>
+                        }
+                        <Icon
+                            name="thumbs-up"
+                            type="font-awesome"
+                            color={like}
+                            onPress={() => likePost(data.post_id)}
+                        />
+                        <Text style={{ color: "grey", textAlign: "right", marginTop: 3, fontWeight: "bold", fontSize: 20, left: -40 }}>{postStats.likes}</Text>
+                    </View>
                 </View>
             </View>
         </>
@@ -232,8 +234,7 @@ const styles = StyleSheet.create({
     postContainer: {
         width: "95%",
         marginTop: 10,
-        padding: 15,
-        left:"2.5%",
+        left: "2.5%",
         borderRadius: 12,
         backgroundColor: "white",
         color: "black",

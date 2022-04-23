@@ -1,6 +1,8 @@
 # Flitter ( socialmedia app )
 Backend is configure to run on **localhost** as RESTAPI . Server file contains 2 separated server, one with routes that are connected to the DB and returns data, the second one is only for sockets. Socket server is used for locations on the map and for chat. 
 
+Application is no longer supported!
+
 |TYPE                |DESCRIPTION                          |PORT                       | 
 |----------------|-------------------------------|-----------------------------|
 |RestAPI|`Contains all routes for both apps and returning database data. Some routes are public via GET request and some like login register etc. are protected by with parameters with POST request.  `            |3002            |
